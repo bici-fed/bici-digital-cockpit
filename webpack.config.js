@@ -1,7 +1,7 @@
 'use strict';
 
 const path = require('path');
-const AntdDayjsWebpackPlugin = require('antd-dayjs-webpack-plugin');
+// const AntdDayjsWebpackPlugin = require('antd-dayjs-webpack-plugin');
 
 function resolve(pathname) {
   return path.resolve(__dirname, pathname);
@@ -35,6 +35,30 @@ module.exports = {
         use: ['style-loader', { loader: 'css-loader', options: { modules: true } }],
       },
       {
+        test: /\.less$/,
+        use: [
+          'style-loader',
+          'css-loader',
+          {
+            loader: 'less-loader',
+            options: {
+              javascriptEnabled: true,
+            },
+          },
+        ],
+      },
+      {
+        test: /\.(png|jpg|gif|svg)$/,
+        use: [
+          {
+            loader: 'url-loader',
+            options: {
+              limit: 819200,
+            },
+          },
+        ],
+      },
+      {
         test: /\.m?js$/,
         exclude: /(node_modules|bower_components)/,
         use: {
@@ -46,7 +70,7 @@ module.exports = {
       },
     ],
   },
-  plugins: [new AntdDayjsWebpackPlugin()],
+  // plugins: [new AntdDayjsWebpackPlugin()],
   optimization: {
     minimize: true,
     splitChunks: {
@@ -65,14 +89,5 @@ module.exports = {
       },
     },
   },
-  externals: [
-    'react',
-    'react-dom',
-    'prop-types',
-    'lodash',
-    'dayjs',
-    /^@ant-design\/.+$/,
-    /^dayjs\/plugin\/.+$/,
-    /^antd\/es\/.+$/,
-  ],
+  externals: ['react', 'react-dom', 'lodash'],
 };

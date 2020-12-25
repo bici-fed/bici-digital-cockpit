@@ -1,14 +1,5 @@
-import React from 'react';
 import DigitalBoard from '@/components/DigitalBoard';
 import DigitalCockpit from '@/components/DigitalCockpit';
+import DisplayPage from '@/components/DigitalCockpit/DisplayPage';
 
-function BiciDigitalCockpit() {
-  return (
-    <>
-      <DigitalBoard />
-      <DigitalCockpit />
-    </>
-  );
-}
-
-export default BiciDigitalCockpit;
+export { DigitalBoard, DigitalCockpit, DisplayPage };

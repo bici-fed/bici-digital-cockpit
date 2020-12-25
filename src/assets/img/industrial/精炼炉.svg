@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="220px" height="282px" viewBox="0 0 220 282" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>精炼炉</title>
+    <defs>
+        <linearGradient x1="100%" y1="50%" x2="0%" y2="50%" id="linearGradient-1">
+            <stop stop-color="#D5D8DF" offset="0%"></stop>
+            <stop stop-color="#C9CCD2" offset="38.4274047%"></stop>
+            <stop stop-color="#767A7E" offset="91.7482759%"></stop>
+            <stop stop-color="#D4D8DE" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="100%" y1="50%" x2="0%" y2="50%" id="linearGradient-2">
+            <stop stop-color="#DFE2E6" offset="0%"></stop>
+            <stop stop-color="#7A7E82" offset="88.4164964%"></stop>
+            <stop stop-color="#D4D8DE" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="100%" y1="50%" x2="0%" y2="50%" id="linearGradient-3">
+            <stop stop-color="#B4B7BF" offset="0%"></stop>
+            <stop stop-color="#D4D7DC" offset="38.4274047%"></stop>
+            <stop stop-color="#6B7074" offset="91.7482759%"></stop>
+            <stop stop-color="#D4D8DE" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="100%" y1="50%" x2="0%" y2="50%" id="linearGradient-4">
+            <stop stop-color="#BFC3CB" offset="0%"></stop>
+            <stop stop-color="#A9ADB2" offset="38.4274047%"></stop>
+            <stop stop-color="#9D9EA0" offset="88.8851115%"></stop>
+            <stop stop-color="#D4D8DE" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="100%" y1="50%" x2="0%" y2="50%" id="linearGradient-5">
+            <stop stop-color="#B4B7BF" offset="0%"></stop>
+            <stop stop-color="#D4D7DC" offset="38.4274047%"></stop>
+            <stop stop-color="#6B7074" offset="91.7482759%"></stop>
+            <stop stop-color="#D4D8DE" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="100%" y1="50%" x2="0%" y2="50%" id="linearGradient-6">
+            <stop stop-color="#BFC3CB" offset="0%"></stop>
+            <stop stop-color="#A9ADB2" offset="38.4274047%"></stop>
+            <stop stop-color="#9D9EA0" offset="88.8851115%"></stop>
+            <stop stop-color="#D4D8DE" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="100%" y1="50%" x2="0%" y2="50%" id="linearGradient-7">
+            <stop stop-color="#B4B7BF" offset="0%"></stop>
+            <stop stop-color="#D4D7DC" offset="38.4274047%"></stop>
+            <stop stop-color="#6B7074" offset="91.7482759%"></stop>
+            <stop stop-color="#D4D8DE" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="100%" y1="50%" x2="0%" y2="50%" id="linearGradient-8">
+            <stop stop-color="#E3E5E9" offset="0%"></stop>
+            <stop stop-color="#B9BDC2" offset="100%"></stop>
+        </linearGradient>
+        <radialGradient cx="50%" cy="38.794871%" fx="50%" fy="38.794871%" r="50.4096378%" gradientTransform="translate(0.500000,0.387949),scale(1.000000,0.769592),rotate(-90.000000),scale(1.000000,2.395184),translate(-0.500000,-0.387949)" id="radialGradient-9">
+            <stop stop-color="#FFBB3E" offset="0%"></stop>
+            <stop stop-color="#B62227" offset="100%"></stop>
+        </radialGradient>
+    </defs>
+    <g id="-" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="画板" transform="translate(-2498.000000, -407.000000)">
+            <g id="精炼炉" transform="translate(2498.500000, 407.500000)">
+                <g id="底部" transform="translate(7.500000, 131.250000)">
+                    <path d="M105.187502,24.375 C149.396039,24.375 187.234757,40.4176089 202.796974,63.1459549 L210.375005,63.1461878 L210.375005,89.3961878 L210.241342,89.3966501 C207.455957,122.107121 161.487011,148.125003 105.187502,148.125003 C48.8879931,148.125003 2.91904724,122.107121 0.133662911,89.3966501 L0,89.3961878 L0,63.1461878 L7.57803051,63.1459549 C23.1402479,40.4176089 60.9789658,24.375 105.187502,24.375 Z" id="形状结合" fill="url(#linearGradient-1)"></path>
+                    <ellipse id="椭圆形" fill="url(#linearGradient-2)" cx="105.187502" cy="60.8437513" rx="105.187502" ry="60.8437513"></ellipse>
+                </g>
+                <path d="M211.875,93.75 L211.875,180 L211.668763,180.000953 C208.343218,217.683865 165.214965,247.5 112.5,247.5 C59.7850355,247.5 16.6567816,217.683865 13.3312366,180.000953 L13.125,180 L13.125,93.75 L211.875,93.75 Z" id="主体" fill="url(#linearGradient-3)"></path>
+                <g id="3层" transform="translate(13.125000, 35.437498)" fill="url(#linearGradient-4)">
+                    <ellipse id="椭圆形" cx="99.4021825" cy="57.4973409" rx="99.4021825" ry="57.4973409"></ellipse>
+                </g>
+                <g id="2层" transform="translate(22.968750, 25.593749)">
+                    <path d="M89.4619619,8.918436 C133.572851,8.918436 170.227291,27.6977654 177.580378,52.4064822 L178.923924,52.4064514 L178.923924,64.2189508 L178.810296,64.2187232 C176.441856,92.0392674 137.345046,114.167803 89.4619619,114.167803 C41.5788779,114.167803 2.48206784,92.0392674 0.11362744,64.2187232 L9.79216663e-14,64.2189508 L9.79216663e-14,52.4064514 L1.34354594,52.4064822 C8.69663323,27.6977654 45.3510723,8.918436 89.4619619,8.918436 Z" id="形状结合" fill="url(#linearGradient-5)"></path>
+                    <ellipse id="椭圆形" fill="url(#linearGradient-6)" cx="89.4619619" cy="51.7476054" rx="89.4619619" ry="51.7476054"></ellipse>
+                </g>
+                <g id="1层" transform="translate(32.812499, 0.000000)">
+                    <path d="M80.5157636,24.5640912 C112.015817,24.5640912 139.29093,35.2047501 152.519971,50.7089321 L161.031527,50.7095542 L161.031527,74.3345532 L160.929227,74.3347703 C158.797271,99.3730612 123.610296,119.288519 80.5157636,119.288519 C37.4212312,119.288519 2.23425637,99.3730612 0.102300623,74.3347703 L0,74.3345532 L0,50.7095542 L8.51155603,50.7089321 C21.7405975,35.2047501 49.0157103,24.5640912 80.5157636,24.5640912 Z" id="形状结合" fill="url(#linearGradient-7)"></path>
+                    <ellipse id="椭圆形" fill="url(#linearGradient-8)" cx="80.5157636" cy="46.5728436" rx="80.5157636" ry="46.5728436"></ellipse>
+                </g>
+                <g id="窗口" transform="translate(0.000000, 120.000000)">
+                    <polygon id="路径-9" fill="#777B7F" points="0 12.1875007 80.4375044 59.0791637 80.4375044 121.875007 0 75.0567036"></polygon>
+                    <polygon id="路径-9" fill="url(#radialGradient-9)" points="9.75000054 26.8125015 70.5450501 62.9967729 70.5450501 105.808934 9.75000054 70.1223968"></polygon>
+                    <polygon id="路径-17" fill="#979BA0" points="80.4375044 121.875007 95.0625052 109.687506 95.0625052 46.8609291 80.4375044 59.0791637"></polygon>
+                    <path d="M14.6250008,0 L0,12.1875007 L80.4375044,59.0791637 L95.0625052,46.8609291 C60.032706,36.441644 23.672564,22.5876617 14.6250008,0 Z" id="路径-32" fill="#C5C8CD"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

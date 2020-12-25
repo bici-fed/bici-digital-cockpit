@@ -7,7 +7,7 @@ order: 1
 
 ```jsx
 import React from 'react';
-import BiciDigitalCockpit from '../dist/bici-digital-cockpit.js';
+import {DigitalBoard} from '../dist/bici-digital-cockpit.js';
 
-export default () => <BiciDigitalCockpit />;
+export default () => <DigitalBoard />;
 ```

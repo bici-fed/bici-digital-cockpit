@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 62 (91390) - https://sketch.com -->
+    <title>复制</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M11.571875,2.8640625 L11.571875,3.98125 L10.678125,3.98125 L10.678125,2.8640625 C10.678125,2.8046875 10.65625,2.75 10.6125,2.7078125 C10.56875,2.6640625 10.515625,2.6421875 10.45625,2.6421875 L2.865625,2.6421875 C2.80625,2.6421875 2.7515625,2.6640625 2.709375,2.7078125 C2.6671875,2.7515625 2.64375,2.8046875 2.64375,2.8640625 L2.64375,10.45625 C2.64375,10.515625 2.665625,10.5703125 2.709375,10.6125 C2.753125,10.65625 2.80625,10.678125 2.865625,10.678125 L3.9828125,10.678125 L3.9828125,11.571875 L2.865625,11.571875 C2.559375,11.571875 2.2953125,11.4625 2.078125,11.2453125 C1.859375,11.0265625 1.75,10.7625 1.75,10.45625 L1.75,2.8640625 C1.75,2.5578125 1.859375,2.29375 2.0765625,2.0765625 C2.29375,1.859375 2.5578125,1.75 2.8640625,1.75 L10.45625,1.75 C10.7625,1.75 11.0265625,1.8609375 11.24375,2.0765625 C11.4625,2.2953125 11.571875,2.5578125 11.571875,2.8640625 Z" id="path-1"></path>
+        <filter x="-10.2%" y="-10.2%" width="140.7%" height="140.7%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="1" dy="1" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="0.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 1 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <path d="M13.1375,4.4296875 C13.44375,4.4296875 13.7078125,4.540625 13.925,4.75625 C14.1421875,4.975 14.2515625,5.2375 14.2515625,5.54375 L14.2515625,13.1359375 C14.2515625,13.4421875 14.140625,13.70625 13.925,13.9234375 C13.70625,14.1421875 13.44375,14.25 13.1375,14.25 L5.5453125,14.25 C5.2390625,14.25 4.975,14.1390625 4.7578125,13.9234375 C4.5390625,13.7046875 4.43125,13.4421875 4.43125,13.1359375 L4.43125,5.54375 C4.43125,5.2375 4.540625,4.9734375 4.7578125,4.75625 C4.975,4.5390625 5.2390625,4.4296875 5.5453125,4.4296875 L13.1375,4.4296875 Z M12.43125,5.4296875 L6.43125,5.4296875 C5.87896525,5.4296875 5.43125,5.87740275 5.43125,6.4296875 L5.43125,6.4296875 L5.43125,12.4296875 C5.43125,12.9819722 5.87896525,13.4296875 6.43125,13.4296875 L6.43125,13.4296875 L12.43125,13.4296875 C12.9835347,13.4296875 13.43125,12.9819722 13.43125,12.4296875 L13.43125,12.4296875 L13.43125,6.4296875 C13.43125,5.87740275 12.9835347,5.4296875 12.43125,5.4296875 L12.43125,5.4296875 Z" id="path-3"></path>
+        <filter x="-10.2%" y="-10.2%" width="140.7%" height="140.7%" filterUnits="objectBoundingBox" id="filter-4">
+            <feOffset dx="1" dy="1" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="0.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 1 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="控件" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="卡片-大" transform="translate(-101.000000, -17.000000)" fill-rule="nonzero">
+            <g id="复制" transform="translate(110.000000, 24.000000) scale(-1, 1) translate(-110.000000, -24.000000) translate(102.000000, 16.000000)">
+                <rect id="矩形" fill="#000000" opacity="0" x="0" y="0" width="16" height="16"></rect>
+                <g id="形状">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                    <use fill="#FFFFFF" xlink:href="#path-1"></use>
+                </g>
+                <g id="形状结合">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-4)" xlink:href="#path-3"></use>
+                    <use fill="#FFFFFF" xlink:href="#path-3"></use>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
