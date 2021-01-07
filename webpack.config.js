@@ -1,57 +1,50 @@
-'use strict';
+const path = require("path");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
-const path = require('path');
-// const AntdDayjsWebpackPlugin = require('antd-dayjs-webpack-plugin');
-
-function resolve(pathname) {
-  return path.resolve(__dirname, pathname);
-}
-
-module.exports = {
-  mode: 'production',
-  entry: resolve('src/index.js'),
+module.exports = ["source-map"].map((devtool) => ({
+  mode: "development", // development | production
+  devtool,
+  entry: path.resolve(__dirname, "src/index.js"),
   output: {
-    path: resolve('dist'),
-    filename: 'bici-digital-cockpit.js',
-    library: 'BiciDigitalCockpit',
-    libraryTarget: 'umd',
+    path: path.resolve(__dirname, "dist"),
+    filename: "index.js",
+    library: "biciCockpit",
+    libraryTarget: "umd",
   },
   resolve: {
     alias: {
-      '@': resolve('src'),
+      "@": path.resolve(__dirname, "src"),
     },
-    extensions: ['.js', '.json', '.css'],
   },
   module: {
     rules: [
       {
-        test: /\.css$/,
-        exclude: resolve('src/components'),
-        use: ['style-loader', 'css-loader'],
-      },
-      {
-        test: /\.css$/,
-        include: resolve('src/components'),
-        use: ['style-loader', { loader: 'css-loader', options: { modules: true } }],
+        test: /\.css$/i,
+        use: ["style-loader", { loader: "css-loader", options: { modules: true } }],
       },
       {
         test: /\.less$/,
         use: [
-          'style-loader',
-          'css-loader',
+          "style-loader",
+          "css-loader",
           {
-            loader: 'less-loader',
+            loader: "less-loader",
             options: {
-              javascriptEnabled: true,
+              lessOptions: {
+                modifyVars: {
+                  "@ant-prefix": "antd",
+                },
+                javascriptEnabled: true,
+              },
             },
           },
         ],
       },
       {
-        test: /\.(png|jpg|gif|svg)$/,
+        test: /\.(png|svg|jpg|jpeg|gif)$/,
         use: [
           {
-            loader: 'url-loader',
+            loader: "url-loader",
             options: {
               limit: 819200,
             },
@@ -62,32 +55,14 @@ module.exports = {
         test: /\.m?js$/,
         exclude: /(node_modules|bower_components)/,
         use: {
-          loader: 'babel-loader',
+          loader: "babel-loader",
           options: {
-            cacheDirectory: true,
+            presets: ["@babel/preset-env", "@babel/preset-react"],
           },
         },
       },
     ],
   },
-  // plugins: [new AntdDayjsWebpackPlugin()],
-  optimization: {
-    minimize: true,
-    splitChunks: {
-      chunks: 'all',
-      minSize: 30000,
-      minChunks: 3,
-      automaticNameDelimiter: '.',
-      cacheGroups: {
-        vendor: {
-          name: 'vendors',
-          test({ resource }) {
-            return /[\\/]node_modules[\\/]/.test(resource);
-          },
-          priority: 10,
-        },
-      },
-    },
-  },
-  externals: ['react', 'react-dom', 'lodash'],
-};
+  plugins: [new CleanWebpackPlugin()],
+  externals: ["react", "react-dom", "bici-transformers", "@ant-design/icons"],
+}));

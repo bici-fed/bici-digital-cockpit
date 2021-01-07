@@ -5,21 +5,35 @@ import React, {
   useRef,
   useMemo,
   useImperativeHandle,
-} from 'react';
-import { DownOutlined } from '@ant-design/icons';
-import { Row, Col, Button, Empty, Input, Radio, Menu, Dropdown, Checkbox, Space } from 'antd';
-import { biciNotification } from 'bici-transformers';
-import BoardManage from './BoardManage';
-import BoardCreate from './BoardCreate';
-import BoardCard from './BoardCard';
-import { BOARD_QUERY_PARAMS_KEY } from '@/constant/index';
-import { fetchBoardList, fetchTypeList, orderBoard } from '@/apis/board';
-import { DragDropContext } from 'react-dnd';
-import useOnClickOutside from '@/hooks/useOnClickOutside';
-import HTML5Backend from 'react-dnd-html5-backend';
-import _ from 'lodash';
+} from "react";
+import { DownOutlined } from "@ant-design/icons";
+import {
+  Row,
+  Col,
+  Button,
+  Empty,
+  Input,
+  Radio,
+  Menu,
+  Dropdown,
+  Checkbox,
+  Space,
+  ConfigProvider,
+} from "antd";
+import { biciNotification } from "bici-transformers";
+import BoardManage from "./BoardManage";
+import BoardCreate from "./BoardCreate";
+import BoardCard from "./BoardCard";
+import { BOARD_QUERY_PARAMS_KEY } from "@/constant/index";
+import { fetchBoardList, fetchTypeList, orderBoard } from "@/apis/board";
+import { DragDropContext } from "react-dnd";
+import useOnClickOutside from "@/hooks/useOnClickOutside";
+import HTML5Backend from "react-dnd-html5-backend";
+import _ from "lodash";
 
-import styles from './index.module.css';
+import "antd/dist/antd.less";
+
+import styles from "./index.module.css";
 
 const DigitalBoard = React.forwardRef((props, ref) => {
   const { token, permissionBtn, userInfo, useTag, requestClient, baseUrl } = props;
@@ -79,7 +93,7 @@ const DigitalBoard = React.forwardRef((props, ref) => {
         clearTableQueryParams();
       },
     }),
-    [],
+    []
   );
 
   useEffect(() => {
@@ -90,10 +104,10 @@ const DigitalBoard = React.forwardRef((props, ref) => {
   }, []);
 
   // 请求所有面板数据
-  const requestBoardList = async params => {
+  const requestBoardList = async (params) => {
     const { list, total } = await fetchBoardList(requestClient, { pagination, ...params }, token);
     setBoardList(() => list);
-    setPagination(prevState => ({
+    setPagination((prevState) => ({
       ...prevState,
       total,
     }));
@@ -102,13 +116,13 @@ const DigitalBoard = React.forwardRef((props, ref) => {
   // 请求所有类型数据
   const requestTypeList = async () => {
     const data = await fetchTypeList(requestClient, {}, token);
-    const tags = data.map(tag => {
+    const tags = data.map((tag) => {
       return {
         value: tag.id,
         label: tag.name,
       };
     });
-    setTypeTagData(prevState => ({
+    setTypeTagData((prevState) => ({
       ...prevState,
       typeList: tags,
     }));
@@ -118,26 +132,26 @@ const DigitalBoard = React.forwardRef((props, ref) => {
         otherTypes: tags.slice(4),
       }));
       setTypeSelect(() => ({
-        selectedTypes: tags.map(item => item.value),
-        indexSelected: tags.slice(0, 4).map(item => item.value),
-        hideSelected: tags.slice(4).map(item => item.value),
+        selectedTypes: tags.map((item) => item.value),
+        indexSelected: tags.slice(0, 4).map((item) => item.value),
+        hideSelected: tags.slice(4).map((item) => item.value),
       }));
     } else {
-      setTagShow(prevState => ({
+      setTagShow((prevState) => ({
         ...prevState,
         indexTypes: tags.slice(0, 4),
       }));
       setTypeSelect(() => ({
-        selectedTypes: tags.map(item => item.value),
-        indexSelected: tags.slice(0, 4).map(item => item.value),
+        selectedTypes: tags.map((item) => item.value),
+        indexSelected: tags.slice(0, 4).map((item) => item.value),
         hideSelected: [],
       }));
     }
 
-    setSearchInfo(prevState => ({
+    setSearchInfo((prevState) => ({
       ...prevState,
-      tagIdList: tags.map(item => item.value),
-      prevTagList: tags.map(item => item.value),
+      tagIdList: tags.map((item) => item.value),
+      prevTagList: tags.map((item) => item.value),
     }));
   };
 
@@ -147,11 +161,11 @@ const DigitalBoard = React.forwardRef((props, ref) => {
   };
 
   // 配置面板
-  const handleConfigBoard = item => {
+  const handleConfigBoard = (item) => {
     if (item.updateAuth === 2 && userInfo.id !== item.createUserId) {
       // 禁止他人编辑  不是本人
       biciNotification.error({
-        message: '无权编辑该看板!',
+        message: "无权编辑该看板!",
       });
       return;
     }
@@ -170,10 +184,10 @@ const DigitalBoard = React.forwardRef((props, ref) => {
   }, [setCreateVisible]);
 
   // 改变看板布局
-  const handleSizeChange = e => {
+  const handleSizeChange = (e) => {
     if (Number(e.target.value) === 4) {
       setColHeight(() => 210);
-      setPagination(prevState => ({
+      setPagination((prevState) => ({
         ...prevState,
         pageSize: 30,
       }));
@@ -181,7 +195,7 @@ const DigitalBoard = React.forwardRef((props, ref) => {
 
     if (Number(e.target.value) === 8) {
       setColHeight(() => 410);
-      setPagination(prevState => ({
+      setPagination((prevState) => ({
         ...prevState,
         pageSize: 9,
       }));
@@ -189,7 +203,7 @@ const DigitalBoard = React.forwardRef((props, ref) => {
 
     if (Number(e.target.value) === 6) {
       setColHeight(() => 310);
-      setPagination(prevState => ({
+      setPagination((prevState) => ({
         ...prevState,
         pageSize: 12,
       }));
@@ -198,14 +212,14 @@ const DigitalBoard = React.forwardRef((props, ref) => {
     setColSize(Number(e.target.value));
   };
   // 展示的类型选择
-  const onTypeChange = checkedList => {
+  const onTypeChange = (checkedList) => {
     const newSeletedList = [...typeSelect.hideSelected, ...checkedList];
-    setTypeTagData(prevState => ({
+    setTypeTagData((prevState) => ({
       ...prevState,
       indeterminate: !!checkedList.length && newSeletedList.length < typeTagData.typeList.length,
       checkAll: newSeletedList.length === typeTagData.typeList.length,
     }));
-    setTypeSelect(prevState => ({
+    setTypeSelect((prevState) => ({
       ...prevState,
       selectedTypes: newSeletedList,
       indexSelected: checkedList,
@@ -216,45 +230,45 @@ const DigitalBoard = React.forwardRef((props, ref) => {
       name: searchInfo.boardName,
       tagIdList: newSeletedList,
     });
-    setSearchInfo(prevState => ({
+    setSearchInfo((prevState) => ({
       ...prevState,
       tagIdList: newSeletedList,
       prevTagList: newSeletedList,
     }));
   };
   // 隐藏类型的选择事件
-  const hideTypeChange = checkedList => {
+  const hideTypeChange = (checkedList) => {
     const newSeletedList = [...typeSelect.indexSelected, ...checkedList];
-    setTypeTagData(prevState => ({
+    setTypeTagData((prevState) => ({
       ...prevState,
       indeterminate: !!checkedList.length && newSeletedList.length < typeTagData.typeList.length,
       checkAll: newSeletedList.length === typeTagData.typeList.length,
     }));
     // 后端查询
-    setSearchInfo(prevState => ({
+    setSearchInfo((prevState) => ({
       ...prevState,
       tagIdList: newSeletedList,
       prevHideTags: typeSelect.hideSelected,
     }));
     // 控制标签显示
-    setTypeSelect(typeSelect => ({
+    setTypeSelect((typeSelect) => ({
       ...typeSelect,
       selectedTypes: newSeletedList,
       hideSelected: checkedList,
     }));
   };
   // 选择全部标签
-  const onCheckAllChange = e => {
-    const checkedList = e.target.checked ? typeTagData.typeList.map(item => item.value) : [];
-    setTypeTagData(prevState => ({
+  const onCheckAllChange = (e) => {
+    const checkedList = e.target.checked ? typeTagData.typeList.map((item) => item.value) : [];
+    setTypeTagData((prevState) => ({
       ...prevState,
       indeterminate: false,
       checkAll: e.target.checked,
     }));
     setTypeSelect({
       selectedTypes: checkedList,
-      indexSelected: e.target.checked ? tagShow.indexTypes.map(item => item.value) : [],
-      hideSelected: e.target.checked ? tagShow.otherTypes.map(item => item.value) : [],
+      indexSelected: e.target.checked ? tagShow.indexTypes.map((item) => item.value) : [],
+      hideSelected: e.target.checked ? tagShow.otherTypes.map((item) => item.value) : [],
     });
 
     // 后端查询
@@ -264,13 +278,13 @@ const DigitalBoard = React.forwardRef((props, ref) => {
         name: searchInfo.boardName,
         tagIdList: checkedList,
       });
-      setSearchInfo(prevState => ({
+      setSearchInfo((prevState) => ({
         ...prevState,
         tagIdList: checkedList,
       }));
     } else {
       setBoardList([]);
-      setSearchInfo(prevState => ({
+      setSearchInfo((prevState) => ({
         ...prevState,
         tagIdList: [],
       }));
@@ -289,7 +303,7 @@ const DigitalBoard = React.forwardRef((props, ref) => {
     }
     setShowDropdown(false);
     // 设置上一次查询的tag列表
-    setSearchInfo(prevState => ({
+    setSearchInfo((prevState) => ({
       ...prevState,
       prevTagList: searchInfo.tagIdList,
     }));
@@ -298,7 +312,7 @@ const DigitalBoard = React.forwardRef((props, ref) => {
   // 处理标签选择取消
   const handleTagSeletedCanel = () => {
     if (searchInfo.prevTagList.length === typeTagData.typeList.length) {
-      setTypeTagData(prevState => ({
+      setTypeTagData((prevState) => ({
         ...prevState,
         indeterminate: false,
         checkAll: true,
@@ -306,7 +320,7 @@ const DigitalBoard = React.forwardRef((props, ref) => {
     }
     // 设置hidelist
     setShowDropdown(false);
-    setTypeSelect(prevState => ({
+    setTypeSelect((prevState) => ({
       ...prevState,
       selectedTypes: searchInfo.prevTagList,
       hideSelected: searchInfo.prevHideTags,
@@ -327,7 +341,7 @@ const DigitalBoard = React.forwardRef((props, ref) => {
     } else {
       if (boardList.length !== pagination.total) {
         const size = colSize === 4 ? 30 : colSize === 6 ? 12 : 9;
-        setPagination(prevState => ({
+        setPagination((prevState) => ({
           ...prevState,
           pageSize: pagination.pageSize + size,
         }));
@@ -342,8 +356,8 @@ const DigitalBoard = React.forwardRef((props, ref) => {
   };
 
   // 拖拽处理
-  const findCard = id => {
-    const item = boardList.find(c => c.id === id);
+  const findCard = (id) => {
+    const item = boardList.find((c) => c.id === id);
     return {
       item: item,
       index: boardList.indexOf(item),
@@ -362,12 +376,12 @@ const DigitalBoard = React.forwardRef((props, ref) => {
     orderBoard(
       requestClient,
       {
-        newCockpitPersonalOrderList: boardList.map(item => ({
+        newCockpitPersonalOrderList: boardList.map((item) => ({
           newCockpitBoardId: item.id,
           personalOrder: item.personalOrder,
         })),
       },
-      token,
+      token
     );
   };
 
@@ -377,7 +391,7 @@ const DigitalBoard = React.forwardRef((props, ref) => {
       <Menu style={{ width: 440 }} selectable={false}>
         <Menu.Item>
           <Checkbox.Group
-            style={{ width: '100%' }}
+            style={{ width: "100%" }}
             value={typeSelect.selectedTypes}
             onChange={hideTypeChange}
           >
@@ -388,10 +402,10 @@ const DigitalBoard = React.forwardRef((props, ref) => {
                     <Checkbox
                       value={item.value}
                       style={{
-                        width: '12ch',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                        overflow: 'hidden',
+                        width: "12ch",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
                       }}
                     >
                       {item.label}
@@ -403,7 +417,7 @@ const DigitalBoard = React.forwardRef((props, ref) => {
           </Checkbox.Group>
         </Menu.Item>
         <Menu.Divider />
-        <Menu.Item style={{ textAlign: 'right' }}>
+        <Menu.Item style={{ textAlign: "right" }}>
           <Space>
             <Button onClick={handleTagSeletedCanel}>取消</Button>
             <Button type="primary" onClick={handleTagSeletedOk}>
@@ -415,13 +429,13 @@ const DigitalBoard = React.forwardRef((props, ref) => {
     </div>
   );
 
-  const handleSearchBtn = value => {
+  const handleSearchBtn = (value) => {
     if (typeSelect.selectedTypes.length > 0) {
       requestBoardList({
         name: value,
         tagIdList: typeSelect.selectedTypes,
       });
-      setSearchInfo(prevState => ({
+      setSearchInfo((prevState) => ({
         ...prevState,
         boardName: value,
       }));
@@ -440,7 +454,7 @@ const DigitalBoard = React.forwardRef((props, ref) => {
               height: 36,
             }}
             placeholder="请输入看板名称"
-            onSearch={value => handleSearchBtn(value)}
+            onSearch={(value) => handleSearchBtn(value)}
           />
         </Col>
         {useTag && (
@@ -448,12 +462,12 @@ const DigitalBoard = React.forwardRef((props, ref) => {
             <Col
               style={{
                 marginLeft: 60,
-                borderRight: '1px solid #C4C4C4',
+                borderRight: "1px solid #C4C4C4",
               }}
             >
               <span>展示类型:</span>
               <Checkbox
-                style={{ margin: '0 30px' }}
+                style={{ margin: "0 30px" }}
                 indeterminate={typeTagData.indeterminate}
                 onChange={onCheckAllChange}
                 checked={typeTagData.checkAll}
@@ -475,10 +489,10 @@ const DigitalBoard = React.forwardRef((props, ref) => {
                       key={index}
                       value={item.value}
                       style={{
-                        width: '12ch',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                        overflow: 'hidden',
+                        width: "12ch",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
                       }}
                     >
                       {item.label}
@@ -489,14 +503,14 @@ const DigitalBoard = React.forwardRef((props, ref) => {
               {tagShow.otherTypes.length > 0 && (
                 <Dropdown
                   overlay={renderCheckGroup}
-                  trigger={['click']}
+                  trigger={["click"]}
                   visible={showDropdown}
                   placement="bottomRight"
                 >
                   <a
                     href="/#"
                     className="ant-dropdown-link"
-                    onClick={e => {
+                    onClick={(e) => {
                       e.preventDefault();
                       setShowDropdown(true);
                     }}
@@ -523,7 +537,7 @@ const DigitalBoard = React.forwardRef((props, ref) => {
             <Radio.Button value="8">大</Radio.Button>
           </Radio.Group>
         </Col>
-        <Col className={styles.operation} style={{ flex: '1 0 auto' }}>
+        <Col className={styles.operation} style={{ flex: "1 0 auto" }}>
           <Button onClick={() => setManageVisible(() => true)}>看板管理</Button>
           {permissionBtn.createButton && (
             <Button className="ml20" type="primary" onClick={() => setCreateVisible(() => true)}>
@@ -543,7 +557,7 @@ const DigitalBoard = React.forwardRef((props, ref) => {
           gutter={[16, 16]}
           style={{
             maxHeight: 820,
-            overflowY: 'auto',
+            overflowY: "auto",
           }}
           ref={boardListRef}
           onScroll={handleScroll}
@@ -568,55 +582,57 @@ const DigitalBoard = React.forwardRef((props, ref) => {
   }, [boardList, colHeight, colSize]);
 
   return (
-    <div
-      style={{
-        height: 897,
-        padding: 12,
-        overflow: 'hidden',
-      }}
-      id="capture"
-    >
+    <ConfigProvider prefixCls="antd">
       <div
         style={{
-          height: '100%',
-          background: 'white',
+          height: 897,
           padding: 12,
+          overflow: "hidden",
         }}
+        id="capture"
       >
-        {queryForm()}
-        {!_.isEmpty(boardList) ? (
-          renderBoardList
-        ) : (
-          <Empty style={{ marginTop: 300 }} description="暂无看板数据" />
+        <div
+          style={{
+            height: "100%",
+            background: "white",
+            padding: 12,
+          }}
+        >
+          {queryForm()}
+          {!_.isEmpty(boardList) ? (
+            renderBoardList
+          ) : (
+            <Empty style={{ marginTop: 300 }} description="暂无看板数据" />
+          )}
+        </div>
+        {/* 新建看板 */}
+        {createVisible && (
+          <BoardCreate
+            visible={createVisible}
+            onClose={handleCreateClose}
+            history={props.history}
+            deptUserTree={props.deptUserTree}
+            requestClient={requestClient}
+            baseUrl={baseUrl}
+            token={token}
+            userInfo={userInfo}
+            useTag={useTag}
+          />
+        )}
+        {/* 看板管理 */}
+        {manageVisible && (
+          <BoardManage
+            visible={manageVisible}
+            onClose={handleManageClose}
+            requestBoardList={requestBoardList}
+            requestTypeList={requestTypeList}
+            delButton={permissionBtn.delButton}
+            requestClient={requestClient}
+            token={token}
+          />
         )}
       </div>
-      {/* 新建看板 */}
-      {createVisible && (
-        <BoardCreate
-          visible={createVisible}
-          onClose={handleCreateClose}
-          history={props.history}
-          deptUserTree={props.deptUserTree}
-          requestClient={requestClient}
-          baseUrl={baseUrl}
-          token={token}
-          userInfo={userInfo}
-          useTag={useTag}
-        />
-      )}
-      {/* 看板管理 */}
-      {manageVisible && (
-        <BoardManage
-          visible={manageVisible}
-          onClose={handleManageClose}
-          requestBoardList={requestBoardList}
-          requestTypeList={requestTypeList}
-          delButton={permissionBtn.delButton}
-          requestClient={requestClient}
-          token={token}
-        />
-      )}
-    </div>
+    </ConfigProvider>
   );
 });
 

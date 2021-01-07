@@ -8,19 +8,7 @@ Install dependencies,
 $ npm i
 ```
 
-Start the dev server,
-
-```bash
-$ npm start
-```
-
-Build documentation,
-
-```bash
-$ npm run docs:build
-```
-
-Build library via `father-build`,
+Build library via webpack,
 
 ```bash
 $ npm run build

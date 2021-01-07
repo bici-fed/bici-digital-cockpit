@@ -1,16 +1,21 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { CheckCircleFilled, UploadOutlined } from '@ant-design/icons';
-import { Form, Modal, Button, Radio, Input, Upload, TreeSelect } from 'antd';
-import { BiciTagsManager, biciNotification } from 'bici-transformers';
-import { deleteTags, getTagsList, saveTags, updateTags } from '@/apis/tag';
-import { createBoard, modifyBoard } from '@/apis/board';
+import React, { useState, useEffect, useCallback } from "react";
+import { CheckCircleFilled, UploadOutlined } from "@ant-design/icons";
+import { Form, Modal, Button, Radio, Input, Upload, TreeSelect } from "antd";
+import { BiciTagsManager, biciNotification } from "bici-transformers";
+import { deleteTags, getTagsList, saveTags, updateTags } from "@/apis/tag";
+import { createBoard, modifyBoard } from "@/apis/board";
 // import { requestDepartmentList } from '@/apis/equipmentLedger';
-import { fileDelete, batchFileMappingId, requestUploadDetail } from '@/apis/file';
+import { fileDelete, batchFileMappingId, requestUploadDetail } from "@/apis/file";
 // 外部传
 // import { shareDomain } from '@/config';
 
-import _ from 'lodash';
-import styles from './index.module.css';
+import board1 from "@/assets/img/board-1.jpg";
+import board2 from "@/assets/img/board-2.jpg";
+import board3 from "@/assets/img/board-3.jpg";
+import board4 from "@/assets/img/board-4.jpg";
+
+import _ from "lodash";
+import styles from "./index.module.css";
 
 const deviceType = 13;
 const formItemLayout = {
@@ -18,7 +23,7 @@ const formItemLayout = {
   wrapperCol: { span: 19 },
 };
 
-const BoardCreate = props => {
+const BoardCreate = (props) => {
   const {
     visible,
     data,
@@ -53,14 +58,16 @@ const BoardCreate = props => {
 
   // 请求所有看板类型
   const requestTypes = useCallback(async () => {
-    const { tagList } = await getTagsList(requestClient, { deviceType }, token);
-    const tags = tagList.map(tag => {
-      return { id: tag.tagId, name: tag.tagName };
-    });
-    setTypes(tags);
+    if (useTag) {
+      const { tagList } = await getTagsList(requestClient, { deviceType }, token);
+      const tags = tagList.map((tag) => {
+        return { id: tag.tagId, name: tag.tagName };
+      });
+      setTypes(tags);
+    }
     if (data) {
       // 编辑状态，回显
-      const editTags = tags.filter(item => data.tagIdList.includes(item.id));
+      const editTags = tags.filter((item) => data.tagIdList.includes(item.id));
       setSelectedTypes(() => editTags);
     }
   }, [data]);
@@ -77,25 +84,25 @@ const BoardCreate = props => {
           coverRadio = 2;
           // 上传图片回显
           requestUploadDetail(requestClient, { mappingType: 105, mappingId: data.id }, token).then(
-            res => {
-              const files = res.map(item => ({
+            (res) => {
+              const files = res.map((item) => ({
                 uid: item.id,
-                name: item.name.substr(0, 45) + (item.name.length > 45 ? '...' : ''),
-                status: 'done',
+                name: item.name.substr(0, 45) + (item.name.length > 45 ? "..." : ""),
+                status: "done",
                 url: item.url,
               }));
               setFileList(() => files);
-            },
+            }
           );
         }
       }
 
       setPicType(data.thumbnailType);
 
-      let permissionTree = (data.newCockpitVisibleConfigList || []).map(item => item.userId);
+      let permissionTree = (data.newCockpitVisibleConfigList || []).map((item) => item.userId);
       // 选择树没有当前用户，不回显
-      if (!_.isEmpty(treeData) && !treeData.map(item => item.value).includes(userInfo.id)) {
-        permissionTree = permissionTree.filter(id => id !== userInfo.id);
+      if (!_.isEmpty(treeData) && !treeData.map((item) => item.value).includes(userInfo.id)) {
+        permissionTree = permissionTree.filter((id) => id !== userInfo.id);
       }
       form.setFieldsValue({
         code: data.code,
@@ -128,12 +135,12 @@ const BoardCreate = props => {
         name: editedName,
         deviceType,
       },
-      token,
+      token
     ).then(() => {
       const selectedTypesData = _.cloneDeep(selectedTypes);
       const typesData = _.cloneDeep(types);
-      const index = typesData.findIndex(tag => tag.id === editedId);
-      const index2 = selectedTypesData.findIndex(tag => tag.id === editedId);
+      const index = typesData.findIndex((tag) => tag.id === editedId);
+      const index2 = selectedTypesData.findIndex((tag) => tag.id === editedId);
       typesData[index].name = editedName;
       if (index2 >= 0) {
         selectedTypesData[index2].name = editedName;
@@ -152,8 +159,8 @@ const BoardCreate = props => {
       deleteTags(requestClient, { id: toDeleteId }, token).then(() => {
         const selectedTypesData = _.cloneDeep(selectedTypes);
         const typesData = _.cloneDeep(types);
-        const index = typesData.findIndex(tag => tag.id === toDeleteId);
-        const index2 = selectedTypesData.findIndex(tag => tag.id === toDeleteId);
+        const index = typesData.findIndex((tag) => tag.id === toDeleteId);
+        const index2 = selectedTypesData.findIndex((tag) => tag.id === toDeleteId);
         typesData.splice(index, 1);
         if (index2 >= 0) {
           selectedTypesData.splice(index2, 2);
@@ -165,22 +172,22 @@ const BoardCreate = props => {
       });
     } else {
       //仅去掉视图上显示
-      const index = selectedTypes.findIndex(tag => tag.id === toDeleteId);
+      const index = selectedTypes.findIndex((tag) => tag.id === toDeleteId);
       selectedTypes.splice(index, 1);
       setSelectedTypes(() => selectedTypes);
     }
   };
 
   // 创建标签
-  const handleCreateTag = newTagName => {
+  const handleCreateTag = (newTagName) => {
     saveTags(
       requestClient,
       {
         deviceType,
         name: newTagName,
       },
-      token,
-    ).then(res => {
+      token
+    ).then((res) => {
       const selectedTypesData = _.cloneDeep(selectedTypes);
       const typesData = _.cloneDeep(types);
       let newTag = { id: res.id, name: res.name };
@@ -192,15 +199,15 @@ const BoardCreate = props => {
   };
 
   // 选择标签
-  const handleSelectTag = toSetDataSource => {
+  const handleSelectTag = (toSetDataSource) => {
     setSelectedTypes(toSetDataSource);
   };
 
   // 模态框确认处理
   const handleOk = () => {
-    form.validateFields().then(values => {
+    form.validateFields().then((values) => {
       if (useTag && _.isEmpty(selectedTypes)) {
-        biciNotification.error({ message: '必须选择看板类型!' });
+        biciNotification.error({ message: "必须选择看板类型!" });
         return;
       }
 
@@ -208,11 +215,11 @@ const BoardCreate = props => {
       const { name, remark, updateAuth, deptUser, coverRadio } = values;
 
       //
-      const newCockpitVisibleConfigList = deptUser.map(id => {
+      const newCockpitVisibleConfigList = deptUser.map((id) => {
         return { userId: id };
       });
       // 没有选择登录用户，添加
-      if (!newCockpitVisibleConfigList.map(item => item.userId).includes(userId)) {
+      if (!newCockpitVisibleConfigList.map((item) => item.userId).includes(userId)) {
         newCockpitVisibleConfigList.push({ userId: userId });
       }
 
@@ -223,7 +230,7 @@ const BoardCreate = props => {
         updateAuth,
         links: `${window.location.origin}/newCockpit`,
         newCockpitVisibleConfigList,
-        tagIdList: selectedTypes.map(item => item.id),
+        tagIdList: selectedTypes.map((item) => item.id),
       };
       if (picType) {
         distParams.thumbnailType = picType;
@@ -243,7 +250,7 @@ const BoardCreate = props => {
       if (data) {
         // 更新看板方法
         distParams.id = data.id;
-        modifyBoard(requestClient, distParams, token).then(res => {
+        modifyBoard(requestClient, distParams, token).then((res) => {
           //   biciNotification.success({ message: '更新成功!' });
           // 关闭模态框
           props.onClose();
@@ -252,7 +259,7 @@ const BoardCreate = props => {
       } else {
         // 调用创建看板方法
         createBoard(requestClient, distParams, token)
-          .then(res => {
+          .then((res) => {
             if (fileList.length > 0) {
               // 如果上传了图片，更新图片看板id
               batchFileMappingId(
@@ -262,22 +269,22 @@ const BoardCreate = props => {
                   mappingType: 105,
                   mappingId: res,
                 },
-                token,
+                token
               )
-                .then(res => {})
-                .catch(error => {
-                  biciNotification.error({ message: '图片上传失败!' });
+                .then((res) => {})
+                .catch((error) => {
+                  biciNotification.error({ message: "图片上传失败!" });
                 });
             }
 
-            biciNotification.success({ message: '创建成功!' });
+            biciNotification.success({ message: "创建成功!" });
             // 关闭模态框
             props.onClose();
             // 跳转到配置页面
             history.push({ pathname: `/newBoard/${res}` });
           })
-          .catch(err => {
-            biciNotification.error({ message: '创建失败!' });
+          .catch((err) => {
+            biciNotification.error({ message: "创建失败!" });
           });
       }
     });
@@ -286,29 +293,34 @@ const BoardCreate = props => {
   // 渲染看板可选的缩略图
   const renderCover = () => {
     const coverCode = [1, 2, 3, 4];
-    const prefixImgStyle = { width: 94, height: 66, cursor: 'pointer' };
+    const prefixImgStyle = { width: 94, height: 66, cursor: "pointer" };
 
-    return coverCode.map(code => {
-      const src = require(`@/assets/img/board-${code}.jpg`);
+    return coverCode.map((code) => {
+      const srcMap = { 1: board1, 2: board2, 3: board3, 4: board4 };
+      const src = srcMap[code];
       const isActive = picType === code;
       return (
-        <div style={{ position: 'relative', marginRight: 8 }} key={code}>
+        <div style={{ position: "relative", marginRight: 8 }} key={code}>
           <img
             style={prefixImgStyle}
             alt={`board-cover-${code}`}
             src={src}
             onClick={() => {
-              setPicType(() => code);
+              setPicType(code);
             }}
           />
-          {isActive && <CheckCircleFilled className={styles.boardCover} />}
+          {isActive && (
+            <CheckCircleFilled
+              style={{ position: "absolute", top: 2, right: 2, fontSize: 16, color: "#1890ff" }}
+            />
+          )}
         </div>
       );
     });
   };
 
   // 上传图片前回调
-  const beforeUpload = file => {
+  const beforeUpload = (file) => {
     const acceptFileType = `image/jpeg,image/jpg,image/png`;
     // 文件大小限制，最大为5M
     const sizeLimit = 1024 * 1024 * 5;
@@ -318,7 +330,7 @@ const BoardCreate = props => {
       return false;
     }
     if (!type || acceptFileType.indexOf(type) === -1) {
-      biciNotification.info({ message: '不支持上传此文件格式' });
+      biciNotification.info({ message: "不支持上传此文件格式" });
       return false;
     }
 
@@ -326,9 +338,9 @@ const BoardCreate = props => {
   };
 
   // 处理图片radio改变
-  const handleChangePic = e => {
+  const handleChangePic = (e) => {
     if (e.target.value !== 2 && fileList.length !== 0) {
-      biciNotification.error({ message: '请先删除图片!' });
+      biciNotification.error({ message: "请先删除图片!" });
       form.setFieldsValue({ coverRadio: 2 });
       return;
     }
@@ -345,20 +357,20 @@ const BoardCreate = props => {
   // 处理图片上传
   const handleUploadChange = ({ fileList }) => {
     setPicType(() => undefined);
-    setFileList(() => fileList.filter(file => !!file.status));
+    setFileList(() => fileList.filter((file) => !!file.status));
   };
   // 处理图片移除
-  const handleUploadRemove = file => {
+  const handleUploadRemove = (file) => {
     if (data) {
       // 回显时删除
-      fileDelete(requestClient, { id: fileList[0].uid }, token).then(res => {});
+      fileDelete(requestClient, { id: fileList[0].uid }, token).then((res) => {});
     } else {
       // 创建时删除
-      fileDelete(requestClient, { id: file.response.data[0] }, token).then(res => {});
+      fileDelete(requestClient, { id: file.response.data[0] }, token).then((res) => {});
     }
   };
   // 处理树形选择
-  const handleTreeChange = value => {
+  const handleTreeChange = (value) => {
     form.setFieldsValue({ deptUser: value });
   };
 
@@ -366,41 +378,40 @@ const BoardCreate = props => {
   const renderForm = () => {
     return (
       <Form {...formItemLayout} form={form} name="boardCreateForm">
-        <Form.Item label="看板编号" name="code" style={{ marginBottom: 16 }}>
+        <Form.Item label="看板编号" name="code">
           <Input disabled placeholder="新建成功后将自动生成" />
         </Form.Item>
         <Form.Item
           label="看板名称"
           name="name"
           rules={[
-            { required: true, whitespace: true, message: '必填项' },
-            { max: 20, message: '最多输入20位字符' },
+            { required: true, whitespace: true, message: "必填项" },
+            { max: 20, message: "最多输入20位字符" },
           ]}
-          style={{ marginBottom: 16 }}
         >
           <Input
             placeholder="请输入看板名称"
             maxLength="20"
             suffix={`${textLength.nameLen}/20`}
             onChange={() => {
-              setTextLength(prevState => ({
+              setTextLength((prevState) => ({
                 ...prevState,
-                nameLen: form.getFieldValue('name').length,
+                nameLen: form.getFieldValue("name").length,
               }));
             }}
           />
         </Form.Item>
 
         {useTag && (
-          <Form.Item style={{ marginBottom: 16 }}>
+          <Form.Item>
             <BiciTagsManager
               labelElement={
                 <div
                   style={{
                     fontSize: 12,
                     width: 87,
-                    lineHeight: '32px',
-                    textAlign: 'right',
+                    lineHeight: "32px",
+                    textAlign: "right",
                   }}
                 >
                   看板类型：
@@ -420,8 +431,7 @@ const BoardCreate = props => {
         <Form.Item
           label="可见权限"
           name="deptUser"
-          rules={[{ required: true, message: '必填项!' }]}
-          style={{ marginBottom: 16 }}
+          rules={[{ required: true, message: "必填项!" }]}
         >
           {!_.isEmpty(treeData) && (
             <TreeSelect
@@ -439,41 +449,39 @@ const BoardCreate = props => {
         <Form.Item
           label="修改权限"
           name="updateAuth"
-          rules={[{ required: true, message: '请选择一个' }]}
-          style={{ marginBottom: 16 }}
+          rules={[{ required: true, message: "请选择一个" }]}
         >
           <Radio.Group>
             <Radio value={1}>允许他人编辑与删除</Radio>
             <Radio value={2}>禁止他人编辑与删除</Radio>
           </Radio.Group>
         </Form.Item>
-        <Form.Item label="简介" style={{ marginBottom: 16 }}>
-          <Form.Item name="remark" noStyle rules={[{ max: 100, message: '最多输入100位字符' }]}>
+        <Form.Item label="简介">
+          <Form.Item name="remark" noStyle rules={[{ max: 100, message: "最多输入100位字符" }]}>
             <Input.TextArea
               placeholder="请输入看板描述"
               maxLength="100"
               onChange={() => {
-                setTextLength(prevState => ({
+                setTextLength((prevState) => ({
                   ...prevState,
-                  remarkLen: form.getFieldValue('remark').length,
+                  remarkLen: form.getFieldValue("remark").length,
                 }));
               }}
             />
           </Form.Item>
-          <div style={{ textAlign: 'right' }}>{textLength.remarkLen}/100字</div>
+          <div style={{ textAlign: "right" }}>{textLength.remarkLen}/100字</div>
         </Form.Item>
         <Form.Item
           label="看板封面"
           name="coverRadio"
-          rules={[{ required: true, message: '请选择一个' }]}
-          style={{ marginBottom: 16 }}
+          rules={[{ required: true, message: "请选择一个" }]}
         >
-          <Radio.Group onChange={handleChangePic} style={{ paddingTop: '7px' }}>
+          <Radio.Group onChange={handleChangePic} style={{ paddingTop: "7px" }}>
             <Radio value={0}>
               使用默认缩略图
               <div
                 className="mt6"
-                style={{ display: 'flex', justifyContent: 'space-between', paddingLeft: 20 }}
+                style={{ display: "flex", justifyContent: "space-between", paddingLeft: 20 }}
               >
                 {renderCover()}
               </div>
@@ -511,8 +519,8 @@ const BoardCreate = props => {
     <>
       <Modal
         centered
-        getContainer={data ? document.querySelector('#editLayout') : false}
-        title={data ? '配置看板' : '新建看板'}
+        getContainer={data ? document.querySelector("#editLayout") : false}
+        title={data ? "配置看板" : "新建看板"}
         width={580}
         visible={visible}
         onCancel={onClose}
