@@ -32,7 +32,7 @@ module.exports = ["source-map"].map((devtool) => ({
             options: {
               lessOptions: {
                 modifyVars: {
-                  "@ant-prefix": "antd",
+                  "@ant-prefix": "antd-bici-cockpit",
                 },
                 javascriptEnabled: true,
               },

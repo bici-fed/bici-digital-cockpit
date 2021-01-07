@@ -1,16 +1,16 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Modal } from 'antd';
-import BoardCreate from '../DigitalBoard/BoardCreate';
-import { fetchBoardDetail, updateBoardConfigProp } from '@/apis/board';
-import { getEncryption } from '@/utils/index';
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import { Modal, ConfigProvider } from "antd";
+import BoardCreate from "../DigitalBoard/BoardCreate";
+import { fetchBoardDetail, updateBoardConfigProp } from "@/apis/board";
+import { getEncryption } from "@/utils/index";
 
-import preBgImg1 from '@/assets/img/pre_bgimg_1.jpg';
-import preBgImg2 from '@/assets/img/pre_bgimg_2.jpg';
-import preBgImg3 from '@/assets/img/pre_bgimg_3.jpg';
+import preBgImg1 from "@/assets/img/pre_bgimg_1.jpg";
+import preBgImg2 from "@/assets/img/pre_bgimg_2.jpg";
+import preBgImg3 from "@/assets/img/pre_bgimg_3.jpg";
 
 let isSave = false;
 
-const DigitalCockpit = props => {
+const DigitalCockpit = (props) => {
   const {
     baseUrl,
     token,
@@ -35,103 +35,103 @@ const DigitalCockpit = props => {
 
   const industrialLibrary = [
     {
-      name: '编组 84',
-      url: require('@/assets/img/industrial/编组 84.svg'),
+      name: "编组 84",
+      url: require("@/assets/img/industrial/编组 84.svg"),
     },
     {
-      name: '操作机',
-      url: require('@/assets/img/industrial/操作机.svg'),
+      name: "操作机",
+      url: require("@/assets/img/industrial/操作机.svg"),
     },
     {
-      name: '淬火池',
-      url: require('@/assets/img/industrial/淬火池.svg'),
+      name: "淬火池",
+      url: require("@/assets/img/industrial/淬火池.svg"),
     },
     {
-      name: '电炉',
-      url: require('@/assets/img/industrial/电炉.svg'),
+      name: "电炉",
+      url: require("@/assets/img/industrial/电炉.svg"),
     },
     {
-      name: '电渣炉',
-      url: require('@/assets/img/industrial/电渣炉.svg'),
+      name: "电渣炉",
+      url: require("@/assets/img/industrial/电渣炉.svg"),
     },
     {
-      name: '锻压机',
-      url: require('@/assets/img/industrial/锻压机.svg'),
+      name: "锻压机",
+      url: require("@/assets/img/industrial/锻压机.svg"),
     },
     {
-      name: '钢包',
-      url: require('@/assets/img/industrial/钢包.svg'),
+      name: "钢包",
+      url: require("@/assets/img/industrial/钢包.svg"),
     },
     {
-      name: '轨道衡',
-      url: require('@/assets/img/industrial/轨道衡.svg'),
+      name: "轨道衡",
+      url: require("@/assets/img/industrial/轨道衡.svg"),
     },
     {
-      name: '环形加热炉',
-      url: require('@/assets/img/industrial/环形加热炉.svg'),
+      name: "环形加热炉",
+      url: require("@/assets/img/industrial/环形加热炉.svg"),
     },
     {
-      name: '回转台',
-      url: require('@/assets/img/industrial/回转台.svg'),
+      name: "回转台",
+      url: require("@/assets/img/industrial/回转台.svg"),
     },
     {
-      name: '精炼炉',
-      url: require('@/assets/img/industrial/精炼炉.svg'),
+      name: "精炼炉",
+      url: require("@/assets/img/industrial/精炼炉.svg"),
     },
     {
-      name: '矩形加热炉',
-      url: require('@/assets/img/industrial/矩形加热炉.svg'),
+      name: "矩形加热炉",
+      url: require("@/assets/img/industrial/矩形加热炉.svg"),
     },
     {
-      name: '连铸机',
-      url: require('@/assets/img/industrial/连铸机.svg'),
+      name: "连铸机",
+      url: require("@/assets/img/industrial/连铸机.svg"),
     },
     {
-      name: '料仓',
-      url: require('@/assets/img/industrial/料仓.svg'),
+      name: "料仓",
+      url: require("@/assets/img/industrial/料仓.svg"),
     },
     {
-      name: '台车炉',
-      url: require('@/assets/img/industrial/台车炉.svg'),
+      name: "台车炉",
+      url: require("@/assets/img/industrial/台车炉.svg"),
     },
     {
-      name: '轧机',
-      url: require('@/assets/img/industrial/轧机.svg'),
+      name: "轧机",
+      url: require("@/assets/img/industrial/轧机.svg"),
     },
     {
-      name: '转炉',
-      url: require('@/assets/img/industrial/转炉.svg'),
+      name: "转炉",
+      url: require("@/assets/img/industrial/转炉.svg"),
     },
     {
-      name: 'AOD',
-      url: require('@/assets/img/industrial/AOD.svg'),
+      name: "AOD",
+      url: require("@/assets/img/industrial/AOD.svg"),
     },
     {
-      name: 'LF',
-      url: require('@/assets/img/industrial/LF.svg'),
+      name: "LF",
+      url: require("@/assets/img/industrial/LF.svg"),
     },
     {
-      name: 'RH',
-      url: require('@/assets/img/industrial/RH.svg'),
+      name: "RH",
+      url: require("@/assets/img/industrial/RH.svg"),
     },
   ];
 
   const selfIndustrialLibrary = [
     {
-      name: '9',
-      url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+      name: "9",
+      url: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
       width: 100,
       height: 100,
-      type: 'image',
-      key: '8',
+      type: "image",
+      key: "8",
     },
     {
-      name: '10',
-      url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+      name: "10",
+      url: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
       width: 100,
       height: 100,
-      type: 'image',
-      key: '9',
+      type: "image",
+      key: "9",
     },
   ];
 
@@ -140,49 +140,49 @@ const DigitalCockpit = props => {
     self: {
       baseURL: baseUrl,
       token: token,
-      url: '/api/file/file/uploadReturnPath',
+      url: "/api/file/file/uploadReturnPath",
       apiUrl: {
-        list: '/applications/custom/component/componentList',
-        delete: '/file/file/delete',
-        update: '/file/file/updateFile',
+        list: "/applications/custom/component/componentList",
+        delete: "/file/file/delete",
+        update: "/file/file/updateFile",
       },
       data: {
         mappingId: boardData.companyId,
-        mappingType: '106',
+        mappingType: "106",
       },
     },
     preInstall: {
       baseURL: baseUrl,
       token: token,
-      url: '/api/file/file/uploadReturnPath',
+      url: "/api/file/file/uploadReturnPath",
       data: {
         mappingId: boardData.companyId,
-        mappingType: '107',
+        mappingType: "107",
       },
     },
     combineCom: {
       apiURL: baseUrl,
       token: token,
       list: {
-        url: '/applications/customComponent/list',
+        url: "/applications/customComponent/list",
         params: {},
       },
       add: {
-        url: '/applications/customComponent/save',
+        url: "/applications/customComponent/save",
         params: {},
       },
       delete: {
-        url: '/applications/customComponent/delete',
+        url: "/applications/customComponent/delete",
         params: {},
       },
       rename: {
-        url: '/applications/customComponent/update',
+        url: "/applications/customComponent/update",
         params: {},
       },
     },
   };
 
-  const getBoardDetail = useCallback(async isUpdateEdit => {
+  const getBoardDetail = useCallback(async (isUpdateEdit) => {
     const id = boardId;
     const data = await fetchBoardDetail(requestClient, { id }, token);
     if (data) {
@@ -200,15 +200,15 @@ const DigitalCockpit = props => {
   }, [getBoardDetail]);
 
   // 保存数据到数据库
-  const handleSaveEditorData = data => {
+  const handleSaveEditorData = (data) => {
     updateBoardConfigProp(
       requestClient,
       {
         id: boardId,
         property: JSON.stringify(data),
       },
-      token,
-    ).then(res => {});
+      token
+    ).then((res) => {});
     // screenshot  缩略图文件
     if (boardData.thumbnailType === 0 && data.screenshot) {
       // 在上传新的图片
@@ -220,7 +220,7 @@ const DigitalCockpit = props => {
     }
   };
 
-  const handlePoweroff = location => {
+  const handlePoweroff = (location) => {
     if (!isSave && !editorRef.current?.getIsSave()) {
       confirmAgainModal(location);
       return false;
@@ -228,13 +228,13 @@ const DigitalCockpit = props => {
     return true;
   };
 
-  const confirmAgainModal = location => {
+  const confirmAgainModal = (location) => {
     if (!editorRef.current?.getIsSave()) {
       Modal.confirm({
-        title: '当前界面有未保存的内容，是否确认退出？',
-        okText: '确认退出',
-        cancelText: '返回编辑',
-        getContainer: () => document.querySelector('#editLayout'),
+        title: "当前界面有未保存的内容，是否确认退出？",
+        okText: "确认退出",
+        cancelText: "返回编辑",
+        getContainer: () => document.querySelector("#editLayout"),
         onOk: () => {
           isSave = true;
           Modal.destroyAll();
@@ -252,10 +252,10 @@ const DigitalCockpit = props => {
       `/newCockpit/${getEncryption(
         JSON.stringify({
           isShare: false,
-          id: '',
-        }),
+          id: "",
+        })
       )}`,
-      '_blank',
+      "_blank"
     );
     // props.history.push(`/newCockpit/${getEncryption(JSON.stringify({ isShare: false, id: props.match.params.id }))}`)
   };
@@ -269,7 +269,7 @@ const DigitalCockpit = props => {
   };
 
   return (
-    <React.Fragment>
+    <ConfigProvider prefixCls="antd-bici-cockpit">
       {EditorLayout && (
         <EditorLayout
           history={props.history}
@@ -304,7 +304,7 @@ const DigitalCockpit = props => {
         />
       )}
       {Prompt && <Prompt message={handlePoweroff} />}
-    </React.Fragment>
+    </ConfigProvider>
   );
 };
 

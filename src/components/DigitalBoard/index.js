@@ -36,7 +36,7 @@ import "antd/dist/antd.less";
 import styles from "./index.module.css";
 
 const DigitalBoard = React.forwardRef((props, ref) => {
-  const { token, permissionBtn, userInfo, useTag, requestClient, baseUrl } = props;
+  const { token, permissionBtn, userInfo, useTag, requestClient, baseUrl, wrapperStyle } = props;
 
   // 卡片列占比，默认4列
   const [colSize, setColSize] = useState(6);
@@ -582,12 +582,13 @@ const DigitalBoard = React.forwardRef((props, ref) => {
   }, [boardList, colHeight, colSize]);
 
   return (
-    <ConfigProvider prefixCls="antd">
+    <ConfigProvider prefixCls="antd-bici-cockpit">
       <div
         style={{
           height: 897,
           padding: 12,
           overflow: "hidden",
+          ...wrapperStyle,
         }}
         id="capture"
       >
