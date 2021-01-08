@@ -1,15 +1,16 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Space, Modal, Tag, Popconfirm, Tooltip } from 'antd';
-import { biciNotification, ComplexTable } from 'bici-transformers';
-import { getEncryption } from '@/utils/index';
-import { BOARD_QUERY_PARAMS_KEY } from '@/constant/index';
-import { deleteBoard, orderBoard, fetchBoardList } from '@/apis/board';
-import _ from 'lodash';
+import React, { useState, useEffect, useCallback } from "react";
+import { Space, Modal, Tag, Popconfirm, Tooltip } from "antd";
+import { biciNotification, ComplexTable } from "bici-transformers";
+import { getEncryption } from "@/utils/index";
+import { BOARD_QUERY_PARAMS_KEY } from "@/constant/index";
+import { deleteBoard, orderBoard, fetchBoardList } from "@/apis/board";
+import _ from "lodash";
+import BiciDraggableModal from '../BiciDraggableModal'
 
 const initialQueryParams = {
-  code: '', // 看板编号
-  name: '', // 看板名称
-  tagName: '', // 标签name
+  code: "", // 看板编号
+  name: "", // 看板名称
+  tagName: "", // 标签name
   pagination: {
     // 分页信息
     current: 1,
@@ -18,8 +19,17 @@ const initialQueryParams = {
   },
 };
 
-const BoardManage = props => {
-  const { visible, delButton, requestClient, token } = props;
+const BoardManage = (props) => {
+  const {
+    useTag,
+    visible,
+    delButton,
+    requestClient,
+    token,
+    draggable = false,
+    modalProps,
+    complexTableProps,
+  } = props;
 
   // 看板列表
   const [dataList, setDataList] = useState([]);
@@ -30,7 +40,7 @@ const BoardManage = props => {
 
   // 请求所有面板数据
   const requestBoardList = useCallback(
-    async params => {
+    async (params) => {
       const queryParams = JSON.parse(localStorage.getItem(BOARD_QUERY_PARAMS_KEY));
       // const { queryParams } = store.getState().board;
       const isQueryParamsEmpty = _.isEmpty(queryParams);
@@ -50,7 +60,7 @@ const BoardManage = props => {
       setPage(distParams.pagination);
       setDataList(list);
     },
-    [setDataList],
+    [setDataList]
   );
 
   useEffect(() => {
@@ -58,14 +68,14 @@ const BoardManage = props => {
   }, [requestBoardList]);
 
   // 表格数据发生变化
-  const handleTableChange = pagination => {
+  const handleTableChange = (pagination) => {
     const queryParams = JSON.parse(localStorage.getItem(BOARD_QUERY_PARAMS_KEY));
     // const { queryParams } = store.getState().board;
     const distParams = { ...queryParams, pagination };
     requestBoardList(distParams);
   };
   // 筛选条件改变的回调
-  const handleFilterTagsChange = filterTags => {
+  const handleFilterTagsChange = (filterTags) => {
     const queryParams = JSON.parse(localStorage.getItem(BOARD_QUERY_PARAMS_KEY));
     // const { queryParams } = store.getState().board;
     const { pagination } = queryParams;
@@ -78,10 +88,10 @@ const BoardManage = props => {
       distParams = { ...copyInitialQueryParams, pagination: { ...distPagination } };
     } else {
       let { dataIndex } = filterTags;
-      if (dataIndex === 'typeName') {
-        dataIndex = 'tagName';
+      if (dataIndex === "typeName") {
+        dataIndex = "tagName";
       }
-      distParams = { [dataIndex]: '', pagination: { ...distPagination } };
+      distParams = { [dataIndex]: "", pagination: { ...distPagination } };
     }
 
     requestBoardList(distParams);
@@ -94,28 +104,28 @@ const BoardManage = props => {
     let filterTags = [];
     if (!isQueryParamsEmpty) {
       const { code, name, tagName } = queryParams;
-      code && filterTags.push({ filterType: 'search', dataIndex: 'code', val: code });
-      name && filterTags.push({ filterType: 'search', dataIndex: 'name', val: name });
-      tagName && filterTags.push({ filterType: 'search', dataIndex: 'typeName', val: tagName });
+      code && filterTags.push({ filterType: "search", dataIndex: "code", val: code });
+      name && filterTags.push({ filterType: "search", dataIndex: "name", val: name });
+      tagName && filterTags.push({ filterType: "search", dataIndex: "typeName", val: tagName });
     }
     return filterTags;
   };
 
   // 删除
-  const confirmDelete = async item => {
+  const confirmDelete = async (item) => {
     if (item.updateAuth !== 1) {
-      biciNotification.error({ message: '无权删除该看板!' });
+      biciNotification.error({ message: "无权删除该看板!" });
       return;
     }
 
     const res = await deleteBoard(requestClient, { id: item.id }, token);
     if (res) {
-      biciNotification.success({ message: '删除成功!' });
+      biciNotification.success({ message: "删除成功!" });
       requestBoardList();
       props.requestBoardList();
       props.requestTypeList();
     } else {
-      biciNotification.error({ message: '删除失败!' });
+      biciNotification.error({ message: "删除失败!" });
     }
   };
 
@@ -129,7 +139,7 @@ const BoardManage = props => {
   };
 
   // 前移
-  const onMoveUp = index => {
+  const onMoveUp = (index) => {
     let dataTemp = _.cloneDeep(dataList);
     if (index !== 0) {
       // 当前对象的排序值
@@ -146,9 +156,9 @@ const BoardManage = props => {
         ],
       };
       // 排序
-      orderBoard(requestClient, params, token).then(res => {
+      orderBoard(requestClient, params, token).then((res) => {
         if (res) {
-          console.log('page', page);
+          console.log("page", page);
           requestBoardList({
             pagination: { current: page.current, pageSize: page.pageSize },
           });
@@ -162,8 +172,8 @@ const BoardManage = props => {
         {
           pagination: { current: page.current - 1, pageSize: page.pageSize },
         },
-        token,
-      ).then(res => {
+        token
+      ).then((res) => {
         const prePageList = res.list;
 
         const params = {
@@ -180,7 +190,7 @@ const BoardManage = props => {
         };
 
         // 排序
-        orderBoard(requestClient, params, token).then(res => {
+        orderBoard(requestClient, params, token).then((res) => {
           if (res) {
             requestBoardList({
               pagination: { current: page.current, pageSize: page.pageSize },
@@ -192,7 +202,7 @@ const BoardManage = props => {
     }
   };
   // 后移
-  const onMoveDown = index => {
+  const onMoveDown = (index) => {
     let dataTemp = _.cloneDeep(dataList);
     if (index !== dataTemp.length - 1) {
       // 当前对象的排序值
@@ -209,7 +219,7 @@ const BoardManage = props => {
         ],
       };
       // 排序
-      orderBoard(requestClient, params, token).then(res => {
+      orderBoard(requestClient, params, token).then((res) => {
         if (res) {
           requestBoardList({
             pagination: { current: page.current, pageSize: page.pageSize },
@@ -224,8 +234,8 @@ const BoardManage = props => {
         {
           pagination: { current: page.current + 1, pageSize: page.pageSize },
         },
-        token,
-      ).then(res => {
+        token
+      ).then((res) => {
         const nextPageList = res.list;
 
         const params = {
@@ -242,7 +252,7 @@ const BoardManage = props => {
         };
 
         // 排序
-        orderBoard(requestClient, params, token).then(res => {
+        orderBoard(requestClient, params, token).then((res) => {
           if (res) {
             requestBoardList({
               pagination: { current: page.current, pageSize: page.pageSize },
@@ -255,42 +265,42 @@ const BoardManage = props => {
   };
 
   // 列
-  const columns = [
+  let columns = [
     {
-      title: '编号',
-      dataIndex: 'code',
-      width: 'lg',
-      filterType: 'search',
-      handleSubmitSearch: val => requestBoardList({ code: val }),
-      render: text => (
+      title: "编号",
+      dataIndex: "code",
+      width: "lg",
+      filterType: "search",
+      handleSubmitSearch: (val) => requestBoardList({ code: val }),
+      render: (text) => (
         <Tooltip placement="topLeft" title={text}>
           {text}
         </Tooltip>
       ),
     },
     {
-      title: '标题',
-      dataIndex: 'name',
-      width: 'lg',
-      filterType: 'search',
+      title: "标题",
+      dataIndex: "name",
+      width: "lg",
+      filterType: "search",
       ellipsis: true,
-      handleSubmitSearch: val => requestBoardList({ name: val }),
-      render: text => (
+      handleSubmitSearch: (val) => requestBoardList({ name: val }),
+      render: (text) => (
         <Tooltip placement="topLeft" title={text}>
           {text}
         </Tooltip>
       ),
     },
     {
-      title: '类型',
-      dataIndex: 'typeName',
-      width: 'lg',
-      filterType: 'search',
+      title: "类型",
+      dataIndex: "typeName",
+      width: "lg",
+      filterType: "search",
       ellipsis: true,
-      handleSubmitSearch: val => requestBoardList({ tagName: val }),
-      render: text => (
+      handleSubmitSearch: (val) => requestBoardList({ tagName: val }),
+      render: (text) => (
         <Tooltip placement="topLeft" title={text}>
-          {text.split(';').map((tag, i) => {
+          {text.split(";").map((tag, i) => {
             return (
               <Tag color="blue" key={i} className="mt4">
                 {tag}
@@ -301,35 +311,35 @@ const BoardManage = props => {
       ),
     },
     {
-      title: '链接',
-      dataIndex: 'links',
-      width: 'lg',
+      title: "链接",
+      dataIndex: "links",
+      width: "lg",
       ellipsis: true,
       render: (text, record) => (
         <Tooltip
           placement="topLeft"
           title={`${window.location.origin}/newCockpit/${getEncryption(
-            JSON.stringify({ id: record.id, isShare: false }),
+            JSON.stringify({ id: record.id, isShare: false })
           )}`}
         >
           <a className="cursorDefault">{`${window.location.origin}/newCockpit/${getEncryption(
-            JSON.stringify({ id: record.id, isShare: false }),
+            JSON.stringify({ id: record.id, isShare: false })
           )}`}</a>
         </Tooltip>
       ),
     },
     {
-      title: '操作',
-      key: 'operation',
+      title: "操作",
+      key: "operation",
       render: (text, record, index) => (
         <Space size="middle">
           {page.current === 1 && index === 0 ? (
-            <a style={{ pointerEvents: 'none', opacity: 0.3 }}>前移</a>
+            <a style={{ pointerEvents: "none", opacity: 0.3 }}>前移</a>
           ) : (
             <a onClick={() => onMoveUp(index)}>前移</a>
           )}
           {page.current === page.totalPage && index === dataList.length - 1 ? (
-            <a style={{ pointerEvents: 'none', opacity: 0.3 }}>后移</a>
+            <a style={{ pointerEvents: "none", opacity: 0.3 }}>后移</a>
           ) : (
             <a onClick={() => onMoveDown(index)}>后移</a>
           )}
@@ -348,21 +358,32 @@ const BoardManage = props => {
     },
   ];
 
+  if (!useTag) columns.splice(2, 1);
+
+  const ModalWrapper = draggable ? BiciDraggableModal : Modal;
+
   return (
-    <>
-      <Modal title="看板管理" visible={visible} onCancel={handleModal} footer={null} width={1200}>
-        <ComplexTable
-          columns={columns}
-          rowKey="id"
-          minWidth={600}
-          dataSource={dataList}
-          pagination={page}
-          onChange={handleTableChange}
-          initialFilterTags={getInitialFilterTags()}
-          onFilterTagsChange={handleFilterTagsChange}
-        />
-      </Modal>
-    </>
+    <ModalWrapper
+      forceRender
+      title="看板管理"
+      visible={visible}
+      onCancel={handleModal}
+      footer={null}
+      width={1200}
+      {...modalProps}
+    >
+      <ComplexTable
+        columns={columns}
+        rowKey="id"
+        minWidth={600}
+        dataSource={dataList}
+        pagination={page}
+        onChange={handleTableChange}
+        initialFilterTags={getInitialFilterTags()}
+        onFilterTagsChange={handleFilterTagsChange}
+        {...complexTableProps}
+      />
+    </ModalWrapper>
   );
 };
 

@@ -430,16 +430,14 @@ const DigitalBoard = React.forwardRef((props, ref) => {
   );
 
   const handleSearchBtn = (value) => {
-    if (typeSelect.selectedTypes.length > 0) {
-      requestBoardList({
-        name: value,
-        tagIdList: typeSelect.selectedTypes,
-      });
-      setSearchInfo((prevState) => ({
-        ...prevState,
-        boardName: value,
-      }));
-    }
+    const { selectedTypes } = typeSelect;
+    const useType = selectedTypes.length > 0;
+    const searchParams = useType ? { name: value, tagIdList: selectedTypes } : { name: value };
+    requestBoardList(searchParams);
+    setSearchInfo((prevState) => ({
+      ...prevState,
+      boardName: value,
+    }));
   };
 
   // 渲染工具栏
@@ -555,10 +553,7 @@ const DigitalBoard = React.forwardRef((props, ref) => {
       <div>
         <Row
           gutter={[16, 16]}
-          style={{
-            maxHeight: 820,
-            overflowY: "auto",
-          }}
+          style={{ overflowY: "auto", ...wrapperStyle }}
           ref={boardListRef}
           onScroll={handleScroll}
         >
@@ -583,22 +578,8 @@ const DigitalBoard = React.forwardRef((props, ref) => {
 
   return (
     <ConfigProvider prefixCls="antd-bici-cockpit">
-      <div
-        style={{
-          height: 897,
-          padding: 12,
-          overflow: "hidden",
-          ...wrapperStyle,
-        }}
-        id="capture"
-      >
-        <div
-          style={{
-            height: "100%",
-            background: "white",
-            padding: 12,
-          }}
-        >
+      <div style={{ padding: 12, overflow: "hidden" }} id="capture">
+        <div style={{ height: "100%", background: "white", padding: 12 }}>
           {queryForm()}
           {!_.isEmpty(boardList) ? (
             renderBoardList
@@ -630,6 +611,7 @@ const DigitalBoard = React.forwardRef((props, ref) => {
             delButton={permissionBtn.delButton}
             requestClient={requestClient}
             token={token}
+            {..._.pick(props, ["useTag", "draggable", "modalProps", "complexTableProps"])}
           />
         )}
       </div>
