@@ -1,42 +1,22 @@
-import React, {
-  useState,
-  useEffect,
-  useCallback,
-  useRef,
-  useMemo,
-  useImperativeHandle,
-} from "react";
-import { DownOutlined } from "@ant-design/icons";
-import {
-  Row,
-  Col,
-  Button,
-  Empty,
-  Input,
-  Radio,
-  Menu,
-  Dropdown,
-  Checkbox,
-  Space,
-  ConfigProvider,
-} from "antd";
-import { biciNotification } from "bici-transformers";
-import BoardManage from "./BoardManage";
-import BoardCreate from "./BoardCreate";
-import BoardCard from "./BoardCard";
-import { BOARD_QUERY_PARAMS_KEY } from "@/constant/index";
-import { fetchBoardList, fetchTypeList, orderBoard } from "@/apis/board";
-import { DragDropContext } from "react-dnd";
-import useOnClickOutside from "@/hooks/useOnClickOutside";
-import HTML5Backend from "react-dnd-html5-backend";
-import _ from "lodash";
+import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import { DragDropContext } from 'react-dnd';
+import { Row, Col, Button, Empty, Input, Radio, Menu, Dropdown, Checkbox, Space, ConfigProvider } from 'antd';
+import { DownOutlined } from '@ant-design/icons';
+import { biciNotification } from 'bici-transformers';
+import HTML5Backend from 'react-dnd-html5-backend';
+import _ from 'lodash';
+import { fetchBoardList, fetchTypeList, orderBoard } from '@/apis/board';
+import useOnClickOutside from '@/hooks/useOnClickOutside';
+import BoardManage from './BoardManage';
+import BoardCreate from './BoardCreate';
+import BoardCard from './BoardCard';
 
-import "antd/dist/antd.less";
+import 'antd/dist/antd.less';
 
-import styles from "./index.module.css";
+import styles from './index.module.css';
 
-const DigitalBoard = React.forwardRef((props, ref) => {
-  const { token, permissionBtn, userInfo, useTag, requestClient, baseUrl, wrapperStyle } = props;
+const DigitalBoard = (props) => {
+  const { token, permissionBtn, userInfo, useTag, requestClient, wrapperStyle } = props;
 
   // 卡片列占比，默认4列
   const [colSize, setColSize] = useState(6);
@@ -84,17 +64,6 @@ const DigitalBoard = React.forwardRef((props, ref) => {
   const tagMoreRef = useRef();
 
   useOnClickOutside(tagMoreRef, () => setShowDropdown(false));
-
-  // 对父组件暴露保存数据的接口
-  useImperativeHandle(
-    ref,
-    () => ({
-      clearTableQueryParams: () => {
-        clearTableQueryParams();
-      },
-    }),
-    []
-  );
 
   useEffect(() => {
     requestBoardList();
@@ -155,17 +124,12 @@ const DigitalBoard = React.forwardRef((props, ref) => {
     }));
   };
 
-  // 清楚localstorage存储的表格查询参数
-  const clearTableQueryParams = () => {
-    localStorage.removeItem(BOARD_QUERY_PARAMS_KEY);
-  };
-
   // 配置面板
   const handleConfigBoard = (item) => {
     if (item.updateAuth === 2 && userInfo.id !== item.createUserId) {
       // 禁止他人编辑  不是本人
       biciNotification.error({
-        message: "无权编辑该看板!",
+        message: '无权编辑该看板!',
       });
       return;
     }
@@ -333,10 +297,7 @@ const DigitalBoard = React.forwardRef((props, ref) => {
 
   // 滚动加载更多
   const handleScroll = () => {
-    if (
-      boardListRef.current.scrollHeight - boardListRef.current.clientHeight >
-      boardListRef.current.scrollTop
-    ) {
+    if (boardListRef.current.scrollHeight - boardListRef.current.clientHeight > boardListRef.current.scrollTop) {
       return;
     } else {
       if (boardList.length !== pagination.total) {
@@ -381,7 +342,7 @@ const DigitalBoard = React.forwardRef((props, ref) => {
           personalOrder: item.personalOrder,
         })),
       },
-      token
+      token,
     );
   };
 
@@ -390,11 +351,7 @@ const DigitalBoard = React.forwardRef((props, ref) => {
     <div ref={tagMoreRef}>
       <Menu style={{ width: 440 }} selectable={false}>
         <Menu.Item>
-          <Checkbox.Group
-            style={{ width: "100%" }}
-            value={typeSelect.selectedTypes}
-            onChange={hideTypeChange}
-          >
+          <Checkbox.Group style={{ width: '100%' }} value={typeSelect.selectedTypes} onChange={hideTypeChange}>
             <Row gutter={[16, 16]}>
               {tagShow.otherTypes.map((item, index) => {
                 return (
@@ -402,10 +359,10 @@ const DigitalBoard = React.forwardRef((props, ref) => {
                     <Checkbox
                       value={item.value}
                       style={{
-                        width: "12ch",
-                        textOverflow: "ellipsis",
-                        whiteSpace: "nowrap",
-                        overflow: "hidden",
+                        width: '12ch',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
                       }}
                     >
                       {item.label}
@@ -417,7 +374,7 @@ const DigitalBoard = React.forwardRef((props, ref) => {
           </Checkbox.Group>
         </Menu.Item>
         <Menu.Divider />
-        <Menu.Item style={{ textAlign: "right" }}>
+        <Menu.Item style={{ textAlign: 'right' }}>
           <Space>
             <Button onClick={handleTagSeletedCanel}>取消</Button>
             <Button type="primary" onClick={handleTagSeletedOk}>
@@ -460,12 +417,12 @@ const DigitalBoard = React.forwardRef((props, ref) => {
             <Col
               style={{
                 marginLeft: 60,
-                borderRight: "1px solid #C4C4C4",
+                borderRight: '1px solid #C4C4C4',
               }}
             >
               <span>展示类型:</span>
               <Checkbox
-                style={{ margin: "0 30px" }}
+                style={{ margin: '0 30px' }}
                 indeterminate={typeTagData.indeterminate}
                 onChange={onCheckAllChange}
                 checked={typeTagData.checkAll}
@@ -487,10 +444,10 @@ const DigitalBoard = React.forwardRef((props, ref) => {
                       key={index}
                       value={item.value}
                       style={{
-                        width: "12ch",
-                        textOverflow: "ellipsis",
-                        whiteSpace: "nowrap",
-                        overflow: "hidden",
+                        width: '12ch',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
                       }}
                     >
                       {item.label}
@@ -499,12 +456,7 @@ const DigitalBoard = React.forwardRef((props, ref) => {
                 </Row>
               </Checkbox.Group>
               {tagShow.otherTypes.length > 0 && (
-                <Dropdown
-                  overlay={renderCheckGroup}
-                  trigger={["click"]}
-                  visible={showDropdown}
-                  placement="bottomRight"
-                >
+                <Dropdown overlay={renderCheckGroup} trigger={['click']} visible={showDropdown} placement="bottomRight">
                   <a
                     href="/#"
                     className="ant-dropdown-link"
@@ -535,7 +487,7 @@ const DigitalBoard = React.forwardRef((props, ref) => {
             <Radio.Button value="8">大</Radio.Button>
           </Radio.Group>
         </Col>
-        <Col className={styles.operation} style={{ flex: "1 0 auto" }}>
+        <Col className={styles.operation} style={{ flex: '1 0 auto' }}>
           <Button onClick={() => setManageVisible(() => true)}>看板管理</Button>
           {permissionBtn.createButton && (
             <Button className="ml20" type="primary" onClick={() => setCreateVisible(() => true)}>
@@ -553,7 +505,7 @@ const DigitalBoard = React.forwardRef((props, ref) => {
       <div>
         <Row
           gutter={[16, 16]}
-          style={{ overflowY: "auto", ...wrapperStyle }}
+          style={{ overflowY: 'auto', ...wrapperStyle }}
           ref={boardListRef}
           onScroll={handleScroll}
         >
@@ -578,45 +530,27 @@ const DigitalBoard = React.forwardRef((props, ref) => {
 
   return (
     <ConfigProvider prefixCls="antd-bici-cockpit">
-      <div style={{ padding: 12, overflow: "hidden" }} id="capture">
-        <div style={{ height: "100%", background: "white", padding: 12 }}>
+      <div style={{ padding: 12, overflow: 'hidden' }} id="capture">
+        <div style={{ height: '100%', background: 'white', padding: 12 }}>
           {queryForm()}
-          {!_.isEmpty(boardList) ? (
-            renderBoardList
-          ) : (
-            <Empty style={{ marginTop: 300 }} description="暂无看板数据" />
-          )}
+          {!_.isEmpty(boardList) ? renderBoardList : <Empty style={{ marginTop: 300 }} description="暂无看板数据" />}
         </div>
         {/* 新建看板 */}
-        {createVisible && (
-          <BoardCreate
-            visible={createVisible}
-            onClose={handleCreateClose}
-            history={props.history}
-            deptUserTree={props.deptUserTree}
-            requestClient={requestClient}
-            baseUrl={baseUrl}
-            token={token}
-            userInfo={userInfo}
-            useTag={useTag}
-          />
-        )}
+        {createVisible && <BoardCreate visible={createVisible} onClose={handleCreateClose} {...props} />}
         {/* 看板管理 */}
         {manageVisible && (
           <BoardManage
+            {...props}
             visible={manageVisible}
             onClose={handleManageClose}
             requestBoardList={requestBoardList}
             requestTypeList={requestTypeList}
             delButton={permissionBtn.delButton}
-            requestClient={requestClient}
-            token={token}
-            {..._.pick(props, ["useTag", "draggable", "modalProps", "complexTableProps"])}
           />
         )}
       </div>
     </ConfigProvider>
   );
-});
+};
 
 export default DragDropContext(HTML5Backend)(DigitalBoard);

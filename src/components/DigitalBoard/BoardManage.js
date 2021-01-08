@@ -2,10 +2,9 @@ import React, { useState, useEffect, useCallback } from "react";
 import { Space, Modal, Tag, Popconfirm, Tooltip } from "antd";
 import { biciNotification, ComplexTable } from "bici-transformers";
 import { getEncryption } from "@/utils/index";
-import { BOARD_QUERY_PARAMS_KEY } from "@/constant/index";
 import { deleteBoard, orderBoard, fetchBoardList } from "@/apis/board";
 import _ from "lodash";
-import BiciDraggableModal from '../BiciDraggableModal'
+import BiciDraggableModal from "../BiciDraggableModal";
 
 const initialQueryParams = {
   code: "", // 看板编号
@@ -29,6 +28,7 @@ const BoardManage = (props) => {
     draggable = false,
     modalProps,
     complexTableProps,
+    queryParamsKey,
   } = props;
 
   // 看板列表
@@ -41,8 +41,7 @@ const BoardManage = (props) => {
   // 请求所有面板数据
   const requestBoardList = useCallback(
     async (params) => {
-      const queryParams = JSON.parse(localStorage.getItem(BOARD_QUERY_PARAMS_KEY));
-      // const { queryParams } = store.getState().board;
+      const queryParams = JSON.parse(localStorage.getItem(queryParamsKey));
       const isQueryParamsEmpty = _.isEmpty(queryParams);
       const distQueryParams = isQueryParamsEmpty ? initialQueryParams : queryParams;
       const { pagination } = distQueryParams;
@@ -53,8 +52,7 @@ const BoardManage = (props) => {
       };
       const { list, total, totalPage } = await fetchBoardList(requestClient, distParams, token);
       // 存入redux的查询参数
-      localStorage.setItem(BOARD_QUERY_PARAMS_KEY, JSON.stringify(distParams));
-      //   store.dispatch(updateBoardManageListQueryParams(distParams));
+      localStorage.setItem(queryParamsKey, JSON.stringify(distParams));
       distParams.pagination.total = total;
       distParams.pagination.totalPage = totalPage;
       setPage(distParams.pagination);
@@ -69,14 +67,14 @@ const BoardManage = (props) => {
 
   // 表格数据发生变化
   const handleTableChange = (pagination) => {
-    const queryParams = JSON.parse(localStorage.getItem(BOARD_QUERY_PARAMS_KEY));
+    const queryParams = JSON.parse(localStorage.getItem(queryParamsKey));
     // const { queryParams } = store.getState().board;
     const distParams = { ...queryParams, pagination };
     requestBoardList(distParams);
   };
   // 筛选条件改变的回调
   const handleFilterTagsChange = (filterTags) => {
-    const queryParams = JSON.parse(localStorage.getItem(BOARD_QUERY_PARAMS_KEY));
+    const queryParams = JSON.parse(localStorage.getItem(queryParamsKey));
     // const { queryParams } = store.getState().board;
     const { pagination } = queryParams;
     const copyInitialQueryParams = _.cloneDeep(initialQueryParams);
@@ -98,7 +96,7 @@ const BoardManage = (props) => {
   };
   // 回溯查询条件，还原成标签
   const getInitialFilterTags = () => {
-    const queryParams = JSON.parse(localStorage.getItem(BOARD_QUERY_PARAMS_KEY));
+    const queryParams = JSON.parse(localStorage.getItem(queryParamsKey));
     // const { queryParams } = store.getState().board;
     const isQueryParamsEmpty = _.isEmpty(queryParams);
     let filterTags = [];
