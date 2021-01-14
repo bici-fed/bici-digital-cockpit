@@ -1,16 +1,19 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { CheckCircleFilled, UploadOutlined } from '@ant-design/icons';
-import { Form, Modal, Button, Radio, Input, Upload, TreeSelect } from 'antd';
+import { Form, Modal, Button, Radio, Input, Upload, Select, TreeSelect } from 'antd';
 import { BiciTagsManager, biciNotification } from 'bici-transformers';
 import _ from 'lodash';
 import { createBoard, modifyBoard } from '@/apis/board';
 import { deleteTags, getTagsList, saveTags, updateTags } from '@/apis/tag';
 import { fileDelete, batchFileMappingId, requestUploadDetail } from '@/apis/file';
+import BiciDraggableModal from '@/components/BiciDraggableModal';
 
 import board1 from '@/assets/img/board-1.jpg';
 import board2 from '@/assets/img/board-2.jpg';
 import board3 from '@/assets/img/board-3.jpg';
 import board4 from '@/assets/img/board-4.jpg';
+
+const { Option } = Select;
 
 const deviceType = 13;
 const formItemLayout = {
@@ -19,7 +22,23 @@ const formItemLayout = {
 };
 
 const BoardCreate = (props) => {
-  const { visible, data, onClose, history, deptUserTree, userInfo, token, requestClient, useTag, baseUrl } = props;
+  const {
+    visible,
+    data,
+    onClose,
+    history,
+    deptUserTree,
+    userInfo,
+    token,
+    requestClient,
+    useTag,
+    baseUrl,
+    draggable,
+    customPermission = false,
+    permissionData = [],
+    onPermissionButtonClick,
+    onPermissionChange,
+  } = props;
 
   // 描述文本长度
   const [textLength, setTextLength] = useState({
@@ -36,10 +55,8 @@ const BoardCreate = (props) => {
   const [selectedTypes, setSelectedTypes] = useState([]);
   // 可见权限tree数据
   const [treeData, setTreeData] = useState([]);
-
   // antd表单hooks
   const [form] = Form.useForm();
-
   // 请求所有看板类型
   const requestTypes = useCallback(async () => {
     if (useTag) {
@@ -55,7 +72,6 @@ const BoardCreate = (props) => {
       setSelectedTypes(() => editTags);
     }
   }, [data]);
-
   // 处理数据回显
   const handleEditData = useCallback(() => {
     if (data) {
@@ -81,15 +97,21 @@ const BoardCreate = (props) => {
 
       setPicType(data.thumbnailType);
 
-      let permissionTree = (data.newCockpitVisibleConfigList || []).map((item) => item.userId);
+      const permissionData = (data.newCockpitVisibleConfigList || []).map((item) => ({
+        id: item.userId,
+        name: item.userName,
+      }));
+      if (customPermission) setPermissionData(permissionData);
+      // let permissionTree = (data.newCockpitVisibleConfigList || []).map((item) => item.userId);
       // 选择树没有当前用户，不回显
-      if (!_.isEmpty(treeData) && !treeData.map((item) => item.value).includes(userInfo.id)) {
-        permissionTree = permissionTree.filter((id) => id !== userInfo.id);
-      }
+      // if (!_.isEmpty(treeData) && !treeData.map((item) => item.value).includes(userInfo.id)) {
+      //   permissionTree = permissionTree.filter((id) => id !== userInfo.id);
+      // }
       form.setFieldsValue({
         code: data.code,
         name: data.name,
-        deptUser: permissionTree,
+        // deptUser: permissionTree,
+        permissionList: permissionData,
         updateAuth: data.updateAuth,
         remark: data.remark,
         coverRadio,
@@ -107,6 +129,12 @@ const BoardCreate = (props) => {
       setTreeData(deptUserTree);
     }
   }, [handleEditData, requestTypes, deptUserTree]);
+  // 自定义权限更新同步
+  useEffect(() => {
+    if (permissionData) {
+      form.setFieldsValue({ permissionData });
+    }
+  }, [permissionData]);
 
   // 修改标签
   const handleEditTag = (toSetDataSource, editedId, editedName) => {
@@ -133,7 +161,6 @@ const BoardCreate = (props) => {
       }
     });
   };
-
   // 删除标签
   const handleDeleteTag = (toSetDataSource, toDeleteId, isToDatabase) => {
     if (isToDatabase) {
@@ -159,7 +186,6 @@ const BoardCreate = (props) => {
       setSelectedTypes(() => selectedTypes);
     }
   };
-
   // 创建标签
   const handleCreateTag = (newTagName) => {
     saveTags(
@@ -179,12 +205,10 @@ const BoardCreate = (props) => {
       setTypes(typesData);
     });
   };
-
   // 选择标签
   const handleSelectTag = (toSetDataSource) => {
     setSelectedTypes(toSetDataSource);
   };
-
   // 模态框确认处理
   const handleOk = () => {
     form.validateFields().then((values) => {
@@ -192,19 +216,18 @@ const BoardCreate = (props) => {
         biciNotification.error({ message: '必须选择看板类型!' });
         return;
       }
-
       const userId = userInfo.id;
-      const { name, remark, updateAuth, deptUser, coverRadio } = values;
-
-      //
-      const newCockpitVisibleConfigList = deptUser.map((id) => {
-        return { userId: id };
-      });
-      // 没有选择登录用户，添加
-      if (!newCockpitVisibleConfigList.map((item) => item.userId).includes(userId)) {
-        newCockpitVisibleConfigList.push({ userId: userId });
+      const { name, remark, updateAuth, deptUser, permissionList, coverRadio } = values;
+      let newCockpitVisibleConfigList = [];
+      if (customPermission) {
+        newCockpitVisibleConfigList = permissionList.map((p) => ({ userId: p.id, userName: p.name }));
+      } else {
+        newCockpitVisibleConfigList = deptUser.map((id) => ({ userId: id }));
       }
-
+      // 没有选择登录用户，添加
+      // if (!newCockpitVisibleConfigList.map((item) => item.userId).includes(userId)) {
+      //   newCockpitVisibleConfigList.push({ userId: userId });
+      // }
       // cover 封面 1:预览图 2:图片
       let distParams = {
         name,
@@ -271,7 +294,6 @@ const BoardCreate = (props) => {
       }
     });
   };
-
   // 渲染看板可选的缩略图
   const renderCover = () => {
     const coverCode = [1, 2, 3, 4];
@@ -298,7 +320,6 @@ const BoardCreate = (props) => {
       );
     });
   };
-
   // 上传图片前回调
   const beforeUpload = (file) => {
     const acceptFileType = `image/jpeg,image/jpg,image/png`;
@@ -316,7 +337,6 @@ const BoardCreate = (props) => {
 
     return true;
   };
-
   // 处理图片radio改变
   const handleChangePic = (e) => {
     if (e.target.value !== 2 && fileList.length !== 0) {
@@ -333,7 +353,6 @@ const BoardCreate = (props) => {
       setPicType(undefined);
     }
   };
-
   // 处理图片上传
   const handleUploadChange = ({ fileList }) => {
     setPicType(() => undefined);
@@ -353,7 +372,6 @@ const BoardCreate = (props) => {
   const handleTreeChange = (value) => {
     form.setFieldsValue({ deptUser: value });
   };
-
   // 渲染表单
   const renderForm = () => {
     return (
@@ -381,7 +399,6 @@ const BoardCreate = (props) => {
             }}
           />
         </Form.Item>
-
         {useTag && (
           <Form.Item>
             <BiciTagsManager
@@ -408,8 +425,8 @@ const BoardCreate = (props) => {
             />
           </Form.Item>
         )}
-        <Form.Item label="可见权限" name="deptUser" rules={[{ required: true, message: '必填项!' }]}>
-          {!_.isEmpty(treeData) && (
+        {!_.isEmpty(treeData) && !customPermission && (
+          <Form.Item label="可见权限" name="deptUser" rules={[{ required: true, message: '必填项!' }]}>
             <TreeSelect
               treeData={treeData}
               treeCheckable
@@ -420,8 +437,36 @@ const BoardCreate = (props) => {
               placeholder="请在组织内选择可见范围"
               onChange={handleTreeChange}
             />
-          )}
-        </Form.Item>
+          </Form.Item>
+        )}
+        {/* 扩展可见权限配置，支持自定义权限渲染 */}
+        {customPermission && (
+          <Form.Item label="可见权限" name="permissionData" rules={[{ required: true, message: '必填项!' }]}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <Select
+                open={false}
+                mode="multiple"
+                value={permissionData.map((p) => p.id)}
+                placeholder="请在组织内选择可见范围"
+                style={{ width: '70%' }}
+                onChange={(ids) => {
+                  const updatePermissionData = permissionData.filter((p) => ids.includes(p.id));
+                  if (onPermissionChange) onPermissionChange(updatePermissionData);
+                  form.setFieldsValue({ permissionData: updatePermissionData });
+                }}
+              >
+                {permissionData.map((permission) => (
+                  <Option key={permission.id} value={permission.id}>
+                    {permission.name}
+                  </Option>
+                ))}
+              </Select>
+              <Button onClick={() => onPermissionButtonClick && onPermissionButtonClick(permissionData)}>
+                按组织选择
+              </Button>
+            </div>
+          </Form.Item>
+        )}
         <Form.Item label="修改权限" name="updateAuth" rules={[{ required: true, message: '请选择一个' }]}>
           <Radio.Group>
             <Radio value={1}>允许他人编辑与删除</Radio>
@@ -478,22 +523,22 @@ const BoardCreate = (props) => {
     );
   };
 
+  const ModalInstance = draggable ? BiciDraggableModal : Modal;
+
   return (
-    <>
-      <Modal
-        centered
-        getContainer={data ? document.querySelector('#editLayout') : false}
-        title={data ? '配置看板' : '新建看板'}
-        width={580}
-        visible={visible}
-        onCancel={onClose}
-        onOk={handleOk}
-        okText="确认"
-        cancelText="取消"
-      >
-        <div>{renderForm()}</div>
-      </Modal>
-    </>
+    <ModalInstance
+      centered
+      getContainer={data ? document.querySelector('#editLayout') : false}
+      title={data ? '配置看板' : '新建看板'}
+      width={580}
+      visible={visible}
+      onCancel={onClose}
+      onOk={handleOk}
+      okText="确认"
+      cancelText="取消"
+    >
+      <div>{renderForm()}</div>
+    </ModalInstance>
   );
 };
 

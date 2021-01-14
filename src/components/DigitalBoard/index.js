@@ -16,7 +16,7 @@ import 'antd/dist/antd.less';
 import styles from './index.module.css';
 
 const DigitalBoard = (props) => {
-  const { token, permissionBtn, userInfo, useTag, requestClient, wrapperStyle } = props;
+  const { token, permissionBtn, userInfo, useTag, requestClient, wrapperStyle, onBoardCreateModalClose } = props;
 
   // 卡片列占比，默认4列
   const [colSize, setColSize] = useState(6);
@@ -144,6 +144,7 @@ const DigitalBoard = (props) => {
   }, [setManageVisible]);
 
   const handleCreateClose = useCallback(() => {
+    if (onBoardCreateModalClose) onBoardCreateModalClose();
     setCreateVisible(() => false);
   }, [setCreateVisible]);
 
@@ -530,7 +531,7 @@ const DigitalBoard = (props) => {
 
   return (
     <ConfigProvider prefixCls="antd-bici-cockpit">
-      <div style={{ padding: 12, overflow: 'hidden' }} id="capture">
+      <div style={{ height: '100%', padding: 12, overflow: 'hidden' }} id="capture">
         <div style={{ height: '100%', background: 'white', padding: 12 }}>
           {queryForm()}
           {!_.isEmpty(boardList) ? renderBoardList : <Empty style={{ marginTop: 300 }} description="暂无看板数据" />}
