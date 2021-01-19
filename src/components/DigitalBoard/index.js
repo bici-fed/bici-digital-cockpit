@@ -67,9 +67,7 @@ const DigitalBoard = (props) => {
 
   useEffect(() => {
     requestBoardList();
-    if (useTag) {
-      requestTypeList();
-    }
+    requestTypeList();
   }, []);
 
   // 请求所有面板数据
@@ -84,6 +82,7 @@ const DigitalBoard = (props) => {
 
   // 请求所有类型数据
   const requestTypeList = async () => {
+    if (!useTag) return;
     const data = await fetchTypeList(requestClient, {}, token);
     const tags = data.map((tag) => {
       return {
