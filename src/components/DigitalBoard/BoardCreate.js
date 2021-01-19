@@ -36,8 +36,10 @@ const BoardCreate = (props) => {
     draggable,
     customPermission = false,
     permissionData = [],
+    setPermissionData,
     onPermissionButtonClick,
     onPermissionChange,
+    onBoardCreateModalClose,
   } = props;
 
   // 描述文本长度
@@ -66,7 +68,7 @@ const BoardCreate = (props) => {
       });
       setTypes(tags);
     }
-    if (data) {
+    if (data && useTag) {
       // 编辑状态，回显
       const editTags = tags.filter((item) => data.tagIdList.includes(item.id));
       setSelectedTypes(() => editTags);
@@ -99,9 +101,9 @@ const BoardCreate = (props) => {
 
       const permissionData = (data.newCockpitVisibleConfigList || []).map((item) => ({
         id: item.userId,
-        name: item.userName,
+        name: item.username,
       }));
-      if (customPermission) setPermissionData(permissionData);
+      if (setPermissionData) setPermissionData(permissionData);
       // let permissionTree = (data.newCockpitVisibleConfigList || []).map((item) => item.userId);
       // 选择树没有当前用户，不回显
       // if (!_.isEmpty(treeData) && !treeData.map((item) => item.value).includes(userInfo.id)) {
@@ -111,7 +113,7 @@ const BoardCreate = (props) => {
         code: data.code,
         name: data.name,
         // deptUser: permissionTree,
-        permissionList: permissionData,
+        permissionData,
         updateAuth: data.updateAuth,
         remark: data.remark,
         coverRadio,
@@ -216,18 +218,18 @@ const BoardCreate = (props) => {
         biciNotification.error({ message: '必须选择看板类型!' });
         return;
       }
-      const userId = userInfo.id;
-      const { name, remark, updateAuth, deptUser, permissionList, coverRadio } = values;
+      const { id: userId, name: username } = userInfo;
+      const { name, remark, updateAuth, deptUser, permissionData, coverRadio } = values;
       let newCockpitVisibleConfigList = [];
       if (customPermission) {
-        newCockpitVisibleConfigList = permissionList.map((p) => ({ userId: p.id, userName: p.name }));
+        newCockpitVisibleConfigList = permissionData.map((p) => ({ userId: p.id, username: p.name }));
       } else {
         newCockpitVisibleConfigList = deptUser.map((id) => ({ userId: id }));
       }
       // 没有选择登录用户，添加
-      // if (!newCockpitVisibleConfigList.map((item) => item.userId).includes(userId)) {
-      //   newCockpitVisibleConfigList.push({ userId: userId });
-      // }
+      if (!newCockpitVisibleConfigList.map((item) => item.userId).includes(userId)) {
+        newCockpitVisibleConfigList.push({ userId, username });
+      }
       // cover 封面 1:预览图 2:图片
       let distParams = {
         name,
@@ -532,7 +534,11 @@ const BoardCreate = (props) => {
       title={data ? '配置看板' : '新建看板'}
       width={580}
       visible={visible}
-      onCancel={onClose}
+      onCancel={() => {
+        form.resetFields();
+        if (onClose) onClose();
+        if (onBoardCreateModalClose) onBoardCreateModalClose();
+      }}
       onOk={handleOk}
       okText="确认"
       cancelText="取消"
