@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useCallback, useImperativeHandle } from "react";
-import { Row, Col, Modal, Input, Form, Checkbox, Button, InputNumber, ConfigProvider } from "antd";
-import { CopyOutlined, ShareAltOutlined } from "@ant-design/icons";
-import { biciNotification } from "bici-transformers";
-import { CopyToClipboard } from "react-copy-to-clipboard";
+import React, { useState, useEffect, useCallback, useImperativeHandle } from 'react';
+import { Row, Col, Modal, Input, Form, Checkbox, Button, InputNumber, ConfigProvider } from 'antd';
+import { CopyOutlined, ShareAltOutlined } from '@ant-design/icons';
+import { biciNotification } from 'bici-transformers';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 import {
   getEncryption,
   getDecryption,
@@ -10,29 +10,15 @@ import {
   exitFullscreen,
   addFullScreenChanegListener,
   getFullScreenState,
-} from "@/utils/index";
-import { IconFont } from "@/utils/iconConfig";
-import {
-  createShareLink,
-  hasSharePwd,
-  checkSharePwdAndGetData,
-  fetchBoardDetail,
-} from "@/apis/board";
-import { BOARD_SHARE_VERIFIED } from "@/constant";
+} from '@/utils/index';
+import { IconFont } from '@/utils/iconConfig';
+import { createShareLink, hasSharePwd, checkSharePwdAndGetData, fetchBoardDetail } from '@/apis/board';
+import { BOARD_SHARE_VERIFIED } from '@/constant';
 
-const NEW_FULL_SCREEN_ID = "new_cockpit_full_screen";
+const NEW_FULL_SCREEN_ID = 'new_cockpit_full_screen';
 
 const DisplayPage = React.forwardRef((props, ref) => {
-  const {
-    token,
-    shareBtnPermission,
-    Preview,
-    websocketConf,
-    logout,
-    boardUrlId,
-    requestClient,
-    wrapperStyle,
-  } = props;
+  const { token, shareBtnPermission, Preview, websocketConf, logout, boardUrlId, requestClient, wrapperStyle } = props;
 
   const [form] = Form.useForm();
 
@@ -44,11 +30,11 @@ const DisplayPage = React.forwardRef((props, ref) => {
   // 是否显示
   const [headShow, setHeadShow] = useState(false);
   // 分享特殊token
-  const [specialToken, setSpecialToken] = useState("");
+  const [specialToken, setSpecialToken] = useState('');
   // websocketToken
   const [socketToken, setSocketToken] = useState(undefined);
   // 分享密码
-  const [sharePwd, setSharePwd] = useState("");
+  const [sharePwd, setSharePwd] = useState('');
   // 看板id
   const [id, setId] = useState();
   // 分享链接
@@ -76,7 +62,7 @@ const DisplayPage = React.forwardRef((props, ref) => {
         clearShareVerifiy();
       },
     }),
-    []
+    [],
   );
 
   // 判断进入时是否需要密码
@@ -93,7 +79,7 @@ const DisplayPage = React.forwardRef((props, ref) => {
       }));
       const res = await hasSharePwd(requestClient, tokenTmp);
 
-      const shareVerified = localStorage.getItem(BOARD_SHARE_VERIFIED) === "true" ? true : false;
+      const shareVerified = localStorage.getItem(BOARD_SHARE_VERIFIED) === 'true' ? true : false;
       if (res && !shareVerified) {
         // 需要密码认证
         setVisiable((prevState) => ({
@@ -111,7 +97,7 @@ const DisplayPage = React.forwardRef((props, ref) => {
             setEditorData(getEditorData);
           } else {
             biciNotification.warning({
-              message: "未配置看板！",
+              message: '未配置看板！',
             });
           }
         }
@@ -129,7 +115,7 @@ const DisplayPage = React.forwardRef((props, ref) => {
             setEditorData(getEditorData);
           } else {
             biciNotification.warning({
-              message: "请配置看板！",
+              message: '请配置看板！',
             });
           }
         }
@@ -142,7 +128,7 @@ const DisplayPage = React.forwardRef((props, ref) => {
   }, [boardUrlId]);
   // 日期处理
   const handleValidDay = useCallback(() => {
-    const days = form.getFieldValue("validDay");
+    const days = form.getFieldValue('validDay');
     let validDate = new Date();
     if (days) {
       validDate.setDate(validDate.getDate() + Number(days));
@@ -150,7 +136,7 @@ const DisplayPage = React.forwardRef((props, ref) => {
       validDate.setDate(validDate.getDate() + 30);
     }
     setValidDate(() => validDate.toLocaleDateString());
-    form.setFieldsValue({ shareLink: "" });
+    form.setFieldsValue({ shareLink: '' });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setValidDate]);
 
@@ -179,7 +165,7 @@ const DisplayPage = React.forwardRef((props, ref) => {
     const data = await checkSharePwdAndGetData(requestClient, token, sharePwd);
 
     if (data) {
-      localStorage.setItem(BOARD_SHARE_VERIFIED, "true");
+      localStorage.setItem(BOARD_SHARE_VERIFIED, 'true');
       // 认证成功
       setData(() => data);
       if (data.property) {
@@ -215,7 +201,7 @@ const DisplayPage = React.forwardRef((props, ref) => {
   // 生成链接
   const generateLink = (e) => {
     e.preventDefault();
-    const values = form.getFieldsValue(["password", "validDay"]);
+    const values = form.getFieldsValue(['password', 'validDay']);
     const distParams = {
       newCockpitBoardId: id,
       ...values,
@@ -227,7 +213,7 @@ const DisplayPage = React.forwardRef((props, ref) => {
           isShare: true,
           id,
           token: res.uuid,
-        })
+        }),
       );
       const link = `${window.location.origin}/newCockpit/${code}`;
       // const link = `http://localhost:5000/cockpit/${code}`
@@ -246,37 +232,37 @@ const DisplayPage = React.forwardRef((props, ref) => {
   // 复制编号
   const handlerCopyCode = (text) => {
     if (isFullScreen) {
-      let tmpNode = document.createElement("textarea");
+      let tmpNode = document.createElement('textarea');
       document.body.appendChild(tmpNode);
       tmpNode.value = text;
       tmpNode.select();
-      document.execCommand("copy");
+      document.execCommand('copy');
       document.body.removeChild(tmpNode);
 
       // navigator.clipboard.writeText(text).then(() => {})
     }
     biciNotification.success({
-      message: "复制成功",
+      message: '复制成功',
     });
   };
   // 复制链接密码
   const copyShareLink = (text) => {
     if (isFullScreen) {
       // Create an input field with the minimum size and place in a not visible part of the screen
-      let tempTextAreaField = document.createElement("textarea");
-      tempTextAreaField.style = "position:fixed;top:-5rem;height:1px;width:10px;";
+      let tempTextAreaField = document.createElement('textarea');
+      tempTextAreaField.style = 'position:fixed;top:-5rem;height:1px;width:10px;';
 
       // Assign the content we want to copy to the clipboard to the temporary text area field
       tempTextAreaField.value = text;
 
       // Append it to the body of the page
-      document.getElementById("cockpitContent").appendChild(tempTextAreaField);
+      document.getElementById('cockpitContent').appendChild(tempTextAreaField);
 
       // Select the content of the temporary markup field
       tempTextAreaField.select();
 
       // Run the copy function to put the content to the clipboard
-      document.execCommand("copy");
+      document.execCommand('copy');
 
       // Remove the temporary element from the DOM as it is no longer needed
       tempTextAreaField.remove();
@@ -284,7 +270,7 @@ const DisplayPage = React.forwardRef((props, ref) => {
       // navigator.clipboard.writeText(text).then(() => {})
     }
     biciNotification.success({
-      message: "复制成功",
+      message: '复制成功',
     });
     setVisiable((prevState) => ({
       ...prevState,
@@ -313,10 +299,10 @@ const DisplayPage = React.forwardRef((props, ref) => {
       const tempPwd = Math.random().toString(36).substr(2, 6);
       form.setFieldsValue({
         password: tempPwd,
-        shareLink: "",
+        shareLink: '',
       });
     } else {
-      form.resetFields(["password"]);
+      form.resetFields(['password']);
     }
     setDisabled((prevState) => ({
       ...prevState,
@@ -328,11 +314,11 @@ const DisplayPage = React.forwardRef((props, ref) => {
     if (e.target.checked) {
       form.setFieldsValue({
         validDay: 7,
-        shareLink: "",
+        shareLink: '',
       });
       handleValidDay();
     } else {
-      form.resetFields(["validDay"]);
+      form.resetFields(['validDay']);
       handleValidDay();
     }
     setDisabled((prevState) => ({
@@ -341,12 +327,12 @@ const DisplayPage = React.forwardRef((props, ref) => {
     }));
   };
   const limitDecimals = (value) => {
-    return value.toString().replace(/^(0+)|[^\d]+/g, "");
+    return value.toString().replace(/^(0+)|[^\d]+/g, '');
   };
 
   const style = {
-    width: "100vw",
-    height: "100vh",
+    width: '100vw',
+    height: '100vh',
     // zIndex: 1,
     // position: 'relative',
     // margin: '0 auto',
@@ -354,22 +340,24 @@ const DisplayPage = React.forwardRef((props, ref) => {
   };
 
   const headerStyle = {
-    width: "100%",
+    width: '100%',
     height: 48,
-    lineHeight: "48px",
-    position: "absolute",
-    padding: "0 12px",
-    background: "rgba(51,51,51,0.8)",
-    color: "#fff",
+    lineHeight: '48px',
+    position: 'absolute',
+    padding: '0 12px',
+    background: 'rgba(51,51,51,0.8)',
+    color: '#fff',
     zIndex: 1,
     left: 0,
     top: headShow ? 0 : -48,
-    transition: "top 0.3s",
+    transition: 'top 0.3s',
   };
 
   const spanStyle = {
-    display: "inline-block",
-    overflow: "hidden",
+    display: 'inline-block',
+    overflow: 'hidden',
+    marginLeft: 6,
+    marginRight: 6,
   };
 
   const formLayout = {
@@ -381,19 +369,15 @@ const DisplayPage = React.forwardRef((props, ref) => {
     <Modal
       title="查看看板"
       centered
-      getContainer={document.getElementById("cockpitContent")}
+      getContainer={document.getElementById('cockpitContent')}
       visible={visiable.needPwd}
       mask={true}
       maskClosable={false}
       maskStyle={{
-        backgroundColor: "rgba(0, 0, 0, 0.9)",
+        backgroundColor: 'rgba(0, 0, 0, 0.9)',
       }}
       footer={[
-        <Button
-          key="submit"
-          type="primary"
-          onClick={() => getSharedBoardData(specialToken, sharePwd)}
-        >
+        <Button key="submit" type="primary" onClick={() => getSharedBoardData(specialToken, sharePwd)}>
           确定
         </Button>,
       ]}
@@ -411,7 +395,7 @@ const DisplayPage = React.forwardRef((props, ref) => {
     <Modal
       title="看板共享"
       visible={visiable.shareForm}
-      getContainer={document.getElementById("cockpitContent")}
+      getContainer={document.getElementById('cockpitContent')}
       onCancel={handleCancelShareModal}
       footer={[
         <Button key="back" onClick={handleCancelShareModal}>
@@ -427,7 +411,7 @@ const DisplayPage = React.forwardRef((props, ref) => {
       <Form {...formLayout} name="shareForm" form={form}>
         <Form.Item label="设置密码">
           <Checkbox
-            className="ml10 mr16"
+            style={{ marginLeft: 10, marginRight: 16 }}
             checked={!disabled.pwdInput}
             onChange={handlePwdCheckBox}
           />
@@ -438,7 +422,7 @@ const DisplayPage = React.forwardRef((props, ref) => {
               placeholder="请填写密码"
               onChange={() =>
                 form.setFieldsValue({
-                  shareLink: "",
+                  shareLink: '',
                 })
               }
             />
@@ -447,7 +431,7 @@ const DisplayPage = React.forwardRef((props, ref) => {
 
         <Form.Item label="设置有效期">
           <Checkbox
-            className="ml10 mr16"
+            style={{ marginLeft: 10, marginRight: 16 }}
             checked={!disabled.validityInput}
             onChange={handleValidityCheckBox}
           />
@@ -462,7 +446,7 @@ const DisplayPage = React.forwardRef((props, ref) => {
               onChange={handleValidDay}
             />
           </Form.Item>
-          <span className="ml16">有效值至{validDate}</span>
+          <span style={{ marginLeft: 16 }}>有效值至{validDate}</span>
         </Form.Item>
         <Form.Item>
           <a style={{ marginLeft: 130 }} onClick={generateLink}>
@@ -480,9 +464,9 @@ const DisplayPage = React.forwardRef((props, ref) => {
     <ConfigProvider prefixCls="antd-bici-cockpit">
       <div
         style={{
-          position: "relative",
-          background: "#EAEEF2",
-          overflow: "hidden",
+          position: 'relative',
+          background: '#EAEEF2',
+          overflow: 'hidden',
           ...wrapperStyle,
         }}
         id={NEW_FULL_SCREEN_ID}
@@ -490,11 +474,11 @@ const DisplayPage = React.forwardRef((props, ref) => {
         <div
           style={{
             height: 48,
-            position: "absolute",
+            position: 'absolute',
             left: 0,
             top: 0,
             zIndex: 2,
-            width: "100%",
+            width: '100%',
           }}
           onMouseEnter={handleMove}
           onMouseLeave={handleMove}
@@ -503,36 +487,36 @@ const DisplayPage = React.forwardRef((props, ref) => {
           <div style={headerStyle}>
             <Row>
               <Col span={4}>
-                <span className="ml12">No.{data.code}</span>
+                <span style={{ marginLeft: 12 }}>No.{data.code}</span>
                 <CopyToClipboard text={data.code} onCopy={handlerCopyCode}>
-                  <CopyOutlined className="ml4" />
+                  <CopyOutlined style={{ marginLeft: 4 }} />
                 </CopyToClipboard>
               </Col>
               <Col span={14}>
                 <span style={spanStyle}>{data.name}</span>
-                <span className="ml6 mr6" style={spanStyle}>
-                  /
-                </span>
+                {data.typeName && (
+                  <>
+                    <span style={spanStyle}>/</span>
+                    <span
+                      style={{
+                        ...spanStyle,
+                        maxWidth: '10rem',
+                        whiteSpace: 'nowrap',
+                        textOverflow: 'ellipsis',
+                      }}
+                    >
+                      {data.typeName}
+                    </span>
+                  </>
+                )}
+                <span style={spanStyle}>/</span>
                 <span
                   style={{
-                    ...spanStyle,
-                    maxWidth: "10rem",
-                    whiteSpace: "nowrap",
-                    textOverflow: "ellipsis",
-                  }}
-                >
-                  {data.typeName}
-                </span>
-                <span className="ml6 mr6" style={spanStyle}>
-                  /
-                </span>
-                <span
-                  style={{
-                    maxWidth: "10rem",
-                    overflow: "hidden",
-                    whiteSpace: "nowrap",
-                    textOverflow: "ellipsis",
-                    display: "inline-block",
+                    maxWidth: '10rem',
+                    overflow: 'hidden',
+                    whiteSpace: 'nowrap',
+                    textOverflow: 'ellipsis',
+                    display: 'inline-block',
                   }}
                 >
                   {data.remark}
@@ -541,7 +525,7 @@ const DisplayPage = React.forwardRef((props, ref) => {
               <Col span={4} push={2}>
                 {visiable.shareVisiable && (
                   <span
-                    style={{ cursor: "pointer" }}
+                    style={{ cursor: 'pointer' }}
                     onClick={() =>
                       setVisiable((prevState) => ({
                         ...prevState,
@@ -550,23 +534,21 @@ const DisplayPage = React.forwardRef((props, ref) => {
                     }
                   >
                     <ShareAltOutlined />
-                    <span className="ml6" style={{ marginRight: 36 }}>
+                    <span style={{ marginLeft: 6 }} style={{ marginRight: 36 }}>
                       看板分享
                     </span>
                   </span>
                 )}
-                <span style={{ cursor: "pointer" }} onClick={handleShowFullScreen}>
-                  <IconFont type={isFullScreen ? "shouqi1" : "quanping"} />
-                  <span className="ml6">{isFullScreen ? "退出全屏" : "展示全屏"}</span>
+                <span style={{ cursor: 'pointer' }} onClick={handleShowFullScreen}>
+                  <IconFont type={isFullScreen ? 'shouqi1' : 'quanping'} />
+                  <span style={{ marginLeft: 6 }}>{isFullScreen ? '退出全屏' : '展示全屏'}</span>
                 </span>
               </Col>
             </Row>
           </div>
         </div>
         <div style={style} id="cockpitContent">
-          {Preview && editorData && socketToken && (
-            <Preview data={editorData} websocketConf={websocketConf} />
-          )}
+          {Preview && editorData && socketToken && <Preview data={editorData} websocketConf={websocketConf} />}
         </div>
         {renderShareModal}
         {renderSeePwdModal}
