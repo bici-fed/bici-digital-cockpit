@@ -3,6 +3,7 @@ import { Modal, ConfigProvider } from 'antd';
 import BoardCreate from '../DigitalBoard/BoardCreate';
 import { fetchBoardDetail, updateBoardConfigProp } from '@/apis/board';
 import { getEncryption } from '@/utils/index';
+import { industry_List } from '@/constant';
 
 import preBgImg1 from '@/assets/img/pre_bgimg_1.jpg';
 import preBgImg2 from '@/assets/img/pre_bgimg_2.jpg';
@@ -181,6 +182,15 @@ const DigitalCockpit = React.forwardRef((props, ref) => {
         url: '/applications/customComponent/update',
         params: {},
       },
+    },
+    industry: {
+      baseURL: baseUrl,
+      mappingId: boardData.companyId,
+      token: token,
+      list: {
+        url: '/applications/custom/component/industryList',
+      },
+      projectIndustryCats: industry_List,
     },
   };
 
