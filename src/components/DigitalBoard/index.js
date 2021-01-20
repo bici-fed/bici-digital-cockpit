@@ -31,9 +31,10 @@ const DigitalBoard = (props) => {
   });
   // 标签选择
   const [typeSelect, setTypeSelect] = useState({
-    selectedTypes: [], // 最后选择的标签
+    currntSelectedTypes: [], // 当前选择的所有标签
     indexSelected: [], // 显示的checkgroup的标签选择
-    hideSelected: [], // 隐藏的checkgroup的标签选择
+    hideSelected: [], // 隐藏的checkgroup的标签选择，
+    currentHide: [],
   });
   // 展示的标签数据列表
   const [tagShow, setTagShow] = useState({
@@ -52,10 +53,8 @@ const DigitalBoard = (props) => {
   });
   // 搜索信息
   const [searchInfo, setSearchInfo] = useState({
-    boardName: undefined,
+    name: undefined,
     tagIdList: [],
-    prevTagList: [],
-    prevHideTags: [],
   });
   // tag下来显示
   const [showDropdown, setShowDropdown] = useState(false);
@@ -84,43 +83,34 @@ const DigitalBoard = (props) => {
   const requestTypeList = async () => {
     if (!useTag) return;
     const data = await fetchTypeList(requestClient, {}, token);
-    const tags = data.map((tag) => {
-      return {
-        value: tag.id,
-        label: tag.name,
-      };
-    });
-    setTypeTagData((prevState) => ({
-      ...prevState,
+    const tags = data.map((tag) => ({ value: tag.id, label: tag.name }));
+    setTypeTagData({
+      ...typeTagData,
       typeList: tags,
-    }));
+    });
     if (tags.length >= 5) {
       setTagShow(() => ({
         indexTypes: tags.slice(0, 4),
         otherTypes: tags.slice(4),
       }));
       setTypeSelect(() => ({
-        selectedTypes: tags.map((item) => item.value),
+        currntSelectedTypes: tagVals,
         indexSelected: tags.slice(0, 4).map((item) => item.value),
         hideSelected: tags.slice(4).map((item) => item.value),
       }));
     } else {
-      setTagShow((prevState) => ({
-        ...prevState,
-        indexTypes: tags.slice(0, 4),
-      }));
+      setTagShow({ ...tagShow, indexTypes: tags.slice(0, 4) });
       setTypeSelect(() => ({
-        selectedTypes: tags.map((item) => item.value),
+        currntSelectedTypes: tagVals,
         indexSelected: tags.slice(0, 4).map((item) => item.value),
         hideSelected: [],
       }));
     }
 
-    setSearchInfo((prevState) => ({
-      ...prevState,
-      tagIdList: tags.map((item) => item.value),
-      prevTagList: tags.map((item) => item.value),
-    }));
+    setSearchInfo({
+      ...searchInfo,
+      tagIdList: tagVals,
+    });
   };
 
   // 配置面板
@@ -149,150 +139,123 @@ const DigitalBoard = (props) => {
 
   // 改变看板布局
   const handleSizeChange = (e) => {
+    let pageSize = pagination.pageSize;
     if (Number(e.target.value) === 4) {
       setColHeight(() => 210);
-      setPagination((prevState) => ({
-        ...prevState,
-        pageSize: 30,
-      }));
+      pageSize = 30;
     }
 
     if (Number(e.target.value) === 8) {
       setColHeight(() => 410);
-      setPagination((prevState) => ({
-        ...prevState,
-        pageSize: 9,
-      }));
+      pageSize = 9;
     }
 
     if (Number(e.target.value) === 6) {
       setColHeight(() => 310);
-      setPagination((prevState) => ({
-        ...prevState,
-        pageSize: 12,
-      }));
+      pageSize = 12;
     }
 
     setColSize(Number(e.target.value));
+    setPagination({ ...pagination, pageSize });
+    requestBoardList({ ...searchInfo, pagination: { ...pagination, pageSize } });
   };
   // 展示的类型选择
   const onTypeChange = (checkedList) => {
     const newSeletedList = [...typeSelect.hideSelected, ...checkedList];
-    setTypeTagData((prevState) => ({
-      ...prevState,
-      indeterminate: !!checkedList.length && newSeletedList.length < typeTagData.typeList.length,
-      checkAll: newSeletedList.length === typeTagData.typeList.length,
-    }));
-    setTypeSelect((prevState) => ({
-      ...prevState,
-      selectedTypes: newSeletedList,
+    setTagCheckGroup({
+      ...tagCheckGroup,
+      indeterminate: !!checkedList.length && newSeletedList.length < tagCheckGroup.typeList.length,
+      checkAll: newSeletedList.length === tagCheckGroup.typeList.length,
+    });
+    setTypeSelect({
+      ...typeSelect,
+      currntSelectedTypes: newSeletedList,
       indexSelected: checkedList,
-    }));
+    });
 
     // 后端查询
-    requestBoardList({
-      name: searchInfo.boardName,
-      tagIdList: newSeletedList,
-    });
-    setSearchInfo((prevState) => ({
-      ...prevState,
-      tagIdList: newSeletedList,
-      prevTagList: newSeletedList,
-    }));
+    if (newSeletedList.length > 0) {
+      requestBoardList({ ...searchInfo, tagIdList: newSeletedList });
+      setSearchInfo({ ...searchInfo, tagIdList: newSeletedList });
+    } else {
+      setBoardList([]);
+      setSearchInfo({ ...searchInfo, tagIdList: [] });
+    }
   };
   // 隐藏类型的选择事件
   const hideTypeChange = (checkedList) => {
     const newSeletedList = [...typeSelect.indexSelected, ...checkedList];
-    setTypeTagData((prevState) => ({
-      ...prevState,
-      indeterminate: !!checkedList.length && newSeletedList.length < typeTagData.typeList.length,
-      checkAll: newSeletedList.length === typeTagData.typeList.length,
-    }));
-    // 后端查询
-    setSearchInfo((prevState) => ({
-      ...prevState,
-      tagIdList: newSeletedList,
-      prevHideTags: typeSelect.hideSelected,
-    }));
-    // 控制标签显示
-    setTypeSelect((typeSelect) => ({
+    setTagCheckGroup({
+      ...tagCheckGroup,
+      indeterminate: !!checkedList.length && newSeletedList.length < tagCheckGroup.typeList.length,
+      checkAll: newSeletedList.length === tagCheckGroup.typeList.length,
+    });
+    //标签选择
+    setTypeSelect({
       ...typeSelect,
-      selectedTypes: newSeletedList,
-      hideSelected: checkedList,
-    }));
+      currntSelectedTypes: newSeletedList,
+      currentHide: checkedList,
+    });
   };
   // 选择全部标签
   const onCheckAllChange = (e) => {
-    const checkedList = e.target.checked ? typeTagData.typeList.map((item) => item.value) : [];
-    setTypeTagData((prevState) => ({
+    const checkedList = e.target.checked ? tagCheckGroup.typeList.map((item) => item.value) : [];
+    setTagCheckGroup((prevState) => ({
       ...prevState,
       indeterminate: false,
       checkAll: e.target.checked,
     }));
     setTypeSelect({
-      selectedTypes: checkedList,
+      currntSelectedTypes: checkedList,
       indexSelected: e.target.checked ? tagShow.indexTypes.map((item) => item.value) : [],
       hideSelected: e.target.checked ? tagShow.otherTypes.map((item) => item.value) : [],
     });
 
     // 后端查询
     if (e.target.checked) {
-      requestBoardList({
-        ...pagination,
-        name: searchInfo.boardName,
-        tagIdList: checkedList,
-      });
-      setSearchInfo((prevState) => ({
-        ...prevState,
-        tagIdList: checkedList,
-      }));
+      requestBoardList({name: searchInfo.name, tagIdList: checkedList });
+      setSearchInfo({ ...searchInfo, tagIdList: checkedList });
     } else {
       setBoardList([]);
-      setSearchInfo((prevState) => ({
-        ...prevState,
-        tagIdList: [],
-      }));
+      setSearchInfo({ ...searchInfo, tagIdList: [] });
     }
   };
 
   // 处理标签选择确认
   const handleTagSeletedOk = () => {
-    if (searchInfo.tagIdList.length > 0) {
-      requestBoardList({
-        name: searchInfo.boardName,
-        tagIdList: searchInfo.tagIdList,
-      });
+    if (typeSelect.currntSelectedTypes.length > 0) {
+      requestBoardList({ name: searchInfo.name, tagIdList: typeSelect.currntSelectedTypes });
+      setSearchInfo({ ...searchInfo, tagIdList: typeSelect.currntSelectedTypes });
     } else {
       setBoardList([]);
+      setSearchInfo({ ...searchInfo, tagIdList: [] });
     }
+    setTypeSelect({ ...typeSelect, hideSelected: typeSelect.currentHide });
     setShowDropdown(false);
-    // 设置上一次查询的tag列表
-    setSearchInfo((prevState) => ({
-      ...prevState,
-      prevTagList: searchInfo.tagIdList,
-    }));
   };
 
   // 处理标签选择取消
   const handleTagSeletedCanel = () => {
-    if (searchInfo.prevTagList.length === typeTagData.typeList.length) {
-      setTypeTagData((prevState) => ({
-        ...prevState,
+    setTypeSelect({
+      ...typeSelect,
+      currntSelectedTypes: searchInfo.tagIdList,
+    });
+
+    if (searchInfo.tagIdList.length === tagCheckGroup.typeList.length) {
+      setTagCheckGroup({
+        ...tagCheckGroup,
         indeterminate: false,
         checkAll: true,
-      }));
+      });
+    } else {
+      setTagCheckGroup({
+        ...tagCheckGroup,
+        indeterminate: true,
+        checkAll: false,
+      });
     }
     // 设置hidelist
     setShowDropdown(false);
-    setTypeSelect((prevState) => ({
-      ...prevState,
-      selectedTypes: searchInfo.prevTagList,
-      hideSelected: searchInfo.prevHideTags,
-    }));
-    requestBoardList({
-      name: searchInfo.boardName,
-      tagIdList: searchInfo.prevTagList,
-    });
   };
 
   // 滚动加载更多
@@ -302,16 +265,8 @@ const DigitalBoard = (props) => {
     } else {
       if (boardList.length !== pagination.total) {
         const size = colSize === 4 ? 30 : colSize === 6 ? 12 : 9;
-        setPagination((prevState) => ({
-          ...prevState,
-          pageSize: pagination.pageSize + size,
-        }));
-        requestBoardList({
-          pagination: {
-            ...pagination,
-            pageSize: pagination.pageSize + size,
-          },
-        });
+        setPagination({ ...pagination, pageSize: pagination.pageSize + size });
+        requestBoardList({ pagination: { ...pagination, pageSize: pagination.pageSize + size }, ...searchInfo });
       }
     }
   };
@@ -351,7 +306,7 @@ const DigitalBoard = (props) => {
     <div ref={tagMoreRef}>
       <Menu style={{ width: 440 }} selectable={false}>
         <Menu.Item>
-          <Checkbox.Group style={{ width: '100%' }} value={typeSelect.selectedTypes} onChange={hideTypeChange}>
+          <Checkbox.Group style={{ width: '100%' }} value={typeSelect.currntSelectedTypes} onChange={hideTypeChange}>
             <Row gutter={[16, 16]}>
               {tagShow.otherTypes.map((item, index) => {
                 return (
@@ -387,14 +342,14 @@ const DigitalBoard = (props) => {
   );
 
   const handleSearchBtn = (value) => {
-    const { selectedTypes } = typeSelect;
-    const useType = selectedTypes.length > 0;
-    const searchParams = useType ? { name: value, tagIdList: selectedTypes } : { name: value };
+    const { currntSelectedTypes } = typeSelect;
+    const useType = currntSelectedTypes.length > 0;
+    const searchParams = useType ? { name: value, tagIdList: currntSelectedTypes } : { name: value };
     requestBoardList(searchParams);
-    setSearchInfo((prevState) => ({
-      ...prevState,
+    setSearchInfo({
+      ...searchInfo,
       boardName: value,
-    }));
+    });
   };
 
   // 渲染工具栏
@@ -435,7 +390,7 @@ const DigitalBoard = (props) => {
                 style={{
                   marginRight: 30,
                 }}
-                value={typeSelect.selectedTypes}
+                value={typeSelect.currntSelectedTypes}
                 onChange={onTypeChange}
               >
                 <Row>
@@ -526,7 +481,7 @@ const DigitalBoard = (props) => {
         </Row>
       </div>
     );
-  }, [boardList, colHeight, colSize]);
+  }, [boardList, colHeight, colSize, useTag, permissionBtn, wrapperStyle]);
 
   return (
     <ConfigProvider prefixCls="antd-bici-cockpit">

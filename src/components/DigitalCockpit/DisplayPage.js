@@ -18,7 +18,7 @@ import { BOARD_SHARE_VERIFIED } from '@/constant';
 const NEW_FULL_SCREEN_ID = 'new_cockpit_full_screen';
 
 const DisplayPage = React.forwardRef((props, ref) => {
-  const { token, shareBtnPermission, Preview, websocketConf, logout, boardUrlId, requestClient, wrapperStyle } = props;
+  const { token, shareBtnPermission, Preview, wsUrl, logout, boardUrlId, requestClient, wrapperStyle } = props;
 
   const [form] = Form.useForm();
 
@@ -54,6 +54,10 @@ const DisplayPage = React.forwardRef((props, ref) => {
     shareBtn: true,
   });
 
+  const websocketConf = {
+    url: `${wsUrl}?token=${socketToken}`,
+  };
+
   // 对父组件暴露保存数据的接口
   useImperativeHandle(
     ref,
@@ -67,29 +71,32 @@ const DisplayPage = React.forwardRef((props, ref) => {
 
   // 判断进入时是否需要密码
   const handleSharePwdModal = useCallback(async () => {
-    const { id, isShare, tokenTmp } = JSON.parse(getDecryption(boardUrlId));
+    const { id, isShare, token: tokenTmp } = JSON.parse(getDecryption(boardUrlId));
     // 设置看板id
     setId(() => id);
     setSpecialToken(tokenTmp);
+
     if (isShare && tokenTmp) {
+      console.log('share token', tokenTmp);
       setSocketToken(tokenTmp);
-      setVisiable((prevState) => ({
-        ...prevState,
+      setVisiable({
+        ...visiable,
         shareVisiable: false,
-      }));
+      });
       const res = await hasSharePwd(requestClient, tokenTmp);
 
       const shareVerified = localStorage.getItem(BOARD_SHARE_VERIFIED) === 'true' ? true : false;
       if (res && !shareVerified) {
         // 需要密码认证
-        setVisiable((prevState) => ({
-          ...prevState,
+        setVisiable({
+          ...visiable,
           needPwd: true,
-        }));
+        });
       } else {
         // 分享的不需要密码
         // 获取看板详情
         const data = await checkSharePwdAndGetData(requestClient, tokenTmp);
+        console.log(data, tokenTmp);
         if (data) {
           setData(() => data);
           if (data.property) {
@@ -126,6 +133,7 @@ const DisplayPage = React.forwardRef((props, ref) => {
       }
     }
   }, [boardUrlId]);
+
   // 日期处理
   const handleValidDay = useCallback(() => {
     const days = form.getFieldValue('validDay');
@@ -150,7 +158,7 @@ const DisplayPage = React.forwardRef((props, ref) => {
       const visible = getFullScreenState();
       setIsFullScreen(() => visible);
     });
-  }, [handleSharePwdModal]);
+  }, [handleSharePwdModal, token]);
 
   useEffect(() => {
     handleValidDay();
@@ -172,10 +180,7 @@ const DisplayPage = React.forwardRef((props, ref) => {
         const getEditorData = JSON.parse(data.property);
         setEditorData(getEditorData);
       }
-      setVisiable((prevState) => ({
-        ...prevState,
-        needPwd: false,
-      }));
+      setVisiable({ ...visiable, needPwd: false });
     }
   };
 
@@ -191,10 +196,7 @@ const DisplayPage = React.forwardRef((props, ref) => {
   };
   // 分享Modal取消处理
   const handleCancelShareModal = () => {
-    setVisiable((prevState) => ({
-      ...prevState,
-      shareForm: false,
-    }));
+    setVisiable({ ...visiable, shareForm: false });
     restShareModal();
   };
 

@@ -92,12 +92,13 @@ const BoardCreate = (props) => {
               status: 'done',
               url: item.url,
             }));
-            setFileList(() => files);
+            setFileList(files);
           });
         }
+      }else {
+        setPicType(data.thumbnailType);
       }
 
-      setPicType(data.thumbnailType);
 
       const permissionData = (data.newCockpitVisibleConfigList || []).map((item) => ({
         id: item.userId,
