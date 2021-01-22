@@ -17,8 +17,8 @@ import { BOARD_SHARE_INFO } from '@/constant';
 
 const NEW_FULL_SCREEN_ID = 'new_cockpit_full_screen';
 
-const DisplayPage = React.forwardRef((props, ref) => {
-  const { token, shareBtnPermission, Preview, wsUrl, logout, boardUrlId, requestClient, wrapperStyle } = props;
+const DisplayPage = (props) => {
+  const { token, shareBtnPermission, Preview, wsUrl, logout, encodeUrl, requestClient, wrapperStyle } = props;
 
   const [form] = Form.useForm();
 
@@ -58,17 +58,6 @@ const DisplayPage = React.forwardRef((props, ref) => {
     url: `${wsUrl}?token=${socketToken}`,
   };
 
-  // 对父组件暴露保存数据的接口
-  useImperativeHandle(
-    ref,
-    () => ({
-      clearShareVerifiy: () => {
-        clearShareVerifiy();
-      },
-    }),
-    [],
-  );
-
   // 日期处理
   const handleValidDay = useCallback(() => {
     const days = form.getFieldValue('validDay');
@@ -78,7 +67,7 @@ const DisplayPage = React.forwardRef((props, ref) => {
     } else {
       validDate.setDate(validDate.getDate() + 30);
     }
-    setValidDate(() => validDate.toLocaleDateString());
+    setValidDate(validDate.toLocaleDateString());
     form.setFieldsValue({ shareLink: '' });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setValidDate]);
@@ -87,92 +76,97 @@ const DisplayPage = React.forwardRef((props, ref) => {
     if (token) {
       setSocketToken(token);
     }
-    handleSharePwdModal();
     // 全屏监听器
     addFullScreenChanegListener(() => {
       const visible = getFullScreenState();
-      setIsFullScreen(() => visible);
+      setIsFullScreen(visible);
     });
-  }, [boardUrlId, token]);
+  }, [token]);
+
+  useEffect(() => {
+    if (encodeUrl) {
+      const { id, isShare, token: tokenTmp } = JSON.parse(getDecryption(encodeUrl));
+      setId(id);
+      setSpecialToken(tokenTmp);
+      if (isShare && tokenTmp) {
+        // 分享链接
+        getSharedData(id, tokenTmp);
+      } else {
+        // 正常查看链接
+        getNoSharedData(id);
+      }
+    }
+  }, [encodeUrl]);
 
   useEffect(() => {
     handleValidDay();
   }, [handleValidDay]);
 
-  const clearShareVerifiy = () => {
-    localStorage.removeItem(BOARD_SHARE_VERIFIED);
-  };
+  // 分享获取详情
+  const getSharedData = async (id, tokenTmp) => {
+    setSocketToken(tokenTmp);
+    setVisiable({
+      ...visiable,
+      shareVisiable: false,
+    });
+    const res = await hasSharePwd(requestClient, tokenTmp);
 
-  // 判断进入时是否需要密码
-  const handleSharePwdModal = async () => {
-    const { id, isShare, token: tokenTmp } = JSON.parse(getDecryption(boardUrlId));
-    // 设置看板id
-    setId(id);
-    setSpecialToken(tokenTmp);
+    const shareBoardInfoList = JSON.parse(localStorage.getItem(BOARD_SHARE_INFO) || '[]');
+    const hasVerifiedEncodeUrl = shareBoardInfoList.filter((item) => item.key === encodeUrl).length > 0;
 
-    if (isShare && tokenTmp) {
-      setSocketToken(tokenTmp);
+    if (res && !hasVerifiedEncodeUrl) {
+      // 分享 需要密码认证
       setVisiable({
         ...visiable,
-        shareVisiable: false,
+        needPwd: true,
       });
-      const res = await hasSharePwd(requestClient, tokenTmp);
-
-      const shareBoardInfoList = JSON.parse(localStorage.getItem(BOARD_SHARE_INFO) || '[]');
-      const hasVerifiedBoardId = shareBoardInfoList.filter((item) => item.id === id).length > 0;
-
-      if (res && !hasVerifiedBoardId) {
-        // 分享 需要密码认证
-        setVisiable({
-          ...visiable,
-          needPwd: true,
-        });
-      } else {
-        let data = undefined;
-        if (!res) {
-          // 分享的不需要密码
-          // 获取看板详情
-          data = await checkSharePwdAndGetData(requestClient, tokenTmp);
-        } else {
-          // 分享  已经认证过
-          const pwd = window.atob(shareBoardInfoList.filter((item) => item.id === id)[0].pwd);
-          data = await checkSharePwdAndGetData(requestClient, tokenTmp, pwd);
-        }
-
-        if (data) {
-          setData(() => data);
-          if (data.property) {
-            const getEditorData = JSON.parse(data.property);
-            setEditorData(getEditorData);
-          } else {
-            biciNotification.warning({
-              message: '未配置看板！',
-            });
-          }
-        }
-      }
     } else {
-      // 不是分享的
-      // 获取看板详情
-      try {
-        const data = await fetchBoardDetail(requestClient, { id }, token);
-        // 同一个companyId下的用户才能看
-        if (data) {
-          setData(data);
-          if (data.property) {
-            const getEditorData = JSON.parse(data.property);
-            setEditorData(getEditorData);
-          } else {
-            biciNotification.warning({
-              message: '请配置看板！',
-            });
-          }
-        }
-      } catch (error) {
-        // 不是同一companyId跳转到login
-        // 跳转到登录
-        logout && logout(error);
+      let data = undefined;
+      if (!res) {
+        // 分享的不需要密码
+        // 获取看板详情
+        data = await checkSharePwdAndGetData(requestClient, tokenTmp);
+      } else {
+        // 分享  已经认证过
+        const pwd = window.atob(shareBoardInfoList.filter((item) => item.key === encodeUrl)[0].pwd);
+        data = await checkSharePwdAndGetData(requestClient, tokenTmp, pwd);
       }
+
+      if (data) {
+        setData(data);
+        if (data.property) {
+          const getEditorData = JSON.parse(data.property);
+          setEditorData(getEditorData);
+        } else {
+          biciNotification.warning({
+            message: '未配置看板！',
+          });
+        }
+      }
+    }
+  };
+
+  const getNoSharedData = async (id) => {
+    // 不是分享的
+    // 获取看板详情
+    try {
+      const data = await fetchBoardDetail(requestClient, { id }, token);
+      // 同一个companyId下的用户才能看
+      if (data) {
+        setData(data);
+        if (data.property) {
+          const getEditorData = JSON.parse(data.property);
+          setEditorData(getEditorData);
+        } else {
+          biciNotification.warning({
+            message: '请配置看板！',
+          });
+        }
+      }
+    } catch (error) {
+      // 不是同一companyId跳转到login
+      // 跳转到登录
+      logout && logout(error);
     }
   };
 
@@ -182,7 +176,7 @@ const DisplayPage = React.forwardRef((props, ref) => {
 
     if (data) {
       const shareInfo = JSON.parse(localStorage.getItem(BOARD_SHARE_INFO) || '[]');
-      shareInfo.push({ id, pwd: window.btoa(sharePwd) });
+      shareInfo.push({ key: encodeUrl, pwd: window.btoa(sharePwd) });
       localStorage.setItem(BOARD_SHARE_INFO, JSON.stringify(shareInfo));
       // 认证成功
       setData(data);
@@ -298,11 +292,6 @@ const DisplayPage = React.forwardRef((props, ref) => {
       const fullScreenElement = document.getElementById(NEW_FULL_SCREEN_ID);
       launchFullscreen(fullScreenElement);
     }
-  };
-  // 移动显示隐藏头部
-  const handleMove = (e) => {
-    e.stopPropagation();
-    setHeadShow(!headShow);
   };
 
   // 处理密码框勾选
@@ -574,6 +563,6 @@ const DisplayPage = React.forwardRef((props, ref) => {
       </div>
     </ConfigProvider>
   );
-});
+};
 
 export default DisplayPage;

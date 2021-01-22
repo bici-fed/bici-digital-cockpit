@@ -298,6 +298,16 @@ const BoardCreate = (props) => {
       }
     });
   };
+
+  const coverCodeOnClick = (code) => {
+    if (form.getFieldValue('coverRadio') !== 2 && fileList.length !== 0) {
+      biciNotification.error({ message: '请先删除图片!' });
+      form.setFieldsValue({ coverRadio: 2 });
+      return;
+    }
+    setPicType(code);
+  };
+
   // 渲染看板可选的缩略图
   const renderCover = () => {
     const coverCode = [1, 2, 3, 4];
@@ -306,17 +316,10 @@ const BoardCreate = (props) => {
     return coverCode.map((code) => {
       const srcMap = { 1: board1, 2: board2, 3: board3, 4: board4 };
       const src = srcMap[code];
-      const isActive = picType === code;
+      const isActive = picType === code && fileList.length === 0;
       return (
         <div style={{ position: 'relative', marginRight: 8 }} key={code}>
-          <img
-            style={prefixImgStyle}
-            alt={`board-cover-${code}`}
-            src={src}
-            onClick={() => {
-              setPicType(code);
-            }}
-          />
+          <img style={prefixImgStyle} alt={`board-cover-${code}`} src={src} onClick={() => coverCodeOnClick(code)} />
           {isActive && (
             <CheckCircleFilled style={{ position: 'absolute', top: 2, right: 2, fontSize: 16, color: '#1890ff' }} />
           )}
