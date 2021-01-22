@@ -48,7 +48,7 @@ export const createShareLink = (request, params, token) =>
 
 // 查看分享看板链接是否有密码
 export const hasSharePwd = (request, token) =>
-  request.get(`/applications/newBoard/boardShareLinkExistPassword/${token}`);
+  request.get(`/applications/newBoard/boardShareLinkExistPassword`, { params: { token } });
 
 // 获取看板分享数据
 export const checkSharePwdAndGetData = (request, token, password) =>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { CheckCircleFilled, UploadOutlined } from '@ant-design/icons';
+import { CheckCircleFilled, PlusOutlined } from '@ant-design/icons';
 import { Form, Modal, Button, Radio, Input, Upload, Select, TreeSelect } from 'antd';
 import { BiciTagsManager, biciNotification } from 'bici-transformers';
 import _ from 'lodash';
@@ -7,6 +7,8 @@ import { createBoard, modifyBoard } from '@/apis/board';
 import { deleteTags, getTagsList, saveTags, updateTags } from '@/apis/tag';
 import { fileDelete, batchFileMappingId, requestUploadDetail } from '@/apis/file';
 import BiciDraggableModal from '@/components/BiciDraggableModal';
+
+import '@/assets/css/index.css';
 
 import board1 from '@/assets/img/board-1.jpg';
 import board2 from '@/assets/img/board-2.jpg';
@@ -95,10 +97,9 @@ const BoardCreate = (props) => {
             setFileList(files);
           });
         }
-      }else {
+      } else {
         setPicType(data.thumbnailType);
       }
-
 
       const permissionData = (data.newCockpitVisibleConfigList || []).map((item) => ({
         id: item.userId,
@@ -358,12 +359,12 @@ const BoardCreate = (props) => {
   };
   // 处理图片上传
   const handleUploadChange = ({ fileList }) => {
-    setPicType(() => undefined);
-    setFileList(() => fileList.filter((file) => !!file.status));
+    setPicType(undefined);
+    setFileList(fileList.filter((file) => !!file.status));
   };
   // 处理图片移除
   const handleUploadRemove = (file) => {
-    if (data) {
+    if (!file.response) {
       // 回显时删除
       fileDelete(requestClient, { id: fileList[0].uid }, token).then((res) => {});
     } else {
@@ -375,6 +376,22 @@ const BoardCreate = (props) => {
   const handleTreeChange = (value) => {
     form.setFieldsValue({ deptUser: value });
   };
+
+  const onPreview = async (file) => {
+    let src = file.url;
+    if (!src) {
+      src = await new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file.originFileObj);
+        reader.onload = () => resolve(reader.result);
+      });
+    }
+    const image = new Image();
+    image.src = src;
+    const imgWindow = window.open(src);
+    imgWindow.document.write(image.outerHTML);
+  };
+
   // 渲染表单
   const renderForm = () => {
     return (
@@ -503,20 +520,26 @@ const BoardCreate = (props) => {
             <br />
             <Radio value={2} className="mt6">
               上传图片
-              <div className="mt6">
+              <div className="mt6 ml20">
                 <Upload
                   className="mt6 board-create-upload"
                   data={{ mappingType: 105, mappingId: data ? data.id : 3 }}
                   action={`${baseUrl}/api/file/file/upload`}
                   accept="image/jpeg,image/jpg,image/png"
                   headers={{ token }}
-                  listType="picture"
+                  listType="picture-card"
                   fileList={fileList}
+                  onPreview={onPreview}
                   onChange={handleUploadChange}
                   beforeUpload={beforeUpload}
                   onRemove={handleUploadRemove}
                 >
-                  {fileList.length >= 1 ? null : <Button icon={<UploadOutlined />}>上传文件</Button>}
+                  {fileList.length >= 1 ? null : (
+                    <div>
+                      <PlusOutlined />
+                      <div style={{ marginTop: 8 }}>上传文件</div>
+                    </div>
+                  )}
                 </Upload>
               </div>
             </Radio>

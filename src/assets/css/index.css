@@ -1,0 +1,11 @@
+
+.board-create-upload .antd-bici-cockpit-btn {
+  outline: 0;
+  min-width: 0;
+}
+
+.board-create-upload .antd-bici-cockpit-upload-list-item {
+  float: left;
+  width: 350px;
+  margin-right: 8px;
+}

@@ -213,7 +213,7 @@ const DigitalBoard = (props) => {
 
     // 后端查询
     if (e.target.checked) {
-      requestBoardList({name: searchInfo.name, tagIdList: checkedList });
+      requestBoardList({ name: searchInfo.name, tagIdList: checkedList });
       setSearchInfo({ ...searchInfo, tagIdList: checkedList });
     } else {
       setBoardList([]);
@@ -348,7 +348,7 @@ const DigitalBoard = (props) => {
     requestBoardList(searchParams);
     setSearchInfo({
       ...searchInfo,
-      boardName: value,
+      name: value,
     });
   };
 

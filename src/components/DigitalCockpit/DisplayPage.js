@@ -77,7 +77,6 @@ const DisplayPage = React.forwardRef((props, ref) => {
     setSpecialToken(tokenTmp);
 
     if (isShare && tokenTmp) {
-      console.log('share token', tokenTmp);
       setSocketToken(tokenTmp);
       setVisiable({
         ...visiable,
@@ -96,7 +95,6 @@ const DisplayPage = React.forwardRef((props, ref) => {
         // 分享的不需要密码
         // 获取看板详情
         const data = await checkSharePwdAndGetData(requestClient, tokenTmp);
-        console.log(data, tokenTmp);
         if (data) {
           setData(() => data);
           if (data.property) {
@@ -175,7 +173,7 @@ const DisplayPage = React.forwardRef((props, ref) => {
     if (data) {
       localStorage.setItem(BOARD_SHARE_VERIFIED, 'true');
       // 认证成功
-      setData(() => data);
+      setData(data);
       if (data.property) {
         const getEditorData = JSON.parse(data.property);
         setEditorData(getEditorData);
@@ -292,7 +290,7 @@ const DisplayPage = React.forwardRef((props, ref) => {
   // 移动显示隐藏头部
   const handleMove = (e) => {
     e.stopPropagation();
-    setHeadShow(() => !headShow);
+    setHeadShow(!headShow);
   };
 
   // 处理密码框勾选

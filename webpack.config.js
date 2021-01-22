@@ -1,38 +1,44 @@
 const path = require("path");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
-module.exports = ["source-map"].map((devtool) => ({
-  mode: "development", // development | production
+module.exports = ['source-map'].map((devtool) => ({
+  mode: 'development', // development | production
   devtool,
-  entry: path.resolve(__dirname, "src/index.js"),
+  entry: path.resolve(__dirname, 'src/index.js'),
   output: {
-    path: path.resolve(__dirname, "dist"),
-    filename: "index.js",
-    library: "biciCockpit",
-    libraryTarget: "umd",
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'index.js',
+    library: 'biciCockpit',
+    libraryTarget: 'umd',
   },
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "src"),
+      '@': path.resolve(__dirname, 'src'),
     },
   },
   module: {
     rules: [
       {
         test: /\.css$/i,
-        use: ["style-loader", { loader: "css-loader", options: { modules: true } }],
+        exclude: path.resolve(__dirname, 'src/assets/css'),
+        use: ['style-loader', { loader: 'css-loader', options: { modules: true } }],
+      },
+      {
+        test: /\.css$/i,
+        include: path.resolve(__dirname, 'src/assets/css'),
+        use: ['style-loader', { loader: 'css-loader'}],
       },
       {
         test: /\.less$/,
         use: [
-          "style-loader",
-          "css-loader",
+          'style-loader',
+          'css-loader',
           {
-            loader: "less-loader",
+            loader: 'less-loader',
             options: {
               lessOptions: {
                 modifyVars: {
-                  "@ant-prefix": "antd-bici-cockpit",
+                  '@ant-prefix': 'antd-bici-cockpit',
                 },
                 javascriptEnabled: true,
               },
@@ -44,7 +50,7 @@ module.exports = ["source-map"].map((devtool) => ({
         test: /\.(png|svg|jpg|jpeg|gif)$/,
         use: [
           {
-            loader: "url-loader",
+            loader: 'url-loader',
             options: {
               limit: 819200,
             },
@@ -55,15 +61,15 @@ module.exports = ["source-map"].map((devtool) => ({
         test: /\.m?js$/,
         exclude: /(node_modules|bower_components)/,
         use: {
-          loader: "babel-loader",
+          loader: 'babel-loader',
           options: {
-            presets: ["@babel/preset-env", "@babel/preset-react"],
-            plugins: ["@babel/plugin-proposal-class-properties"],
+            presets: ['@babel/preset-env', '@babel/preset-react'],
+            plugins: ['@babel/plugin-proposal-class-properties'],
           },
         },
       },
     ],
   },
   plugins: [new CleanWebpackPlugin()],
-  externals: ["react", "react-dom", "bici-transformers", "@ant-design/icons"],
+  externals: ['react', 'react-dom', 'bici-transformers', '@ant-design/icons'],
 }));
