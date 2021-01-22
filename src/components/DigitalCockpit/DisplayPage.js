@@ -13,7 +13,7 @@ import {
 } from '@/utils/index';
 import { IconFont } from '@/utils/iconConfig';
 import { createShareLink, hasSharePwd, checkSharePwdAndGetData, fetchBoardDetail } from '@/apis/board';
-import { BOARD_SHARE_VERIFIED } from '@/constant';
+import { BOARD_SHARE_INFO } from '@/constant';
 
 const NEW_FULL_SCREEN_ID = 'new_cockpit_full_screen';
 
@@ -73,7 +73,7 @@ const DisplayPage = React.forwardRef((props, ref) => {
   const handleSharePwdModal = useCallback(async () => {
     const { id, isShare, token: tokenTmp } = JSON.parse(getDecryption(boardUrlId));
     // 设置看板id
-    setId(() => id);
+    setId(id);
     setSpecialToken(tokenTmp);
 
     if (isShare && tokenTmp) {
@@ -84,17 +84,27 @@ const DisplayPage = React.forwardRef((props, ref) => {
       });
       const res = await hasSharePwd(requestClient, tokenTmp);
 
-      const shareVerified = localStorage.getItem(BOARD_SHARE_VERIFIED) === 'true' ? true : false;
-      if (res && !shareVerified) {
-        // 需要密码认证
+      const shareBoardInfoList = JSON.parse(localStorage.getItem(BOARD_SHARE_INFO) || '[]');
+      const hasVerifiedBoardId = shareBoardInfoList.filter((item) => item.id === id).length > 0;
+
+      if (res && !hasVerifiedBoardId) {
+        // 分享 需要密码认证
         setVisiable({
           ...visiable,
           needPwd: true,
         });
       } else {
-        // 分享的不需要密码
-        // 获取看板详情
-        const data = await checkSharePwdAndGetData(requestClient, tokenTmp);
+        let data = undefined;
+        if (!res) {
+          // 分享的不需要密码
+          // 获取看板详情
+          data = await checkSharePwdAndGetData(requestClient, tokenTmp);
+        } else {
+          // 分享  已经认证过
+          const pwd = window.atob(shareBoardInfoList.filter((item) => item.id === id)[0].pwd);
+          data = await checkSharePwdAndGetData(requestClient, tokenTmp, pwd);
+        }
+
         if (data) {
           setData(() => data);
           if (data.property) {
@@ -171,7 +181,9 @@ const DisplayPage = React.forwardRef((props, ref) => {
     const data = await checkSharePwdAndGetData(requestClient, token, sharePwd);
 
     if (data) {
-      localStorage.setItem(BOARD_SHARE_VERIFIED, 'true');
+      const shareInfo = JSON.parse(localStorage.getItem(BOARD_SHARE_INFO) || '[]');
+      shareInfo.push({ id, pwd: window.btoa(sharePwd) });
+      localStorage.setItem(BOARD_SHARE_INFO, JSON.stringify(shareInfo));
       // 认证成功
       setData(data);
       if (data.property) {
@@ -480,8 +492,14 @@ const DisplayPage = React.forwardRef((props, ref) => {
             zIndex: 2,
             width: '100%',
           }}
-          onMouseEnter={handleMove}
-          onMouseLeave={handleMove}
+          onMouseEnter={(e) => {
+            e.stopPropagation();
+            setHeadShow(true);
+          }}
+          onMouseLeave={(e) => {
+            e.stopPropagation();
+            setHeadShow(false);
+          }}
           onClick={(e) => e.stopPropagation()}
         >
           <div style={headerStyle}>

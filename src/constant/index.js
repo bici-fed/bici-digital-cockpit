@@ -1,4 +1,4 @@
-export const BOARD_SHARE_VERIFIED = 'BOARD_SHARE_VERIFIED';
+export const BOARD_SHARE_INFO = 'BOARD_SHARE_PWD';
 
 export const NEW_BOARD_INDUSTRY_CONVEYOR = [121, '传送带2'];
 export const NEW_BOARD_INDUSTRY_STORAGE_SILO = [122, '储料罐'];
