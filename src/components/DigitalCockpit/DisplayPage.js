@@ -345,6 +345,7 @@ const DisplayPage = React.forwardRef((props, ref) => {
   const style = {
     width: '100vw',
     height: '100vh',
+    overflow: 'auto',
     // zIndex: 1,
     // position: 'relative',
     // margin: '0 auto',
