@@ -69,8 +69,42 @@ const DisplayPage = React.forwardRef((props, ref) => {
     [],
   );
 
+  // 日期处理
+  const handleValidDay = useCallback(() => {
+    const days = form.getFieldValue('validDay');
+    let validDate = new Date();
+    if (days) {
+      validDate.setDate(validDate.getDate() + Number(days));
+    } else {
+      validDate.setDate(validDate.getDate() + 30);
+    }
+    setValidDate(() => validDate.toLocaleDateString());
+    form.setFieldsValue({ shareLink: '' });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [setValidDate]);
+
+  useEffect(() => {
+    if (token) {
+      setSocketToken(token);
+    }
+    handleSharePwdModal();
+    // 全屏监听器
+    addFullScreenChanegListener(() => {
+      const visible = getFullScreenState();
+      setIsFullScreen(() => visible);
+    });
+  }, [boardUrlId, token]);
+
+  useEffect(() => {
+    handleValidDay();
+  }, [handleValidDay]);
+
+  const clearShareVerifiy = () => {
+    localStorage.removeItem(BOARD_SHARE_VERIFIED);
+  };
+
   // 判断进入时是否需要密码
-  const handleSharePwdModal = useCallback(async () => {
+  const handleSharePwdModal = async () => {
     const { id, isShare, token: tokenTmp } = JSON.parse(getDecryption(boardUrlId));
     // 设置看板id
     setId(id);
@@ -124,7 +158,7 @@ const DisplayPage = React.forwardRef((props, ref) => {
         const data = await fetchBoardDetail(requestClient, { id }, token);
         // 同一个companyId下的用户才能看
         if (data) {
-          setData(() => data);
+          setData(data);
           if (data.property) {
             const getEditorData = JSON.parse(data.property);
             setEditorData(getEditorData);
@@ -140,40 +174,6 @@ const DisplayPage = React.forwardRef((props, ref) => {
         logout && logout(error);
       }
     }
-  }, [boardUrlId]);
-
-  // 日期处理
-  const handleValidDay = useCallback(() => {
-    const days = form.getFieldValue('validDay');
-    let validDate = new Date();
-    if (days) {
-      validDate.setDate(validDate.getDate() + Number(days));
-    } else {
-      validDate.setDate(validDate.getDate() + 30);
-    }
-    setValidDate(() => validDate.toLocaleDateString());
-    form.setFieldsValue({ shareLink: '' });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [setValidDate]);
-
-  useEffect(() => {
-    if (token) {
-      setSocketToken(token);
-    }
-    handleSharePwdModal();
-    // 全屏监听器
-    addFullScreenChanegListener(() => {
-      const visible = getFullScreenState();
-      setIsFullScreen(() => visible);
-    });
-  }, [handleSharePwdModal, token]);
-
-  useEffect(() => {
-    handleValidDay();
-  }, [handleValidDay]);
-
-  const clearShareVerifiy = () => {
-    localStorage.removeItem(BOARD_SHARE_VERIFIED);
   };
 
   // 获取分享的看板数据
@@ -190,7 +190,7 @@ const DisplayPage = React.forwardRef((props, ref) => {
         const getEditorData = JSON.parse(data.property);
         setEditorData(getEditorData);
       }
-      setVisiable({ ...visiable, needPwd: false });
+      setVisiable({ ...visiable, shareVisiable: false, needPwd: false });
     }
   };
 
@@ -545,10 +545,10 @@ const DisplayPage = React.forwardRef((props, ref) => {
                   <span
                     style={{ cursor: 'pointer' }}
                     onClick={() =>
-                      setVisiable((prevState) => ({
-                        ...prevState,
+                      setVisiable({
+                        ...visiable,
                         shareForm: true,
-                      }))
+                      })
                     }
                   >
                     <ShareAltOutlined />
