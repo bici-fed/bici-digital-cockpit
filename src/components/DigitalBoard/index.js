@@ -457,13 +457,8 @@ const DigitalBoard = (props) => {
   // 渲染看板列表
   const renderBoardList = useMemo(() => {
     return (
-      <div>
-        <Row
-          gutter={[16, 16]}
-          style={{ overflowY: 'auto', ...wrapperStyle }}
-          ref={boardListRef}
-          onScroll={handleScroll}
-        >
+      <div style={{ overflowY: 'auto', overflowX: 'hidden' }} ref={boardListRef} onScroll={handleScroll}>
+        <Row gutter={[16, 16]} style={{ ...wrapperStyle }}>
           {boardList.map((item, index) => (
             <Col key={index} className={styles.boards} span={colSize} style={{ height: colHeight }}>
               <BoardCard
