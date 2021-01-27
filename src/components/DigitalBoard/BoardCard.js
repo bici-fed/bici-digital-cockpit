@@ -5,6 +5,7 @@ import { biciNotification } from 'bici-transformers';
 import { getEncryption } from '@/utils/index';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { DragSource, DropTarget } from 'react-dnd';
+import { v4 as uuidv4 } from 'uuid';
 
 import coverImg1 from '@/assets/img/board-1.jpg';
 import coverImg2 from '@/assets/img/board-2.jpg';
@@ -58,7 +59,7 @@ const dropCollect = (connect, monitor) => ({
   isOverCurrent: monitor.isOver({ shallow: true }),
 });
 
-const BoardCard = props => {
+const BoardCard = (props) => {
   const {
     isDragging,
     isOverCurrent,
@@ -70,6 +71,8 @@ const BoardCard = props => {
     configButton,
     useTag,
   } = props;
+
+  const popoverId = uuidv4();
 
   const opacity = isDragging ? 0 : 1;
 
@@ -142,14 +145,14 @@ const BoardCard = props => {
   };
 
   // 模拟Link标签，跳转
-  const handleCardLink = e => {
+  const handleCardLink = (e) => {
     const w = window.open('about:blank');
     w.location.href = window.location.origin + `/newCockpit/${handleLinks()}`;
   };
 
   // 简介tip
   const tipContent = (
-    <div className={styles.tipContent} onClick={e => e.stopPropagation()}>
+    <div className={styles.tipContent} onClick={(e) => e.stopPropagation()}>
       <div className="mb12">
         <span>卡片简介</span>
         <CopyToClipboard
@@ -169,6 +172,7 @@ const BoardCard = props => {
   return connectDragSource(
     connectDropTarget(
       <div
+        id={popoverId}
         className={styles.board}
         style={{
           backgroundImage: `url(${src})`,
@@ -180,22 +184,16 @@ const BoardCard = props => {
         onClick={handleCardLink}
       >
         <div className={styles.boardHead}>
-          <div
-            style={{ float: 'left', cursor: 'pointer', marginLeft: 12 }}
-            onClick={e => e.stopPropagation()}
-          >
+          <div style={{ float: 'left', cursor: 'pointer', marginLeft: 12 }} onClick={(e) => e.stopPropagation()}>
             <span id="codeNo">No.{handleCode()}</span>
-            <CopyToClipboard
-              text={item.code}
-              onCopy={() => biciNotification.success({ message: '复制成功' })}
-            >
+            <CopyToClipboard text={item.code} onCopy={() => biciNotification.success({ message: '复制成功' })}>
               <img src={copyIcon} className="ml4" />
             </CopyToClipboard>
           </div>
           {configButton && (
             <div
               style={{ float: 'right', cursor: 'pointer', marginRight: 12 }}
-              onClick={e => {
+              onClick={(e) => {
                 e.stopPropagation();
                 props.handleConfigBoard(item);
               }}
@@ -229,8 +227,15 @@ const BoardCard = props => {
             </Tooltip>
           )}
         </div>
-        <Tooltip title={tipContent} color="#ffffff" className={styles.tipWrapper}>
-          <img src={infoIcon} className="mr4" />
+        <Tooltip
+          placement="topLeft"
+          arrowPointAtCenter
+          getPopupContainer={() => document.getElementById(popoverId)}
+          title={tipContent}
+          color="#ffffff"
+          className={styles.tipWrapper}
+        >
+          <img src={infoIcon} />
         </Tooltip>
       </div>,
     ),
