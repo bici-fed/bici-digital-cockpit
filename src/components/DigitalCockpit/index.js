@@ -119,24 +119,6 @@ const DigitalCockpit = React.forwardRef((props, ref) => {
     },
   ];
 
-  const selfIndustrialLibrary = [
-    {
-      name: '9',
-      url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-      width: 100,
-      height: 100,
-      type: 'image',
-      key: '8',
-    },
-    {
-      name: '10',
-      url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-      width: 100,
-      height: 100,
-      type: 'image',
-      key: '9',
-    },
-  ];
 
   const uploadConfig = {
     baseURL: baseUrl,
@@ -301,7 +283,7 @@ const DigitalCockpit = React.forwardRef((props, ref) => {
             editorData={editorData}
             boardData={boardData}
             onExtraSetting={handleExtraSetting}
-            selfIndustrialLibrary={selfIndustrialLibrary}
+            // selfIndustrialLibrary={selfIndustrialLibrary}
             industrialLibrary={industrialLibrary}
             uploadConfig={uploadConfig}
             onPoweroff={confirmAgainModal}

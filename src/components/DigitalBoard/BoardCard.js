@@ -58,7 +58,7 @@ const dropCollect = (connect, monitor) => ({
   isOverCurrent: monitor.isOver({ shallow: true }),
 });
 
-const BoardCard = props => {
+const BoardCard = (props) => {
   const {
     isDragging,
     isOverCurrent,
@@ -142,22 +142,22 @@ const BoardCard = props => {
   };
 
   // 模拟Link标签，跳转
-  const handleCardLink = e => {
+  const handleCardLink = (e) => {
     const w = window.open('about:blank');
     w.location.href = window.location.origin + `/newCockpit/${handleLinks()}`;
   };
 
   // 简介tip
   const tipContent = (
-    <div className={styles.tipContent} onClick={e => e.stopPropagation()}>
-      <div className="mb12">
+    <div className={styles.tipContent} onClick={(e) => e.stopPropagation()}>
+      <div style={{ marginBottom: 12 }}>
         <span>卡片简介</span>
         <CopyToClipboard
           text={`${window.location.origin}/newCockpit/${handleLinks()}`}
           onCopy={() => biciNotification.success({ message: '复制成功' })}
         >
           <span style={{ color: '#096DD9', float: 'right', cursor: 'pointer' }}>
-            <LinkOutlined className="mr4" />
+            <LinkOutlined style={{ marginRight: 4 }} />
             <span>复制链接</span>
           </span>
         </CopyToClipboard>
@@ -180,27 +180,21 @@ const BoardCard = props => {
         onClick={handleCardLink}
       >
         <div className={styles.boardHead}>
-          <div
-            style={{ float: 'left', cursor: 'pointer', marginLeft: 12 }}
-            onClick={e => e.stopPropagation()}
-          >
+          <div style={{ float: 'left', cursor: 'pointer', marginLeft: 12 }} onClick={(e) => e.stopPropagation()}>
             <span id="codeNo">No.{handleCode()}</span>
-            <CopyToClipboard
-              text={item.code}
-              onCopy={() => biciNotification.success({ message: '复制成功' })}
-            >
+            <CopyToClipboard text={item.code} onCopy={() => biciNotification.success({ message: '复制成功' })}>
               <img src={copyIcon} className="ml4" />
             </CopyToClipboard>
           </div>
           {configButton && (
             <div
               style={{ float: 'right', cursor: 'pointer', marginRight: 12 }}
-              onClick={e => {
+              onClick={(e) => {
                 e.stopPropagation();
                 props.handleConfigBoard(item);
               }}
             >
-              <img src={configIcon} className="mr4" />
+              <img src={configIcon} style={{ marginRight: 4 }} />
               配置看板
             </div>
           )}
@@ -230,7 +224,7 @@ const BoardCard = props => {
           )}
         </div>
         <Tooltip title={tipContent} color="#ffffff" className={styles.tipWrapper}>
-          <img src={infoIcon} className="mr4" />
+          <img src={infoIcon} style={{ marginRight: 4 }} />
         </Tooltip>
       </div>,
     ),

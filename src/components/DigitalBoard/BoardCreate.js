@@ -515,17 +515,18 @@ const BoardCreate = (props) => {
           <Radio.Group onChange={handleChangePic} style={{ paddingTop: '7px' }}>
             <Radio value={0}>
               使用默认缩略图
-              <div className="mt6" style={{ display: 'flex', justifyContent: 'space-between', paddingLeft: 20 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', paddingLeft: 20, marginTop: 6 }}>
                 {renderCover()}
               </div>
             </Radio>
             {/* <Radio value={1}>使用看板缩略图</Radio> */}
             <br />
-            <Radio value={2} className="mt6">
+            <Radio value={2} style={{ marginTop: 6 }}>
               上传图片
-              <div className="mt6 ml20">
+              <div style={{ marginTop: 6, marginLeft: 20 }}>
                 <Upload
-                  className="mt6 board-create-upload"
+                  className="board-create-upload"
+                  style={{ marginTop: 6 }}
                   data={{ mappingType: 105, mappingId: data ? data.id : 3 }}
                   action={`${baseUrl}/api/file/file/upload`}
                   accept="image/jpeg,image/jpg,image/png"
