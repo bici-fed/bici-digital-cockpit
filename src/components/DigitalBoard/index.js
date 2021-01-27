@@ -24,7 +24,7 @@ const DigitalBoard = (props) => {
   const [colHeight, setColHeight] = useState(310);
   // 看板列表数据
   const [boardList, setBoardList] = useState([]);
-  const [typeTagData, setTypeTagData] = useState({
+  const [tagCheckGroup, setTagCheckGroup] = useState({
     typeList: [],
     indeterminate: false,
     checkAll: true,
@@ -83,11 +83,11 @@ const DigitalBoard = (props) => {
   const requestTypeList = async () => {
     if (!useTag) return;
     const data = await fetchTypeList(requestClient, {}, token);
-    const tags = data.map((tag) => ({ value: tag.id, label: tag.name }));
-    setTypeTagData({
-      ...typeTagData,
-      typeList: tags,
+    const tags = data.map((tag) => {
+      return { value: tag.id, label: tag.name };
     });
+    setTagCheckGroup({ ...tagCheckGroup, typeList: tags });
+    const tagVals = tags.map((item) => item.value);
     if (tags.length >= 5) {
       setTagShow(() => ({
         indexTypes: tags.slice(0, 4),
@@ -99,7 +99,7 @@ const DigitalBoard = (props) => {
         hideSelected: tags.slice(4).map((item) => item.value),
       }));
     } else {
-      setTagShow({ ...tagShow, indexTypes: tags.slice(0, 4) });
+      setTagShow((prevState) => ({ ...prevState, indexTypes: tags.slice(0, 4) }));
       setTypeSelect(() => ({
         currntSelectedTypes: tagVals,
         indexSelected: tags.slice(0, 4).map((item) => item.value),
@@ -378,9 +378,9 @@ const DigitalBoard = (props) => {
               <span>展示类型:</span>
               <Checkbox
                 style={{ margin: '0 30px' }}
-                indeterminate={typeTagData.indeterminate}
+                indeterminate={tagCheckGroup.indeterminate}
                 onChange={onCheckAllChange}
-                checked={typeTagData.checkAll}
+                checked={tagCheckGroup.checkAll}
               >
                 全选
               </Checkbox>
