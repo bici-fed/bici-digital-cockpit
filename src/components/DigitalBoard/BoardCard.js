@@ -5,6 +5,7 @@ import { biciNotification } from 'bici-transformers';
 import { getEncryption } from '@/utils/index';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { DragSource, DropTarget } from 'react-dnd';
+import { v4 as uuidv4 } from 'uuid';
 
 import coverImg1 from '@/assets/img/board-1.jpg';
 import coverImg2 from '@/assets/img/board-2.jpg';
@@ -70,6 +71,8 @@ const BoardCard = (props) => {
     configButton,
     useTag,
   } = props;
+
+  const popoverId = uuidv4();
 
   const opacity = isDragging ? 0 : 1;
 
@@ -169,6 +172,7 @@ const BoardCard = (props) => {
   return connectDragSource(
     connectDropTarget(
       <div
+        id={popoverId}
         className={styles.board}
         style={{
           backgroundImage: `url(${src})`,
@@ -223,13 +227,21 @@ const BoardCard = (props) => {
             </Tooltip>
           )}
         </div>
-        <Tooltip title={tipContent} color="#ffffff" className={styles.tipWrapper}>
-          <img src={infoIcon} style={{ marginRight: 4 }} />
+        <Tooltip
+          placement="topLeft"
+          arrowPointAtCenter
+          getPopupContainer={() => document.getElementById(popoverId)}
+          title={tipContent}
+          color="#ffffff"
+          className={styles.tipWrapper}
+        >
+          <img src={infoIcon} />
         </Tooltip>
       </div>,
     ),
   );
 };
+
 export default DragSource(
   'boardCard',
   CardSource,
