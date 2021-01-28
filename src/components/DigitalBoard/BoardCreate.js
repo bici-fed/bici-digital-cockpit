@@ -69,13 +69,13 @@ const BoardCreate = (props) => {
         return { id: tag.tagId, name: tag.tagName };
       });
       setTypes(tags);
+      if (data) {
+        // 编辑状态，回显
+        const editTags = tags.filter((item) => data.tagIdList?.includes(item.id));
+        setSelectedTypes(editTags);
+      }
     }
-    if (data && useTag) {
-      // 编辑状态，回显
-      const editTags = tags.filter((item) => data.tagIdList.includes(item.id));
-      setSelectedTypes(() => editTags);
-    }
-  }, [data]);
+  }, [data, useTag]);
   // 处理数据回显
   const handleEditData = useCallback(() => {
     if (data) {
@@ -101,44 +101,50 @@ const BoardCreate = (props) => {
         setPicType(data.thumbnailType);
       }
 
-      const permissionData = (data.newCockpitVisibleConfigList || []).map((item) => ({
-        id: item.userId,
-        name: item.username,
-      }));
-      if (setPermissionData) setPermissionData(permissionData);
-      // let permissionTree = (data.newCockpitVisibleConfigList || []).map((item) => item.userId);
-      // 选择树没有当前用户，不回显
-      // if (!_.isEmpty(treeData) && !treeData.map((item) => item.value).includes(userInfo.id)) {
-      //   permissionTree = permissionTree.filter((id) => id !== userInfo.id);
-      // }
-      form.setFieldsValue({
+      let formVals = {
         code: data.code,
         name: data.name,
-        // deptUser: permissionTree,
-        permissionData,
         updateAuth: data.updateAuth,
         remark: data.remark,
         coverRadio,
-      });
+      };
+
+      if (customPermission) {
+        const permissionData = (data.newCockpitVisibleConfigList || []).map((item) => ({
+          id: item.userId,
+          name: item.username,
+        }));
+        if (setPermissionData) setPermissionData(permissionData);
+        formVals.permissionData = permissionData;
+      } else {
+        let permissionTree = (data.newCockpitVisibleConfigList || []).map((item) => item.userId);
+        // 选择树没有当前用户，不回显
+        if (!_.isEmpty(treeData) && !treeData.map((item) => item.value).includes(userInfo.id)) {
+          permissionTree = permissionTree.filter((id) => id !== userInfo.id);
+        }
+
+        formVals.deptUser = permissionTree;
+      }
+      form.setFieldsValue(formVals);
       setTextLength({ nameLen: data.name.length, remarkLen: data.remark ? data.remark.length : 0 });
     } else {
       form.resetFields();
     }
-  }, [data, form]);
+  }, [data, form, setPermissionData]);
 
   useEffect(() => {
     requestTypes();
     handleEditData();
+  }, [handleEditData, requestTypes]);
+  // 自定义权限更新同步
+  useEffect(() => {
     if (deptUserTree) {
       setTreeData(deptUserTree);
     }
-  }, [handleEditData, requestTypes, deptUserTree]);
-  // 自定义权限更新同步
-  useEffect(() => {
     if (permissionData) {
       form.setFieldsValue({ permissionData });
     }
-  }, [permissionData]);
+  }, [permissionData, deptUserTree]);
 
   // 修改标签
   const handleEditTag = (toSetDataSource, editedId, editedName) => {

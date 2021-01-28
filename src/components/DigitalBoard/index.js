@@ -83,9 +83,11 @@ const DigitalBoard = (props) => {
   const requestTypeList = async () => {
     if (!useTag) return;
     const data = await fetchTypeList(requestClient, {}, token);
-    const tags = data.map((tag) => {
-      return { value: tag.id, label: tag.name };
-    });
+    const tags = data
+      .filter((tag) => tag)
+      .map((tag) => {
+        return { value: tag.id, label: tag.name };
+      });
     setTagCheckGroup({ ...tagCheckGroup, typeList: tags });
     const tagVals = tags.map((item) => item.value);
     if (tags.length >= 5) {
