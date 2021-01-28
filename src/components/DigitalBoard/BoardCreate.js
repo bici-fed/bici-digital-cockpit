@@ -5,7 +5,7 @@ import { BiciTagsManager, biciNotification } from 'bici-transformers';
 import _ from 'lodash';
 import { createBoard, modifyBoard } from '@/apis/board';
 import { deleteTags, getTagsList, saveTags, updateTags } from '@/apis/tag';
-import { fileDelete, batchFileMappingId, requestUploadDetail } from '@/apis/file';
+import { fileDelete, batchFileMappingId, requestUploadDetail, downloadById } from '@/apis/file';
 import BiciDraggableModal from '@/components/BiciDraggableModal';
 
 import '@/assets/css/index.css';
@@ -352,16 +352,8 @@ const BoardCreate = (props) => {
   };
   // 处理图片radio改变
   const handleChangePic = (e) => {
-    if (e.target.value !== 2 && fileList.length !== 0) {
-      biciNotification.error({ message: '请先删除图片!' });
-      form.setFieldsValue({ coverRadio: 2 });
-      return;
-    }
-
     if (e.target.value === 1) {
       setPicType(0);
-    } else if (e.target.value === 0) {
-      setPicType(1);
     } else if (e.target.value === 2) {
       setPicType(undefined);
     }
@@ -387,18 +379,15 @@ const BoardCreate = (props) => {
   };
 
   const onPreview = async (file) => {
-    let src = file.url;
-    if (!src) {
-      src = await new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file.originFileObj);
-        reader.onload = () => resolve(reader.result);
-      });
+    if (file.response.code === 1000) {
+      const src = await downloadById(requestClient, { id: file.response.data[0] }, token);
+      if (src) {
+        const image = new Image();
+        image.src = src;
+        const imgWindow = window.open(src);
+        imgWindow.document.write(image.outerHTML);
+      }
     }
-    const image = new Image();
-    image.src = src;
-    const imgWindow = window.open(src);
-    imgWindow.document.write(image.outerHTML);
   };
 
   // 渲染表单
