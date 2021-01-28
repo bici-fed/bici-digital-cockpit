@@ -119,7 +119,6 @@ const DigitalCockpit = React.forwardRef((props, ref) => {
     },
   ];
 
-
   const uploadConfig = {
     baseURL: baseUrl,
     self: {
@@ -176,9 +175,8 @@ const DigitalCockpit = React.forwardRef((props, ref) => {
     },
   };
 
-  const getBoardDetail = useCallback(async (isUpdateEdit) => {
-    const id = boardId;
-    const data = await fetchBoardDetail(requestClient, { id }, token);
+  const getBoardDetail = async (isUpdateEdit) => {
+    const data = await fetchBoardDetail(requestClient, { id: boardId }, token);
     if (data) {
       setBoardData(data);
     }
@@ -186,12 +184,12 @@ const DigitalCockpit = React.forwardRef((props, ref) => {
       const getEditorData = JSON.parse(data.property);
       setEditorData(getEditorData);
     }
-  }, []);
+  };
 
   useEffect(() => {
     // 获取面板数据
     getBoardDetail(true);
-  }, [getBoardDetail]);
+  }, []);
 
   // 保存数据到数据库
   const handleSaveEditorData = (data) => {
@@ -255,6 +253,7 @@ const DigitalCockpit = React.forwardRef((props, ref) => {
   };
 
   const handleExtraSetting = () => {
+    getBoardDetail();
     setExtraVisible(true);
   };
 

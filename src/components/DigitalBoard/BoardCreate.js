@@ -325,7 +325,7 @@ const BoardCreate = (props) => {
       const isActive = picType === code && fileList.length === 0;
       return (
         <div style={{ position: 'relative', marginRight: 8 }} key={code}>
-          <img style={prefixImgStyle} alt={`board-cover-${code}`} src={src} onClick={() => coverCodeOnClick(code)} />
+          <img style={prefixImgStyle} alt={`board-cover-${code}`} src={src} onClick={(e) => coverCodeOnClick(code)} />
           {isActive && (
             <CheckCircleFilled style={{ position: 'absolute', top: 2, right: 2, fontSize: 16, color: '#1890ff' }} />
           )}
@@ -352,6 +352,12 @@ const BoardCreate = (props) => {
   };
   // 处理图片radio改变
   const handleChangePic = (e) => {
+    if (e.target.value !== 2 && fileList.length !== 0) {
+      biciNotification.error({ message: '请先删除图片!' });
+      form.setFieldsValue({ coverRadio: 2 });
+      return;
+    }
+
     if (e.target.value === 1) {
       setPicType(0);
     } else if (e.target.value === 2) {
