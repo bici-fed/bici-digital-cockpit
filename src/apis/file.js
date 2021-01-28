@@ -13,4 +13,7 @@ export const fileDelete = (request, params, token) => {
   return request.get(`/file/file/delete`, { params, headers: { token } });
 };
 
-// 保存并更新
+// 下载附件
+export const downloadById = (request, params, token) => {
+  return request.get('/file/file/downloadById', { params, headers: { token } });
+};
