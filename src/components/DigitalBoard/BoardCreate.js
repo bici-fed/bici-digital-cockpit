@@ -477,7 +477,7 @@ const BoardCreate = (props) => {
                 mode="multiple"
                 value={permissionData.map((p) => p.id)}
                 placeholder="请在组织内选择可见范围"
-                style={{ width: '70%' }}
+                style={{ width: '70%', maxWidth: 300 }}
                 onChange={(ids) => {
                   const updatePermissionData = permissionData.filter((p) => ids.includes(p.id));
                   if (onPermissionChange) onPermissionChange(updatePermissionData);
