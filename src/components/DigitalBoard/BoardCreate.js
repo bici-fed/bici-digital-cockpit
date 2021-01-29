@@ -305,12 +305,15 @@ const BoardCreate = (props) => {
     });
   };
 
-  const coverCodeOnClick = (code) => {
-    if (form.getFieldValue('coverRadio') !== 2 && fileList.length !== 0) {
+  const coverCodeOnClick = (e, code) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (form.getFieldValue('coverRadio') === 2 && fileList.length !== 0) {
       biciNotification.error({ message: '请先删除图片!' });
       form.setFieldsValue({ coverRadio: 2 });
       return;
     }
+    form.setFieldsValue({ coverRadio: 0 });
     setPicType(code);
   };
 
@@ -325,7 +328,12 @@ const BoardCreate = (props) => {
       const isActive = picType === code && fileList.length === 0;
       return (
         <div style={{ position: 'relative', marginRight: 8 }} key={code}>
-          <img style={prefixImgStyle} alt={`board-cover-${code}`} src={src} onClick={(e) => coverCodeOnClick(code)} />
+          <img
+            style={prefixImgStyle}
+            alt={`board-cover-${code}`}
+            src={src}
+            onClick={(e) => coverCodeOnClick(e, code)}
+          />
           {isActive && (
             <CheckCircleFilled style={{ position: 'absolute', top: 2, right: 2, fontSize: 16, color: '#1890ff' }} />
           )}
@@ -472,7 +480,7 @@ const BoardCreate = (props) => {
                 mode="multiple"
                 value={permissionData.map((p) => p.id)}
                 placeholder="请在组织内选择可见范围"
-                style={{ width: '70%' }}
+                style={{ width: '70%', maxWidth: 300 }}
                 onChange={(ids) => {
                   const updatePermissionData = permissionData.filter((p) => ids.includes(p.id));
                   if (onPermissionChange) onPermissionChange(updatePermissionData);

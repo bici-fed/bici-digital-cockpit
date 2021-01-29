@@ -1,6 +1,6 @@
 export const BOARD_SHARE_INFO = 'BOARD_SHARE_PWD';
 
-export const NEW_BOARD_INDUSTRY_CONVEYOR = [121, '传送带2'];
+export const NEW_BOARD_INDUSTRY_CONVEYOR = [121, '传送带'];
 export const NEW_BOARD_INDUSTRY_STORAGE_SILO = [122, '储料罐'];
 export const NEW_BOARD_INDUSTRY_CHEMICAL_INDUSTRY = [123, '化工'];
 export const NEW_BOARD_INDUSTRY_MATERIAL_HANDLING = [124, '原料处理'];

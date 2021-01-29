@@ -493,14 +493,14 @@ const DisplayPage = (props) => {
           onClick={(e) => e.stopPropagation()}
         >
           <div style={headerStyle}>
-            <Row>
-              <Col span={4}>
+            <Row justify="space-between">
+              <Col md={6} lg={4}>
                 <span style={{ marginLeft: 12 }}>No.{data.code}</span>
                 <CopyToClipboard text={data.code} onCopy={handlerCopyCode}>
                   <CopyOutlined style={{ marginLeft: 4 }} />
                 </CopyToClipboard>
               </Col>
-              <Col span={14}>
+              <Col sm={0} md={10} lg={14}>
                 <span style={spanStyle}>{data.name}</span>
                 {data.typeName && (
                   <>
@@ -530,7 +530,7 @@ const DisplayPage = (props) => {
                   {data.remark}
                 </span>
               </Col>
-              <Col span={4} push={2}>
+              <Col md={8} lg={6}>
                 {visiable.shareVisiable && (
                   <span
                     style={{ cursor: 'pointer' }}
