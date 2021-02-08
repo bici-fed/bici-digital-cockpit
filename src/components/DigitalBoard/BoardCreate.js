@@ -370,6 +370,8 @@ const BoardCreate = (props) => {
       setPicType(0);
     } else if (e.target.value === 2) {
       setPicType(undefined);
+    } else if (e.target.value === 0) {
+      setPicType(1);
     }
   };
   // 处理图片上传
