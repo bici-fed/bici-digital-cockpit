@@ -307,7 +307,7 @@ const DigitalBoard = (props) => {
   const renderCheckGroup = (
     <div ref={tagMoreRef}>
       <Menu style={{ width: 440 }} selectable={false}>
-        <Menu.Item>
+        <Menu.Item style={{height: '100%'}}>
           <Checkbox.Group style={{ width: '100%' }} value={typeSelect.currntSelectedTypes} onChange={hideTypeChange}>
             <Row gutter={[16, 16]}>
               {tagShow.otherTypes.map((item, index) => {
