@@ -18,7 +18,7 @@ import { BOARD_SHARE_INFO } from '@/constant';
 const NEW_FULL_SCREEN_ID = 'new_cockpit_full_screen';
 
 const DisplayPage = (props) => {
-  const { token, shareBtnPermission, Preview, wsUrl, logout, encodeUrl, requestClient, wrapperStyle } = props;
+  const { token, shareBtnPermission, Preview, wsUrl, logout, encodeUrl, requestClient, wrapperStyle, isApp } = props;
 
   const [form] = Form.useForm();
 
@@ -473,90 +473,92 @@ const DisplayPage = (props) => {
         }}
         id={NEW_FULL_SCREEN_ID}
       >
-        <div
-          style={{
-            height: 48,
-            position: 'absolute',
-            left: 0,
-            top: 0,
-            zIndex: 2,
-            width: '100%',
-          }}
-          onMouseEnter={(e) => {
-            e.stopPropagation();
-            setHeadShow(true);
-          }}
-          onMouseLeave={(e) => {
-            e.stopPropagation();
-            setHeadShow(false);
-          }}
-          onClick={(e) => e.stopPropagation()}
-        >
-          <div style={headerStyle}>
-            <Row justify="space-between">
-              <Col md={6} lg={4}>
-                <span style={{ marginLeft: 12 }}>No.{data.code}</span>
-                <CopyToClipboard text={data.code} onCopy={handlerCopyCode}>
-                  <CopyOutlined style={{ marginLeft: 4 }} />
-                </CopyToClipboard>
-              </Col>
-              <Col sm={0} md={10} lg={14}>
-                <span style={spanStyle}>{data.name}</span>
-                {data.typeName && (
-                  <>
-                    <span style={spanStyle}>/</span>
-                    <span
-                      style={{
-                        ...spanStyle,
-                        maxWidth: '10rem',
-                        whiteSpace: 'nowrap',
-                        textOverflow: 'ellipsis',
-                      }}
-                    >
-                      {data.typeName}
-                    </span>
-                  </>
-                )}
-                <span style={spanStyle}>/</span>
-                <span
-                  style={{
-                    maxWidth: '10rem',
-                    overflow: 'hidden',
-                    whiteSpace: 'nowrap',
-                    textOverflow: 'ellipsis',
-                    display: 'inline-block',
-                  }}
-                >
-                  {data.remark}
-                </span>
-              </Col>
-              <Col md={8} lg={6}>
-                {visiable.shareVisiable && (
+        {
+          isApp?'':(<div
+            style={{
+              height: 48,
+              position: 'absolute',
+              left: 0,
+              top: 0,
+              zIndex: 2,
+              width: '100%',
+            }}
+            onMouseEnter={(e) => {
+              e.stopPropagation();
+              setHeadShow(true);
+            }}
+            onMouseLeave={(e) => {
+              e.stopPropagation();
+              setHeadShow(false);
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div style={headerStyle}>
+              <Row justify="space-between">
+                <Col md={6} lg={4}>
+                  <span style={{ marginLeft: 12 }}>No.{data.code}</span>
+                  <CopyToClipboard text={data.code} onCopy={handlerCopyCode}>
+                    <CopyOutlined style={{ marginLeft: 4 }} />
+                  </CopyToClipboard>
+                </Col>
+                <Col sm={0} md={10} lg={14}>
+                  <span style={spanStyle}>{data.name}</span>
+                  {data.typeName && (
+                    <>
+                      <span style={spanStyle}>/</span>
+                      <span
+                        style={{
+                          ...spanStyle,
+                          maxWidth: '10rem',
+                          whiteSpace: 'nowrap',
+                          textOverflow: 'ellipsis',
+                        }}
+                      >
+                        {data.typeName}
+                      </span>
+                    </>
+                  )}
+                  <span style={spanStyle}>/</span>
                   <span
-                    style={{ cursor: 'pointer' }}
-                    onClick={() =>
-                      setVisiable({
-                        ...visiable,
-                        shareForm: true,
-                      })
-                    }
+                    style={{
+                      maxWidth: '10rem',
+                      overflow: 'hidden',
+                      whiteSpace: 'nowrap',
+                      textOverflow: 'ellipsis',
+                      display: 'inline-block',
+                    }}
                   >
-                    <ShareAltOutlined />
-                    <span style={{ marginLeft: 6 }} style={{ marginRight: 36 }}>
-                      看板分享
-                    </span>
+                    {data.remark}
                   </span>
-                )}
-                <span style={{ cursor: 'pointer' }} onClick={handleShowFullScreen}>
-                  <IconFont type={isFullScreen ? 'shouqi1' : 'quanping'} />
-                  <span style={{ marginLeft: 6 }}>{isFullScreen ? '退出全屏' : '展示全屏'}</span>
-                </span>
-              </Col>
-            </Row>
-          </div>
-        </div>
+                </Col>
+                <Col md={8} lg={6}>
+                  {visiable.shareVisiable && (
+                    <span
+                      style={{ cursor: 'pointer' }}
+                      onClick={() =>
+                        setVisiable({
+                          ...visiable,
+                          shareForm: true,
+                        })
+                      }
+                    >
+                      <ShareAltOutlined />
+                      <span style={{ marginLeft: 6 }} style={{ marginRight: 36 }}>
+                        看板分享
+                      </span>
+                    </span>
+                  )}
+                  <span style={{ cursor: 'pointer' }} onClick={handleShowFullScreen}>
+                    <IconFont type={isFullScreen ? 'shouqi1' : 'quanping'} />
+                    <span style={{ marginLeft: 6 }}>{isFullScreen ? '退出全屏' : '展示全屏'}</span>
+                  </span>
+                </Col>
+              </Row>
+            </div>
+          </div>)
+        }
         <div style={style} id="cockpitContent">
-          {Preview && editorData && socketToken && <Preview data={editorData} websocketConf={websocketConf} />}
+          {Preview && editorData && socketToken && <Preview data={editorData} isApp={isApp} websocketConf={websocketConf} />}
         </div>
         {renderShareModal}
         {renderSeePwdModal}

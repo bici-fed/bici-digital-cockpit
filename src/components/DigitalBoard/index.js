@@ -83,7 +83,7 @@ const DigitalBoard = (props) => {
   const requestTypeList = async () => {
     if (!useTag) return;
     const data = await fetchTypeList(requestClient, {}, token);
-    const tags = data
+    const tags = (data||[])
       .filter((tag) => tag)
       .map((tag) => {
         return { value: tag.id, label: tag.name };
