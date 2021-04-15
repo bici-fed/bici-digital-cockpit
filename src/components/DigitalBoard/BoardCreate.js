@@ -42,6 +42,7 @@ const BoardCreate = (props) => {
     onPermissionButtonClick,
     onPermissionChange,
     onBoardCreateModalClose,
+    BiciTagManager,
   } = props;
 
   // 描述文本长度
@@ -215,6 +216,7 @@ const BoardCreate = (props) => {
       setTypes(typesData);
     });
   };
+
   // 选择标签
   const handleSelectTag = (toSetDataSource) => {
     setSelectedTypes(toSetDataSource);
@@ -433,32 +435,46 @@ const BoardCreate = (props) => {
             }}
           />
         </Form.Item>
-        {useTag && (
-          <Form.Item>
-            <BiciTagsManager
-              labelElement={
-                <div
-                  style={{
-                    fontSize: 12,
-                    width: 87,
-                    lineHeight: '32px',
-                    textAlign: 'right',
-                  }}
-                >
-                  看板类型：
-                </div>
-              }
-              tagLength={10}
-              selectMax={10}
-              dataSource={selectedTypes}
-              selectData={types}
-              onSelectTag={handleSelectTag}
-              onCreateTag={handleCreateTag}
-              onDeleteTag={handleDeleteTag}
-              onEditTag={handleEditTag}
-            />
-          </Form.Item>
+        {useTag && BiciTagManager ? (
+          <BiciTagManager
+            isRequired
+            label="看板类型："
+            labelStyle={{
+              fontSize: 14,
+              width: 87,
+            }}
+            style={{ marginBottom: 24 }}
+            tagLength={10}
+            selectMax={10}
+            deviceType={deviceType}
+            selectData={selectedTypes}
+            onChange={(tagsList, tagIdList) => setSelectedTypes(tagIdList)}
+          />
+        ) : (
+          <BiciTagsManager
+            labelElement={
+              <div
+                style={{
+                  fontSize: 12,
+                  width: 87,
+                  lineHeight: '32px',
+                  textAlign: 'right',
+                }}
+              >
+                看板类型：
+              </div>
+            }
+            tagLength={10}
+            selectMax={10}
+            dataSource={selectedTypes}
+            selectData={types}
+            onSelectTag={handleSelectTag}
+            onCreateTag={handleCreateTag}
+            onDeleteTag={handleDeleteTag}
+            onEditTag={handleEditTag}
+          />
         )}
+
         {!_.isEmpty(treeData) && !customPermission && (
           <Form.Item label="可见权限" name="deptUser" rules={[{ required: true, message: '必填项!' }]}>
             <TreeSelect
