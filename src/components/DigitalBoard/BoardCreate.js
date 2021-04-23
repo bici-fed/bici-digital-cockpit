@@ -438,7 +438,7 @@ const BoardCreate = (props) => {
         {useTag && BiciTagManager ? (
           <BiciTagManager
             isRequired
-            label="看板类型："
+            label="看板类型:"
             labelStyle={{
               fontSize: 14,
               width: 87,
@@ -447,8 +447,10 @@ const BoardCreate = (props) => {
             tagLength={10}
             selectMax={10}
             deviceType={deviceType}
-            selectData={selectedTypes}
-            onChange={(tagsList, tagIdList) => setSelectedTypes(tagIdList)}
+            selectData={selectedTypes.map((tag) => tag.id)}
+            onChange={(tagsList, tagIdList) => {
+              setSelectedTypes(tagsList.map((item) => ({ id: item.tagId, name: item.tagName })));
+            }}
           />
         ) : (
           <BiciTagsManager
