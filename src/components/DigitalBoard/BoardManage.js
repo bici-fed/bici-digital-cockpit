@@ -1,15 +1,15 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { Space, Modal, Tag, Popconfirm, Tooltip } from "antd";
-import { biciNotification, ComplexTable } from "bici-transformers";
-import { getEncryption } from "@/utils/index";
-import { deleteBoard, orderBoard, fetchBoardList } from "@/apis/board";
-import _ from "lodash";
-import BiciDraggableModal from "../BiciDraggableModal";
+import React, { useState, useEffect, useCallback } from 'react';
+import { Space, Modal, Tag, Popconfirm, Tooltip } from 'antd';
+import { biciNotification, ComplexTable } from 'bici-transformers';
+import { getEncryption } from '@/utils/index';
+import { deleteBoard, orderBoard, fetchBoardList } from '@/apis/board';
+import _ from 'lodash';
+import BiciDraggableModal from '../BiciDraggableModal';
 
 const initialQueryParams = {
-  code: "", // 看板编号
-  name: "", // 看板名称
-  tagName: "", // 标签name
+  code: '', // 看板编号
+  name: '', // 看板名称
+  tagName: '', // 标签name
   pagination: {
     // 分页信息
     current: 1,
@@ -58,7 +58,7 @@ const BoardManage = (props) => {
       setPage(distParams.pagination);
       setDataList(list);
     },
-    [setDataList]
+    [setDataList],
   );
 
   useEffect(() => {
@@ -86,10 +86,10 @@ const BoardManage = (props) => {
       distParams = { ...copyInitialQueryParams, pagination: { ...distPagination } };
     } else {
       let { dataIndex } = filterTags;
-      if (dataIndex === "typeName") {
-        dataIndex = "tagName";
+      if (dataIndex === 'typeName') {
+        dataIndex = 'tagName';
       }
-      distParams = { [dataIndex]: "", pagination: { ...distPagination } };
+      distParams = { [dataIndex]: '', pagination: { ...distPagination } };
     }
 
     requestBoardList(distParams);
@@ -102,9 +102,9 @@ const BoardManage = (props) => {
     let filterTags = [];
     if (!isQueryParamsEmpty) {
       const { code, name, tagName } = queryParams;
-      code && filterTags.push({ filterType: "search", dataIndex: "code", val: code });
-      name && filterTags.push({ filterType: "search", dataIndex: "name", val: name });
-      tagName && filterTags.push({ filterType: "search", dataIndex: "typeName", val: tagName });
+      code && filterTags.push({ filterType: 'search', dataIndex: 'code', val: code });
+      name && filterTags.push({ filterType: 'search', dataIndex: 'name', val: name });
+      tagName && filterTags.push({ filterType: 'search', dataIndex: 'typeName', val: tagName });
     }
     return filterTags;
   };
@@ -112,18 +112,18 @@ const BoardManage = (props) => {
   // 删除
   const confirmDelete = async (item) => {
     if (item.updateAuth !== 1) {
-      biciNotification.error({ message: "无权删除该看板!" });
+      biciNotification.error({ message: '无权删除该看板!' });
       return;
     }
 
     const res = await deleteBoard(requestClient, { id: item.id }, token);
     if (res) {
-      biciNotification.success({ message: "删除成功!" });
+      biciNotification.success({ message: '删除成功!' });
       requestBoardList();
       props.requestBoardList();
       props.requestTypeList();
     } else {
-      biciNotification.error({ message: "删除失败!" });
+      biciNotification.error({ message: '删除失败!' });
     }
   };
 
@@ -156,7 +156,7 @@ const BoardManage = (props) => {
       // 排序
       orderBoard(requestClient, params, token).then((res) => {
         if (res) {
-          console.log("page", page);
+          console.log('page', page);
           requestBoardList({
             pagination: { current: page.current, pageSize: page.pageSize },
           });
@@ -170,7 +170,7 @@ const BoardManage = (props) => {
         {
           pagination: { current: page.current - 1, pageSize: page.pageSize },
         },
-        token
+        token,
       ).then((res) => {
         const prePageList = res.list;
 
@@ -232,7 +232,7 @@ const BoardManage = (props) => {
         {
           pagination: { current: page.current + 1, pageSize: page.pageSize },
         },
-        token
+        token,
       ).then((res) => {
         const nextPageList = res.list;
 
@@ -265,10 +265,10 @@ const BoardManage = (props) => {
   // 列
   let columns = [
     {
-      title: "编号",
-      dataIndex: "code",
-      width: "lg",
-      filterType: "search",
+      title: '编号',
+      dataIndex: 'code',
+      width: 'lg',
+      filterType: 'search',
       handleSubmitSearch: (val) => requestBoardList({ code: val }),
       render: (text) => (
         <Tooltip placement="topLeft" title={text}>
@@ -277,10 +277,10 @@ const BoardManage = (props) => {
       ),
     },
     {
-      title: "标题",
-      dataIndex: "name",
-      width: "lg",
-      filterType: "search",
+      title: '标题',
+      dataIndex: 'name',
+      width: 'lg',
+      filterType: 'search',
       ellipsis: true,
       handleSubmitSearch: (val) => requestBoardList({ name: val }),
       render: (text) => (
@@ -290,15 +290,15 @@ const BoardManage = (props) => {
       ),
     },
     {
-      title: "类型",
-      dataIndex: "typeName",
-      width: "lg",
-      filterType: "search",
+      title: '类型',
+      dataIndex: 'typeName',
+      width: 'lg',
+      filterType: 'search',
       ellipsis: true,
       handleSubmitSearch: (val) => requestBoardList({ tagName: val }),
       render: (text) => (
         <Tooltip placement="topLeft" title={text}>
-          {text.split(";").map((tag, i) => {
+          {text?.split(';').map((tag, i) => {
             return (
               <Tag color="blue" key={i} className="mt4">
                 {tag}
@@ -309,46 +309,41 @@ const BoardManage = (props) => {
       ),
     },
     {
-      title: "链接",
-      dataIndex: "links",
-      width: "lg",
+      title: '链接',
+      dataIndex: 'links',
+      width: 'lg',
       ellipsis: true,
       render: (text, record) => (
         <Tooltip
           placement="topLeft"
           title={`${window.location.origin}/newCockpit/${getEncryption(
-            JSON.stringify({ id: record.id, isShare: false })
+            JSON.stringify({ id: record.id, isShare: false }),
           )}`}
         >
           <a className="cursorDefault">{`${window.location.origin}/newCockpit/${getEncryption(
-            JSON.stringify({ id: record.id, isShare: false })
+            JSON.stringify({ id: record.id, isShare: false }),
           )}`}</a>
         </Tooltip>
       ),
     },
     {
-      title: "操作",
-      key: "operation",
+      title: '操作',
+      key: 'operation',
       render: (text, record, index) => (
         <Space size="middle">
           {page.current === 1 && index === 0 ? (
-            <a style={{ pointerEvents: "none", opacity: 0.3 }}>前移</a>
+            <a style={{ pointerEvents: 'none', opacity: 0.3 }}>前移</a>
           ) : (
             <a onClick={() => onMoveUp(index)}>前移</a>
           )}
           {page.current === page.totalPage && index === dataList.length - 1 ? (
-            <a style={{ pointerEvents: "none", opacity: 0.3 }}>后移</a>
+            <a style={{ pointerEvents: 'none', opacity: 0.3 }}>后移</a>
           ) : (
             <a onClick={() => onMoveDown(index)}>后移</a>
           )}
           {delButton && (
-            <Popconfirm
-              title="确定删除看板？"
-              onConfirm={() => confirmDelete(record)}
-              okText="是"
-              cancelText="否"
-            >
-              <a>删除</a>
+            <Popconfirm title="确定删除看板？" onConfirm={() => confirmDelete(record)} okText="是" cancelText="否">
+              <a style={{ color: '#f5222d' }}>删除</a>
             </Popconfirm>
           )}
         </Space>

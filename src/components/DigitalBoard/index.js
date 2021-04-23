@@ -31,7 +31,7 @@ const DigitalBoard = (props) => {
   });
   // 标签选择
   const [typeSelect, setTypeSelect] = useState({
-    currntSelectedTypes: [], // 当前选择的所有标签
+    currentSelectedTypes: [], // 当前选择的所有标签
     indexSelected: [], // 显示的checkgroup的标签选择
     hideSelected: [], // 隐藏的checkgroup的标签选择，
     currentHide: [],
@@ -96,14 +96,14 @@ const DigitalBoard = (props) => {
         otherTypes: tags.slice(4),
       }));
       setTypeSelect(() => ({
-        currntSelectedTypes: tagVals,
+        currentSelectedTypes: tagVals,
         indexSelected: tags.slice(0, 4).map((item) => item.value),
         hideSelected: tags.slice(4).map((item) => item.value),
       }));
     } else {
       setTagShow((prevState) => ({ ...prevState, indexTypes: tags.slice(0, 4) }));
       setTypeSelect(() => ({
-        currntSelectedTypes: tagVals,
+        currentSelectedTypes: tagVals,
         indexSelected: tags.slice(0, 4).map((item) => item.value),
         hideSelected: [],
       }));
@@ -171,7 +171,7 @@ const DigitalBoard = (props) => {
     });
     setTypeSelect({
       ...typeSelect,
-      currntSelectedTypes: newSeletedList,
+      currentSelectedTypes: newSeletedList,
       indexSelected: checkedList,
     });
 
@@ -195,7 +195,7 @@ const DigitalBoard = (props) => {
     //标签选择
     setTypeSelect({
       ...typeSelect,
-      currntSelectedTypes: newSeletedList,
+      currentSelectedTypes: newSeletedList,
       currentHide: checkedList,
     });
   };
@@ -208,7 +208,7 @@ const DigitalBoard = (props) => {
       checkAll: e.target.checked,
     }));
     setTypeSelect({
-      currntSelectedTypes: checkedList,
+      currentSelectedTypes: checkedList,
       indexSelected: e.target.checked ? tagShow.indexTypes.map((item) => item.value) : [],
       hideSelected: e.target.checked ? tagShow.otherTypes.map((item) => item.value) : [],
     });
@@ -225,9 +225,9 @@ const DigitalBoard = (props) => {
 
   // 处理标签选择确认
   const handleTagSeletedOk = () => {
-    if (typeSelect.currntSelectedTypes.length > 0) {
-      requestBoardList({ name: searchInfo.name, tagIdList: typeSelect.currntSelectedTypes });
-      setSearchInfo({ ...searchInfo, tagIdList: typeSelect.currntSelectedTypes });
+    if (typeSelect.currentSelectedTypes.length > 0) {
+      requestBoardList({ name: searchInfo.name, tagIdList: typeSelect.currentSelectedTypes });
+      setSearchInfo({ ...searchInfo, tagIdList: typeSelect.currentSelectedTypes });
     } else {
       setBoardList([]);
       setSearchInfo({ ...searchInfo, tagIdList: [] });
@@ -240,7 +240,7 @@ const DigitalBoard = (props) => {
   const handleTagSeletedCanel = () => {
     setTypeSelect({
       ...typeSelect,
-      currntSelectedTypes: searchInfo.tagIdList,
+      currentSelectedTypes: searchInfo.tagIdList,
     });
 
     if (searchInfo.tagIdList.length === tagCheckGroup.typeList.length) {
@@ -308,7 +308,7 @@ const DigitalBoard = (props) => {
     <div ref={tagMoreRef}>
       <Menu style={{ width: 440 }} selectable={false}>
         <Menu.Item style={{height: '100%'}}>
-          <Checkbox.Group style={{ width: '100%' }} value={typeSelect.currntSelectedTypes} onChange={hideTypeChange}>
+          <Checkbox.Group style={{ width: '100%' }} value={typeSelect.currentSelectedTypes} onChange={hideTypeChange}>
             <Row gutter={[16, 16]}>
               {tagShow.otherTypes.map((item, index) => {
                 return (
@@ -344,7 +344,7 @@ const DigitalBoard = (props) => {
   );
 
   const handleSearchBtn = (value) => {
-    const { currntSelectedTypes } = typeSelect;
+    const { currentSelectedTypes: currntSelectedTypes } = typeSelect;
     const useType = currntSelectedTypes.length > 0;
     const searchParams = useType ? { name: value, tagIdList: currntSelectedTypes } : { name: value };
     requestBoardList(searchParams);
@@ -392,7 +392,7 @@ const DigitalBoard = (props) => {
                 style={{
                   marginRight: 30,
                 }}
-                value={typeSelect.currntSelectedTypes}
+                value={typeSelect.currentSelectedTypes}
                 onChange={onTypeChange}
               >
                 <Row>
