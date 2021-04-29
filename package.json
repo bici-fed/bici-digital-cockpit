@@ -1,6 +1,6 @@
 {
   "name": "bici-digital-cockpit",
-  "version": "0.0.25",
+  "version": "0.0.26-zyvideo",
   "private": false,
   "main": "dist/index.js",
   "dependencies": {

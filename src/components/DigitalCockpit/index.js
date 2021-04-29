@@ -23,6 +23,7 @@ const DigitalCockpit = React.forwardRef((props, ref) => {
     requestClient,
     dataPointPropsMap,
     handleAddDataPoint,
+    handleAddVedioSource,
   } = props;
 
   const [boardData, setBoardData] = useState({});
@@ -293,6 +294,7 @@ const DigitalCockpit = React.forwardRef((props, ref) => {
             token={token}
             onPreview={handlePreview}
             onAddDataPoint={handleAddDataPoint}
+            onAddVedioSource={handleAddVedioSource}
             dataPointPropsMap={dataPointPropsMap}
           />
         )}
