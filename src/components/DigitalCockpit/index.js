@@ -263,13 +263,15 @@ const DigitalCockpit = React.forwardRef((props, ref) => {
   };
 
   const handleDataPointBind = (selectedselectedRowKeys, selectedselectedRows) => {
-    // @ts-ignore
     editorRef?.current.handleDataPointBind(selectedselectedRowKeys, selectedselectedRows);
   };
+  const handleVedioBind=(selectedRowKeys, selectedRows)=>{
+    editorRef?.current.handleVedioBind(selectedRowKeys, selectedRows);
+  }
 
   useEffect(() => {
-    // @ts-ignore
     ref.current.handleDataPointBind = handleDataPointBind;
+    ref.current.handleVedioBind = handleVedioBind;
   }, []);
 
   return (
