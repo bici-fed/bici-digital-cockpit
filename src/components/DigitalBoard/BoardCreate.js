@@ -113,7 +113,7 @@ const BoardCreate = (props) => {
       if (customPermission) {
         const permissionData = (data.newCockpitVisibleConfigList || []).map((item) => ({
           id: item.userId,
-          name: item.username,
+          name: item.userName,
         }));
         if (setPermissionData) setPermissionData(permissionData);
         formVals.permissionData = permissionData;
@@ -228,7 +228,7 @@ const BoardCreate = (props) => {
         biciNotification.error({ message: '必须选择看板类型!' });
         return;
       }
-      const { id: userId, name: username } = userInfo;
+      const { id: userId, name: userName } = userInfo;
       const { name, remark, updateAuth, deptUser, permissionData, coverRadio } = values;
       let newCockpitVisibleConfigList = [];
       if (customPermission) {
@@ -238,7 +238,7 @@ const BoardCreate = (props) => {
       }
       // 没有选择登录用户，添加
       if (!newCockpitVisibleConfigList.map((item) => item.userId).includes(userId)) {
-        newCockpitVisibleConfigList.push({ userId, username });
+        newCockpitVisibleConfigList.push({ userId, userName });
       }
       // cover 封面 1:预览图 2:图片
       let distParams = {

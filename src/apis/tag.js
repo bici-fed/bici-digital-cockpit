@@ -1,5 +1,6 @@
 // 获取标签列表
 export const getTagsList = (request, params, token) => {
+  console.log('params===',params)
   return request.get(`/manager/tag/list`, {
     params,
     headers: { token },

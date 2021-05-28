@@ -1,9 +1,11 @@
 const path = require("path");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const webpack = require('webpack');
+
 
 module.exports = ['source-map'].map((devtool) => ({
-  mode: 'development', // development | production
-  devtool,
+  watch: true,
+  mode: 'production', // development | production
   entry: path.resolve(__dirname, 'src/index.js'),
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -26,7 +28,7 @@ module.exports = ['source-map'].map((devtool) => ({
       {
         test: /\.css$/i,
         include: path.resolve(__dirname, 'src/assets/css'),
-        use: ['style-loader', { loader: 'css-loader'}],
+        use: ['style-loader', { loader: 'css-loader' }],
       },
       {
         test: /\.less$/,
@@ -70,6 +72,19 @@ module.exports = ['source-map'].map((devtool) => ({
       },
     ],
   },
-  plugins: [new CleanWebpackPlugin()],
-  externals: ['react', 'react-dom', 'bici-transformers', '@ant-design/icons'],
+  plugins: [
+    new CleanWebpackPlugin()
+  ],
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        commons: {
+          name: 'commons',
+          chunks: 'initial',
+          minChunks: 2
+        }
+      }
+    }
+  },
+  externals: ['react', 'react-dom', 'bici-transformers', '@ant-design/icons','lodash','moment'],
 }));

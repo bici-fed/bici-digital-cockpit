@@ -1,6 +1,7 @@
 {
   "name": "bici-digital-cockpit",
-  "version": "0.0.27-zyvideo",
+  "version": "0.0.30",
+  "sideEffects": false,
   "private": false,
   "main": "dist/index.js",
   "dependencies": {
@@ -16,7 +17,8 @@
     "uuid": "^8.3.2"
   },
   "scripts": {
-    "build": "webpack --config webpack.config.js"
+    "build": "webpack --config webpack.config.js",
+    "dev": "webpack --watch --config webpack.config.js"
   },
   "browserslist": {
     "production": [
