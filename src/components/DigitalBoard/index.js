@@ -72,7 +72,7 @@ const DigitalBoard = (props) => {
   // 请求所有面板数据
   const requestBoardList = async (params) => {
     const { list, total } = await fetchBoardList(requestClient, { pagination, ...params }, token);
-    setBoardList(() => list);
+    setBoardList(list||[]);
     setPagination((prevState) => ({
       ...prevState,
       total,

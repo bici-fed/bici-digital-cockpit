@@ -66,7 +66,7 @@ const BoardCreate = (props) => {
   const requestTypes = useCallback(async () => {
     if (useTag) {
       const { tagList } = await getTagsList(requestClient, { deviceType }, token);
-      const tags = tagList.map((tag) => {
+      const tags = tagList?.map((tag) => {
         return { id: tag.tagId, name: tag.tagName };
       });
       setTypes(tags);

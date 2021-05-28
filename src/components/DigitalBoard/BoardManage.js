@@ -56,9 +56,9 @@ const BoardManage = (props) => {
       distParams.pagination.total = total;
       distParams.pagination.totalPage = totalPage;
       setPage(distParams.pagination);
-      setDataList(list);
+      setDataList(() => list||[]);
     },
-    [setDataList],
+    [],
   );
 
   useEffect(() => {
