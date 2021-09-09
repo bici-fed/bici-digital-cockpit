@@ -39,6 +39,10 @@ const DigitalCockpit = React.forwardRef((props, ref) => {
 
   const industrialLibrary = [
     {
+      name: '钢包',
+      url: require('@/assets/img/industrial/钢包.svg'),
+    },
+    {
       name: '编组 84',
       url: require('@/assets/img/industrial/编组 84.svg'),
     },

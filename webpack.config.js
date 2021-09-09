@@ -4,7 +4,7 @@ const webpack = require('webpack');
 
 
 module.exports = ['source-map'].map((devtool) => ({
-  watch: true,
+  // watch: true,
   mode: 'production', // development | production
   entry: path.resolve(__dirname, 'src/index.js'),
   output: {
