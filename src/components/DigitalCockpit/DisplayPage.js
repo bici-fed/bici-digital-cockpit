@@ -334,7 +334,8 @@ const DisplayPage = (props) => {
   const style = {
     width: '100vw',
     height: '100vh',
-    overflow: 'hidden',
+    overflowY: 'auto',
+    overflowX: 'auto',
     // zIndex: 1,
     // position: 'relative',
     // margin: '0 auto',
