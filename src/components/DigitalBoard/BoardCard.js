@@ -227,16 +227,18 @@ const BoardCard = (props) => {
             </Tooltip>
           )}
         </div>
-        <Tooltip
-          placement="topLeft"
-          arrowPointAtCenter
-          getPopupContainer={() => document.getElementById(popoverId)}
-          title={tipContent}
-          color="#ffffff"
-          className={styles.tipWrapper}
-        >
-          <img src={infoIcon} />
-        </Tooltip>
+        <div className={styles.tipWrapper} style={{display:'flex',justifyContent:'space-between',alignItems:'center',width:'100%',paddingRight:20,}}>
+          <Tooltip
+            placement="topLeft"
+            arrowPointAtCenter
+            getPopupContainer={() => document.getElementById(popoverId)}
+            title={tipContent}
+            color="#ffffff"
+          >
+            <img src={infoIcon} />
+          </Tooltip>
+          <span style={{color:'#fff',fontWeight:'bold'}}>{item.createUsername}</span>
+        </div>
       </div>,
     ),
   );
