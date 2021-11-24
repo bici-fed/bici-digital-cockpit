@@ -80,6 +80,9 @@ const DisplayPage = (props) => {
     addFullScreenChanegListener(() => {
       const visible = getFullScreenState();
       setIsFullScreen(visible);
+      // setTimeout(()=>{
+      //   location.reload();
+      // },200)
     });
   }, [token]);
 
@@ -101,6 +104,8 @@ const DisplayPage = (props) => {
   useEffect(() => {
     handleValidDay();
   }, [handleValidDay]);
+
+
 
   // 分享获取详情
   const getSharedData = async (id, tokenTmp) => {

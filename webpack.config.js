@@ -54,7 +54,7 @@ module.exports = ['source-map'].map((devtool) => ({
           {
             loader: 'url-loader',
             options: {
-              limit: 819200,
+              limit: 81920000,
             },
           },
         ],
