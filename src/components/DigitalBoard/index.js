@@ -125,7 +125,7 @@ const DigitalBoard = (props) => {
       return;
     }
     props.history.push({
-      pathname: `/newBoard/${item.id}`,
+      pathname: `/SJYY/newBoard/${item.id}`,
     });
   };
 

@@ -137,7 +137,7 @@ const DigitalCockpit = React.forwardRef((props, ref) => {
       token: token,
       url: '/api/file/file/uploadReturnPath',
       apiUrl: {
-        list: '/applications/custom/component/componentList',
+        list: '/applications/service/remote/custom/component/componentList',
         delete: '/file/file/delete',
         update: '/file/file/updateFile',
       },
@@ -159,19 +159,19 @@ const DigitalCockpit = React.forwardRef((props, ref) => {
       apiURL: baseUrl,
       token: token,
       list: {
-        url: '/applications/customComponent/list',
+        url: '/applications/service/remote/custom/component/list',
         params: {},
       },
       add: {
-        url: '/applications/customComponent/save',
+        url: '/applications/service/remote/customComponent/save',
         params: {},
       },
       delete: {
-        url: '/applications/customComponent/delete',
+        url: '/applications/service/remote/custom/component/delete',
         params: {},
       },
       rename: {
-        url: '/applications/customComponent/update',
+        url: '/applications/service/remote/custom/component/update',
         params: {},
       },
     },
@@ -180,7 +180,7 @@ const DigitalCockpit = React.forwardRef((props, ref) => {
       mappingId: boardData.companyId,
       token: token,
       list: {
-        url: '/applications/custom/component/industryList',
+        url: '/applications/service/remote/custom/component/industryList',
       },
       projectIndustryCats: industry_List,
     },
@@ -241,12 +241,12 @@ const DigitalCockpit = React.forwardRef((props, ref) => {
         onOk: () => {
           isSave = true;
           Modal.destroyAll();
-          location?.pathname ? history.push(`${location.pathname}`) : history.push(`/newBoard`);
+          location?.pathname ? history.push(`${location.pathname}`) : history.push(`/SJYY/newBoard`);
         },
         onCancel: () => Modal.destroyAll(),
       });
     } else {
-      location?.pathname ? history.push(`${location.pathname}`) : history.push(`/newBoard`);
+      location?.pathname ? history.push(`${location.pathname}`) : history.push(`/SJYY/newBoard`);
     }
   };
 
