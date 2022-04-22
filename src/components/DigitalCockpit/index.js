@@ -8,9 +8,6 @@ import { industry_List } from '@/constant';
 import preBgImg1 from '@/assets/img/pre_bgimg_1.jpg';
 import preBgImg2 from '@/assets/img/pre_bgimg_2.jpg';
 import preBgImg3 from '@/assets/img/pre_bgimg_3.jpg';
-import preBgImg4 from '@/assets/img/twin_index_bg.png';
-import preBgImg5 from '@/assets/img/twin_gjj_bg.png';
-import preBgImg6 from '@/assets/img/twin_ydc_bg.png';
 
 let isSave = false;
 
@@ -38,9 +35,6 @@ const DigitalCockpit = React.forwardRef((props, ref) => {
     { key: 1, img: preBgImg1 },
     { key: 2, img: preBgImg2 },
     { key: 3, img: preBgImg3 },
-    { key: 4, img: preBgImg4 },
-    { key: 5, img: preBgImg5 },
-    { key: 6, img: preBgImg6 },
   ];
 
   const industrialLibrary = [
@@ -135,11 +129,11 @@ const DigitalCockpit = React.forwardRef((props, ref) => {
     self: {
       baseURL: baseUrl,
       token: token,
-      url: '/api/file/file/uploadReturnPath',
+      url: '/file/service/file/uploadReturnPath',
       apiUrl: {
         list: '/applications/service/remote/custom/component/componentList',
-        delete: '/file/file/delete',
-        update: '/file/file/updateFile',
+        delete: '/file/service/file/delete',
+        update: '/file/service/file/updateFile',
       },
       data: {
         mappingId: boardData.companyId,
@@ -149,7 +143,7 @@ const DigitalCockpit = React.forwardRef((props, ref) => {
     preInstall: {
       baseURL: baseUrl,
       token: token,
-      url: '/api/file/file/uploadReturnPath',
+      url: '/file/service/file/uploadReturnPath',
       data: {
         mappingId: boardData.companyId,
         mappingType: '107',
@@ -199,6 +193,7 @@ const DigitalCockpit = React.forwardRef((props, ref) => {
 
   useEffect(() => {
     // 获取面板数据
+    console.log(baseUrl,111)
     getBoardDetail(true);
   }, []);
 
