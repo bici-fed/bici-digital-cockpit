@@ -55,7 +55,7 @@ const DisplayPage = (props) => {
   });
 
   const websocketConf = {
-    url: `${wsUrl}?token=${socketToken}`,
+    url: `${wsUrl}/${socketToken}`,
   };
 
   // 日期处理
