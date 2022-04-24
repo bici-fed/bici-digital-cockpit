@@ -226,7 +226,7 @@ const DisplayPage = (props) => {
           token: res.uuid,
         }),
       );
-      const link = `${window.location.origin}/newCockpit/${code}`;
+      const link = `${window.location.origin}/SJYY/newCockpit/${code}`;
       // const link = `http://localhost:5000/cockpit/${code}`
       form.setFieldsValue({ shareLink: link });
       const shareStr = values.password

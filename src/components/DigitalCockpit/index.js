@@ -249,7 +249,7 @@ const DigitalCockpit = React.forwardRef((props, ref) => {
 
   const handlePreview = () => {
     window.open(
-      `/newCockpit/${getEncryption(
+      `/SJYY/newCockpit/${getEncryption(
         JSON.stringify({
           isShare: false,
           id: boardId,

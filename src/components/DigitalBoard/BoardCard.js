@@ -147,7 +147,7 @@ const BoardCard = (props) => {
   // 模拟Link标签，跳转
   const handleCardLink = (e) => {
     const w = window.open('about:blank');
-    w.location.href = window.location.origin + `/newCockpit/${handleLinks()}`;
+    w.location.href = window.location.origin + `/SJYY/newCockpit/${handleLinks()}`;
   };
 
   // 简介tip
@@ -156,7 +156,7 @@ const BoardCard = (props) => {
       <div style={{ marginBottom: 12 }}>
         <span>卡片简介</span>
         <CopyToClipboard
-          text={`${window.location.origin}/newCockpit/${handleLinks()}`}
+          text={`${window.location.origin}/SJYY/newCockpit/${handleLinks()}`}
           onCopy={() => biciNotification.success({ message: '复制成功' })}
         >
           <span style={{ color: '#096DD9', float: 'right', cursor: 'pointer' }}>
