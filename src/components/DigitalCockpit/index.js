@@ -249,7 +249,7 @@ const DigitalCockpit = React.forwardRef((props, ref) => {
 
   const handlePreview = () => {
     const url = window.location.href;
-    if(url && url.indexOf('/dp/base')){
+    if(url && url.indexOf('/dp/base') !== -1){
       window.open(
         `/dp/base/SJYY/newCockpit/${getEncryption(
           JSON.stringify({
