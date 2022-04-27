@@ -298,7 +298,7 @@ const BoardCreate = (props) => {
             // 关闭模态框
             props.onClose();
             // 跳转到配置页面
-            history.push({ pathname: `/newBoard/${res}` });
+            history.push({ pathname: `/SJYY/newBoard/${res}` });
           })
           .catch((err) => {
             biciNotification.error({ message: '创建失败!' });

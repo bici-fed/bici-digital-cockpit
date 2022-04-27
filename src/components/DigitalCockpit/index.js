@@ -248,15 +248,28 @@ const DigitalCockpit = React.forwardRef((props, ref) => {
   };
 
   const handlePreview = () => {
-    window.open(
-      `/SJYY/newCockpit/${getEncryption(
-        JSON.stringify({
-          isShare: false,
-          id: boardId,
-        }),
-      )}`,
-      '_blank',
-    );
+    const url = window.location.href;
+    if(url && url.indexOf('/dp/base')){
+      window.open(
+        `/dp/base/SJYY/newCockpit/${getEncryption(
+          JSON.stringify({
+            isShare: false,
+            id: boardId,
+          }),
+        )}`,
+        '_blank',
+      );
+    }else{
+      window.open(
+        `/SJYY/newCockpit/${getEncryption(
+          JSON.stringify({
+            isShare: false,
+            id: boardId,
+          }),
+        )}`,
+        '_blank',
+      );
+    }
     // props.history.push(`/newCockpit/${getEncryption(JSON.stringify({ isShare: false, id: props.match.params.id }))}`);
   };
 
