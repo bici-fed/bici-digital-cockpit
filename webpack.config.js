@@ -1,6 +1,7 @@
 const path = require("path");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
-const webpack = require('webpack');
+// const webpack = require('webpack');
+// const nodeExternals = require('webpack-node-externals');
 
 
 module.exports = ['source-map'].map((devtool) => ({

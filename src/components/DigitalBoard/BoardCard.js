@@ -146,8 +146,14 @@ const BoardCard = (props) => {
 
   // 模拟Link标签，跳转
   const handleCardLink = (e) => {
-    const w = window.open('about:blank');
-    w.location.href = window.location.origin + `/SJYY/newCockpit/${handleLinks()}`;
+    const url = window.location.href;
+    if(url && url.indexOf('/dp/base') !== -1){
+      const w = window.open('about:blank');
+      w.location.href = window.location.origin + `/dp/base/SJYY/newCockpit/${handleLinks()}`;
+    }else{
+      const w = window.open('about:blank');
+      w.location.href = window.location.origin + `/SJYY/newCockpit/${handleLinks()}`;
+    }
   };
 
   // 简介tip
