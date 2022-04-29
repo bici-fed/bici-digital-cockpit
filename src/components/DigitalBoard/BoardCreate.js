@@ -62,12 +62,14 @@ const BoardCreate = (props) => {
   const [treeData, setTreeData] = useState([]);
   // antd表单hooks
   const [form] = Form.useForm();
+
   // 请求所有看板类型
   const requestTypes = useCallback(async () => {
     if (useTag) {
-      const { tagList } = await getTagsList(requestClient, { deviceType }, token);
-      const tags = tagList?.map((tag) => {
-        return { id: tag.tagId, name: tag.tagName };
+      const res = await getTagsList(requestClient, { deviceType }, token);
+      const list = _.compact(res);
+      const tags = (list||[])?.map((tag) => {
+        return { id: tag.id, name: tag.name };
       });
       setTypes(tags);
       if (data) {
@@ -105,7 +107,7 @@ const BoardCreate = (props) => {
       let formVals = {
         code: data.code,
         name: data.name,
-        updateAuth: data.updateAuth,
+        updateAuth: data.updateAuth || 2,
         remark: data.remark,
         coverRadio,
       };
@@ -130,6 +132,13 @@ const BoardCreate = (props) => {
       setTextLength({ nameLen: data.name.length, remarkLen: data.remark ? data.remark.length : 0 });
     } else {
       form.resetFields();
+      let formVals = {
+        cover: 1,
+        updateAuth:  2,
+        coverRadio: 0,
+      };
+      setPicType(1);
+      form.setFieldsValue(formVals);
     }
   }, [data, form, setPermissionData]);
 
@@ -143,7 +152,7 @@ const BoardCreate = (props) => {
       setTreeData(deptUserTree);
     }
     if (permissionData) {
-      form.setFieldsValue({ permissionData });
+      form.setFieldsValue({permissionData});
     }
   }, [permissionData, deptUserTree]);
 
@@ -224,10 +233,10 @@ const BoardCreate = (props) => {
   // 模态框确认处理
   const handleOk = () => {
     form.validateFields().then((values) => {
-      if (useTag && _.isEmpty(selectedTypes)) {
-        biciNotification.error({ message: '必须选择看板类型!' });
-        return;
-      }
+      // if (useTag && _.isEmpty(selectedTypes)) {
+      //   biciNotification.error({ message: '必须选择看板类型!' });
+      //   return;
+      // }
       const { id: userId, name: userName } = userInfo;
       const { name, remark, updateAuth, deptUser, permissionData, coverRadio } = values;
       let newCockpitVisibleConfigList = [];
@@ -441,6 +450,7 @@ const BoardCreate = (props) => {
             label="看板类型:"
             labelStyle={{
               fontSize: 14,
+              marginBottom: 24,
               width: 87,
             }}
             style={{ marginBottom: 24 }}
@@ -453,11 +463,12 @@ const BoardCreate = (props) => {
             }}
           />
         ) : (
+          <div class="antd-bici-cockpit-form-item">
           <BiciTagsManager
             labelElement={
               <div
                 style={{
-                  fontSize: 12,
+                  fontSize: 14,
                   width: 87,
                   lineHeight: '32px',
                   textAlign: 'right',
@@ -466,6 +477,7 @@ const BoardCreate = (props) => {
                 看板类型：
               </div>
             }
+            style={{marginBottom: 24}}
             tagLength={10}
             selectMax={10}
             dataSource={selectedTypes}
@@ -475,6 +487,7 @@ const BoardCreate = (props) => {
             onDeleteTag={handleDeleteTag}
             onEditTag={handleEditTag}
           />
+          </div>
         )}
 
         {!_.isEmpty(treeData) && !customPermission && (
@@ -557,7 +570,7 @@ const BoardCreate = (props) => {
                   className="board-create-upload"
                   style={{ marginTop: 6 }}
                   data={{ mappingType: 105, mappingId: data ? data.id : 3 }}
-                  action={`${baseUrl}/api/file/file/upload`}
+                  action={`${baseUrl}/file/service/file/upload`}
                   accept="image/jpeg,image/jpg,image/png"
                   headers={{ token }}
                   listType="picture-card"

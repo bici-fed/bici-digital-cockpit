@@ -1,11 +1,19 @@
 // 获取标签列表
+// export const getTagsList = (request, params, token) => {
+//  // console.log('params===',params)
+//   return request.post(`/applications/service/remote/tag/list`, {
+//     ...params,
+//     headers: { token },
+//   });
+// };
 export const getTagsList = (request, params, token) => {
- // console.log('params===',params)
-  return request.post(`/applications/service/remote/tag/list`, {
-    params,
+  // console.log('params===',params)
+  return request.post(`/applications/service/remote/newBoard/tag`, {
+    ...params,
     headers: { token },
   });
 };
+
 
 // 删除标签
 export const deleteTags = (request, params, token) => {
