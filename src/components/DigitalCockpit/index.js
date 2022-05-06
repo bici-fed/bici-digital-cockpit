@@ -131,13 +131,14 @@ const DigitalCockpit = React.forwardRef((props, ref) => {
       token: token,
       url: '/file/service/file/uploadReturnPath',
       apiUrl: {
-        list: '/file/service/file/findList',
+        list: '/file/service/file/getMappingFile',
         delete: '/file/service/file/delete',
         update: '/file/service/file/updateFile',
       },
       data: {
         mappingId: boardData.companyId,
-        mappingType: '106',
+        mappingType: 106,
+        getPdf: false,
       },
     },
     preInstall: {
@@ -153,9 +154,10 @@ const DigitalCockpit = React.forwardRef((props, ref) => {
       apiURL: baseUrl,
       token: token,
       list: {
-        url: '/file/service/file/findList',
+        url: '/applications/service/remote/customComponent/list',
         params: {
-          "mappingType":'101'
+          "mappingType":'101',
+          mappingId: boardData.companyId,
          },
       },
       add: {
@@ -163,11 +165,11 @@ const DigitalCockpit = React.forwardRef((props, ref) => {
         params: {},
       },
       delete: {
-        url: '/applications/service/remote/custom/component/delete',
+        url: '/applications/service/remote/customComponent/delete',
         params: {},
       },
       rename: {
-        url: ' /file/service/file/updateFile',
+        url: '/applications/service/remote/customComponent/update',
         params: {},
       },
     },
