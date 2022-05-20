@@ -178,7 +178,7 @@ const DigitalCockpit = React.forwardRef((props, ref) => {
       mappingId: boardData.companyId,
       token: token,
       list: {
-        url: '/applications/service/remote/custom/component/industryList',
+        url: '/file/service/file/getMappingFile',
       },
       projectIndustryCats: industry_List,
     },
