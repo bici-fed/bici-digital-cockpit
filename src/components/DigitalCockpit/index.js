@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Modal, ConfigProvider } from 'antd';
+import { Modal, ConfigProvider, notification } from 'antd';
 import BoardCreate from '../DigitalBoard/BoardCreate';
 import { fetchBoardDetail, updateBoardConfigProp } from '@/apis/board';
 import { getEncryption } from '@/utils/index';
@@ -210,7 +210,12 @@ const DigitalCockpit = React.forwardRef((props, ref) => {
         property: JSON.stringify(data),
       },
       token,
-    ).then((res) => {});
+    ).then((res) => {
+      notification.success({
+        message: '提示!',
+        description: '画布数据保存成功!',
+      });
+    });
     // screenshot  缩略图文件
     if (boardData.thumbnailType === 0 && data.screenshot) {
       // 在上传新的图片
