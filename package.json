@@ -1,6 +1,6 @@
 {
   "name": "bici-digital-cockpit",
-  "version": "0.0.56",
+  "version": "0.0.58",
   "sideEffects": false,
   "private": false,
   "main": "dist/index.js",

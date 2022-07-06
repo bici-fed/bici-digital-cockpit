@@ -144,6 +144,13 @@ const BoardCard = (props) => {
     return getEncryption(JSON.stringify({ isShare: false, id: item.id }));
   };
 
+  let PREVIEW_URL = window.location.origin + `/SJYY/newCockpit/${handleLinks()}`;
+  if(url && url.indexOf('/dp/base') !== -1){
+    PREVIEW_URL = window.location.origin + `/dp/base/SJYY/newCockpit/${handleLinks()}`;
+  }else{
+    PREVIEW_URL = window.location.origin + `/SJYY/newCockpit/${handleLinks()}`;
+  }
+
   // 模拟Link标签，跳转
   const handleCardLink = (e) => {
     const url = window.location.href;
@@ -162,7 +169,7 @@ const BoardCard = (props) => {
       <div style={{ marginBottom: 12 }}>
         <span>卡片简介</span>
         <CopyToClipboard
-          text={`${window.location.origin}/SJYY/newCockpit/${handleLinks()}`}
+          text={`${PREVIEW_URL}`}
           onCopy={() => biciNotification.success({ message: '复制成功' })}
         >
           <span style={{ color: '#096DD9', float: 'right', cursor: 'pointer' }}>

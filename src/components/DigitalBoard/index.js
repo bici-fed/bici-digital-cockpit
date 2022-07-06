@@ -218,7 +218,9 @@ const DigitalBoard = (props) => {
       requestBoardList({ name: searchInfo.name, tagIdList: checkedList });
       setSearchInfo({ ...searchInfo, tagIdList: checkedList });
     } else {
-      setBoardList([]);
+      // setBoardList([]);
+      // setSearchInfo({ ...searchInfo, tagIdList: [] });
+      requestBoardList({ name: searchInfo.name });
       setSearchInfo({ ...searchInfo, tagIdList: [] });
     }
   };
