@@ -146,6 +146,17 @@ const BoardCard = (props) => {
 
   let PREVIEW_URL = window.location.origin + `/SJYY/newCockpit/${handleLinks()}`;
 
+  const generatePrevUrl = ()=>{
+    const url = window.location.href;
+    if(url && url.indexOf('/dp/base') !== -1){
+      PREVIEW_URL = window.location.origin + `/dp/base/SJYY/newCockpit/${handleLinks()}`;
+    }else{
+      PREVIEW_URL = window.location.origin + `/SJYY/newCockpit/${handleLinks()}`;
+    }
+  }
+
+  generatePrevUrl();
+
   // 模拟Link标签，跳转
   const handleCardLink = (e) => {
     const url = window.location.href;
