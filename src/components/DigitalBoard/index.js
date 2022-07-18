@@ -27,7 +27,7 @@ const DigitalBoard = (props) => {
   const [tagCheckGroup, setTagCheckGroup] = useState({
     typeList: [],
     indeterminate: false,
-    checkAll: true,
+    checkAll: false,
   });
   // 标签选择
   const [typeSelect, setTypeSelect] = useState({
@@ -71,7 +71,7 @@ const DigitalBoard = (props) => {
 
   // 请求所有面板数据
   const requestBoardList = async (params) => {
-    const { list, total } = await fetchBoardList(requestClient, { pagination, ...params }, token);
+    const { list, total } = await fetchBoardList(requestClient, { pagination, ...params, tagIdList: params?.tagIdList||searchInfo.tagIdList }, token);
     setBoardList(list||[]);
     setPagination((prevState) => ({
       ...prevState,
@@ -96,14 +96,14 @@ const DigitalBoard = (props) => {
         otherTypes: tags.slice(4),
       }));
       setTypeSelect(() => ({
-        currentSelectedTypes: tagVals,
+        currentSelectedTypes: [],
         indexSelected: tags.slice(0, 4).map((item) => item.value),
         hideSelected: tags.slice(4).map((item) => item.value),
       }));
     } else {
       setTagShow((prevState) => ({ ...prevState, indexTypes: tags.slice(0, 4) }));
       setTypeSelect(() => ({
-        currentSelectedTypes: tagVals,
+        currentSelectedTypes: [],
         indexSelected: tags.slice(0, 4).map((item) => item.value),
         hideSelected: [],
       }));
@@ -111,7 +111,7 @@ const DigitalBoard = (props) => {
 
     setSearchInfo({
       ...searchInfo,
-      tagIdList: tagVals,
+      tagIdList: [],
     });
   };
 
@@ -201,6 +201,8 @@ const DigitalBoard = (props) => {
   };
   // 选择全部标签
   const onCheckAllChange = (e) => {
+
+
     const checkedList = e.target.checked ? tagCheckGroup.typeList.map((item) => item.value) : [];
     setTagCheckGroup((prevState) => ({
       ...prevState,
@@ -213,16 +215,19 @@ const DigitalBoard = (props) => {
       hideSelected: e.target.checked ? tagShow.otherTypes.map((item) => item.value) : [],
     });
 
-    // 后端查询
-    if (e.target.checked) {
-      requestBoardList({ name: searchInfo.name, tagIdList: checkedList });
-      setSearchInfo({ ...searchInfo, tagIdList: checkedList });
-    } else {
-      // setBoardList([]);
-      // setSearchInfo({ ...searchInfo, tagIdList: [] });
-      requestBoardList({ name: searchInfo.name });
-      setSearchInfo({ ...searchInfo, tagIdList: [] });
-    }
+    requestBoardList({ name: searchInfo.name, tagIdList: checkedList });
+    setSearchInfo({ ...searchInfo, tagIdList: checkedList });
+
+    // // 后端查询
+    // if (e.target.checked) {
+    //   requestBoardList({ name: searchInfo.name, tagIdList: checkedList });
+    //   setSearchInfo({ ...searchInfo, tagIdList: checkedList });
+    // } else {
+    //   // setBoardList([]);
+    //   // setSearchInfo({ ...searchInfo, tagIdList: [] });
+    //   requestBoardList({ name: searchInfo.name });
+    //   setSearchInfo({ ...searchInfo, tagIdList: [] });
+    // }
   };
 
   // 处理标签选择确认

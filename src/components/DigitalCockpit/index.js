@@ -245,12 +245,12 @@ const DigitalCockpit = React.forwardRef((props, ref) => {
         onOk: () => {
           isSave = true;
           Modal.destroyAll();
-          location?.pathname ? history.push(`${location.pathname}`) : history.push(`/SJYY/newBoard`);
+          location?.pathname ? history.push(`${location.pathname}`) : history.push(`/SJYY/newBoard?tabClose=true`);
         },
         onCancel: () => Modal.destroyAll(),
       });
     } else {
-      location?.pathname ? history.push(`${location.pathname}`) : history.push(`/SJYY/newBoard`);
+      location?.pathname ? history.push(`${location.pathname}`) : history.push(`/SJYY/newBoard?tabClose=true`);
     }
   };
 

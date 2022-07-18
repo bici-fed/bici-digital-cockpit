@@ -81,6 +81,14 @@ const BoardCard = (props) => {
   // 背景图片路径
   const [src, setSrc] = useState('');
 
+  const [previewUrl, setPreviewUrl]=useState('');
+
+  useEffect(()=>{
+
+  },[
+    window.location.href
+  ])
+
   // 处理背景图片路径
   const handleSrc = useCallback(() => {
     if (item.cover === 2 && item.url) {
@@ -153,10 +161,8 @@ const BoardCard = (props) => {
     }else{
       PREVIEW_URL = window.location.origin + `/SJYY/newCockpit/${handleLinks()}`;
     }
+    return PREVIEW_URL;
   }
-
-  generatePrevUrl();
-
   // 模拟Link标签，跳转
   const handleCardLink = (e) => {
     const url = window.location.href;
@@ -172,23 +178,26 @@ const BoardCard = (props) => {
   };
 
   // 简介tip
-  const tipContent = (
-    <div className={styles.tipContent} onClick={(e) => e.stopPropagation()}>
-      <div style={{ marginBottom: 12 }}>
-        <span>卡片简介</span>
-        <CopyToClipboard
-          text={`${PREVIEW_URL}`}
-          onCopy={() => biciNotification.success({ message: '复制成功' })}
-        >
+  const tipContent = ()=>{
+    const url = generatePrevUrl();
+    return (
+      <div className={styles.tipContent} onClick={(e) => e.stopPropagation()}>
+        <div style={{ marginBottom: 12 }}>
+          <span>卡片简介</span>
+          <CopyToClipboard
+            text={`${url}`}
+            onCopy={() => biciNotification.success({ message: '复制成功' })}
+          >
           <span style={{ color: '#096DD9', float: 'right', cursor: 'pointer' }}>
             <LinkOutlined style={{ marginRight: 4 }} />
             <span>复制链接</span>
           </span>
-        </CopyToClipboard>
+          </CopyToClipboard>
+        </div>
+        <p>{item.remark}</p>
       </div>
-      <p>{item.remark}</p>
-    </div>
-  );
+    );
+  }
   //
   return connectDragSource(
     connectDropTarget(
