@@ -4,7 +4,7 @@ const webpack = require('webpack');
 
 
 module.exports = ['source-map'].map((devtool) => ({
-  watch: true,
+  // watch: true,
   mode: 'production', // development | production
   entry: path.resolve(__dirname, 'src/index.js'),
   output: {
@@ -86,5 +86,5 @@ module.exports = ['source-map'].map((devtool) => ({
       }
     }
   },
-  externals: ['react', 'react-dom', 'bici-transformers', '@ant-design/icons','lodash','moment'],
+  externals: ['react', 'react-dom', 'bici-transformer', '@ant-design/icons','lodash','moment'],
 }));

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Space, Modal, Tag, Popconfirm, Tooltip } from 'antd';
-import { biciNotification, ComplexTable } from 'bici-transformers';
+import { biciNotification, ComplexTable } from 'bici-transformer';
 import { getEncryption } from '@/utils/index';
 import { deleteBoard, orderBoard, fetchBoardList } from '@/apis/board';
 import _ from 'lodash';

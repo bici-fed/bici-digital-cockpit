@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useImperativeHandle } from 'react';
 import { Row, Col, Modal, Input, Form, Checkbox, Button, InputNumber, ConfigProvider } from 'antd';
 import { CopyOutlined, ShareAltOutlined } from '@ant-design/icons';
-import { biciNotification } from 'bici-transformers';
+import { biciNotification } from 'bici-transformer';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import {
   getEncryption,
