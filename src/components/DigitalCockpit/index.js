@@ -18,7 +18,7 @@ const DigitalCockpit = React.forwardRef((props, ref) => {
     token,
     history,
     Prompt,
-    websocketConf,q
+    websocketConf,
     EditorLayout,
     boardId,
     requestClient,
