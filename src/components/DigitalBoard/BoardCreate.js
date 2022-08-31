@@ -43,6 +43,7 @@ const BoardCreate = (props) => {
     onPermissionChange,
     onBoardCreateModalClose,
     BiciTagManager,
+    routePrefix = '', // 路由前缀
   } = props;
 
   // 描述文本长度
@@ -298,7 +299,7 @@ const BoardCreate = (props) => {
             // 关闭模态框
             props.onClose();
             // 跳转到配置页面
-            history.push({ pathname: `/newBoard/${res}` });
+            history.push({ pathname: `${routePrefix}/newBoard/${res}` });
           })
           .catch((err) => {
             biciNotification.error({ message: '创建失败!' });
