@@ -16,7 +16,16 @@ import 'antd/dist/antd.less';
 import styles from './index.module.css';
 
 const DigitalBoard = (props) => {
-  const { token, permissionBtn, userInfo, useTag, requestClient, wrapperStyle, onBoardCreateModalClose } = props;
+  const {
+    token,
+    permissionBtn,
+    userInfo,
+    useTag,
+    requestClient,
+    wrapperStyle,
+    onBoardCreateModalClose,
+    routePrefix = '', // 路由前缀
+  } = props;
 
   // 卡片列占比，默认4列
   const [colSize, setColSize] = useState(6);
@@ -72,7 +81,7 @@ const DigitalBoard = (props) => {
   // 请求所有面板数据
   const requestBoardList = async (params) => {
     const { list, total } = await fetchBoardList(requestClient, { pagination, ...params }, token);
-    setBoardList(list||[]);
+    setBoardList(list || []);
     setPagination((prevState) => ({
       ...prevState,
       total,
@@ -83,7 +92,7 @@ const DigitalBoard = (props) => {
   const requestTypeList = async () => {
     if (!useTag) return;
     const data = await fetchTypeList(requestClient, {}, token);
-    const tags = (data||[])
+    const tags = (data || [])
       .filter((tag) => tag)
       .map((tag) => {
         return { value: tag.id, label: tag.name };
@@ -125,7 +134,7 @@ const DigitalBoard = (props) => {
       return;
     }
     props.history.push({
-      pathname: `/newBoard/${item.id}`,
+      pathname: `${routePrefix}/newBoard/${item.id}`,
     });
   };
 
@@ -307,7 +316,7 @@ const DigitalBoard = (props) => {
   const renderCheckGroup = (
     <div ref={tagMoreRef}>
       <Menu style={{ width: 440 }} selectable={false}>
-        <Menu.Item style={{height: '100%'}}>
+        <Menu.Item style={{ height: '100%' }}>
           <Checkbox.Group style={{ width: '100%' }} value={typeSelect.currentSelectedTypes} onChange={hideTypeChange}>
             <Row gutter={[16, 16]}>
               {tagShow.otherTypes.map((item, index) => {
