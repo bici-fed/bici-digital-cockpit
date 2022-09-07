@@ -29,6 +29,7 @@ const BoardManage = (props) => {
     modalProps,
     complexTableProps,
     queryParamsKey,
+    routePrefix = '', // 路由前缀
   } = props;
 
   // 看板列表
@@ -39,27 +40,24 @@ const BoardManage = (props) => {
   const [isMove, setIsMove] = useState(false);
 
   // 请求所有面板数据
-  const requestBoardList = useCallback(
-    async (params) => {
-      const queryParams = JSON.parse(localStorage.getItem(queryParamsKey));
-      const isQueryParamsEmpty = _.isEmpty(queryParams);
-      const distQueryParams = isQueryParamsEmpty ? initialQueryParams : queryParams;
-      const { pagination } = distQueryParams;
-      const distParams = {
-        ...distQueryParams,
-        pagination: { ...pagination, current: 1 },
-        ...params,
-      };
-      const { list, total, totalPage } = await fetchBoardList(requestClient, distParams, token);
-      // 存入redux的查询参数
-      localStorage.setItem(queryParamsKey, JSON.stringify(distParams));
-      distParams.pagination.total = total;
-      distParams.pagination.totalPage = totalPage;
-      setPage(distParams.pagination);
-      setDataList(() => list||[]);
-    },
-    [],
-  );
+  const requestBoardList = useCallback(async (params) => {
+    const queryParams = JSON.parse(localStorage.getItem(queryParamsKey));
+    const isQueryParamsEmpty = _.isEmpty(queryParams);
+    const distQueryParams = isQueryParamsEmpty ? initialQueryParams : queryParams;
+    const { pagination } = distQueryParams;
+    const distParams = {
+      ...distQueryParams,
+      pagination: { ...pagination, current: 1 },
+      ...params,
+    };
+    const { list, total, totalPage } = await fetchBoardList(requestClient, distParams, token);
+    // 存入redux的查询参数
+    localStorage.setItem(queryParamsKey, JSON.stringify(distParams));
+    distParams.pagination.total = total;
+    distParams.pagination.totalPage = totalPage;
+    setPage(distParams.pagination);
+    setDataList(() => list || []);
+  }, []);
 
   useEffect(() => {
     requestBoardList();
@@ -316,11 +314,11 @@ const BoardManage = (props) => {
       render: (text, record) => (
         <Tooltip
           placement="topLeft"
-          title={`${window.location.origin}/newCockpit/${getEncryption(
+          title={`${window.location.origin}${routePrefix}/newCockpit/${getEncryption(
             JSON.stringify({ id: record.id, isShare: false }),
           )}`}
         >
-          <a className="cursorDefault">{`${window.location.origin}/newCockpit/${getEncryption(
+          <a className="cursorDefault">{`${window.location.origin}${routePrefix}/newCockpit/${getEncryption(
             JSON.stringify({ id: record.id, isShare: false }),
           )}`}</a>
         </Tooltip>

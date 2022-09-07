@@ -18,7 +18,18 @@ import { BOARD_SHARE_INFO } from '@/constant';
 const NEW_FULL_SCREEN_ID = 'new_cockpit_full_screen';
 
 const DisplayPage = (props) => {
-  const { token, shareBtnPermission, Preview, wsUrl, logout, encodeUrl, requestClient, wrapperStyle, isApp } = props;
+  const {
+    token,
+    shareBtnPermission,
+    Preview,
+    wsUrl,
+    logout,
+    encodeUrl,
+    requestClient,
+    wrapperStyle,
+    isApp,
+    routePrefix = '', // 路由前缀
+  } = props;
 
   const [form] = Form.useForm();
 
@@ -221,7 +232,7 @@ const DisplayPage = (props) => {
           token: res.uuid,
         }),
       );
-      const link = `${window.location.origin}/newCockpit/${code}`;
+      const link = `${window.location.origin}${routePrefix}/newCockpit/${code}`;
       // const link = `http://localhost:5000/cockpit/${code}`
       form.setFieldsValue({ shareLink: link });
       const shareStr = values.password
@@ -473,8 +484,10 @@ const DisplayPage = (props) => {
         }}
         id={NEW_FULL_SCREEN_ID}
       >
-        {
-          isApp?'':(<div
+        {isApp ? (
+          ''
+        ) : (
+          <div
             style={{
               height: 48,
               position: 'absolute',
@@ -555,10 +568,12 @@ const DisplayPage = (props) => {
                 </Col>
               </Row>
             </div>
-          </div>)
-        }
+          </div>
+        )}
         <div style={style} id="cockpitContent">
-          {Preview && editorData && socketToken && <Preview data={editorData} isApp={isApp} websocketConf={websocketConf} />}
+          {Preview && editorData && socketToken && (
+            <Preview data={editorData} isApp={isApp} websocketConf={websocketConf} />
+          )}
         </div>
         {renderShareModal}
         {renderSeePwdModal}

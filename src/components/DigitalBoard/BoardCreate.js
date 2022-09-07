@@ -246,7 +246,7 @@ const BoardCreate = (props) => {
         name,
         remark,
         updateAuth,
-        links: `${window.location.origin}/newCockpit`,
+        links: `${window.location.origin}${routePrefix}/newCockpit`,
         newCockpitVisibleConfigList,
         tagIdList: selectedTypes.map((item) => item.id),
       };
