@@ -24,6 +24,7 @@ const DigitalCockpit = React.forwardRef((props, ref) => {
     dataPointPropsMap,
     handleAddDataPoint,
     handleAddVedioSource,
+    routePrefix = '', // 路由前缀
   } = props;
 
   const [boardData, setBoardData] = useState({});
@@ -231,18 +232,18 @@ const DigitalCockpit = React.forwardRef((props, ref) => {
         onOk: () => {
           isSave = true;
           Modal.destroyAll();
-          location?.pathname ? history.push(`${location.pathname}`) : history.push(`/newBoard`);
+          location?.pathname ? history.push(`${location.pathname}`) : history.push(`${routePrefix}/newBoard`);
         },
         onCancel: () => Modal.destroyAll(),
       });
     } else {
-      location?.pathname ? history.push(`${location.pathname}`) : history.push(`/newBoard`);
+      location?.pathname ? history.push(`${location.pathname}`) : history.push(`${routePrefix}/newBoard`);
     }
   };
 
   const handlePreview = () => {
     window.open(
-      `/newCockpit/${getEncryption(
+      `${routePrefix}/newCockpit/${getEncryption(
         JSON.stringify({
           isShare: false,
           id: boardId,
@@ -265,9 +266,9 @@ const DigitalCockpit = React.forwardRef((props, ref) => {
   const handleDataPointBind = (selectedselectedRowKeys, selectedselectedRows) => {
     editorRef?.current.handleDataPointBind(selectedselectedRowKeys, selectedselectedRows);
   };
-  const handleVedioBind=(selectedRowKeys, selectedRows)=>{
+  const handleVedioBind = (selectedRowKeys, selectedRows) => {
     editorRef?.current.handleVedioBind(selectedRowKeys, selectedRows);
-  }
+  };
 
   useEffect(() => {
     ref.current.handleDataPointBind = handleDataPointBind;
