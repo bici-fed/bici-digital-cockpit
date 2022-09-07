@@ -223,6 +223,8 @@ const DigitalCockpit = React.forwardRef((props, ref) => {
   };
 
   const confirmAgainModal = (location) => {
+    const pathname = location?.pathname ?? `${routePrefix}/newBoard`;
+
     if (!editorRef.current?.getIsSave()) {
       Modal.confirm({
         title: '当前界面有未保存的内容，是否确认退出？',
@@ -232,12 +234,13 @@ const DigitalCockpit = React.forwardRef((props, ref) => {
         onOk: () => {
           isSave = true;
           Modal.destroyAll();
-          location?.pathname ? history.push(`${location.pathname}`) : history.push(`${routePrefix}/newBoard`);
+          window.location.href = window.location.origin + `${pathname}`;
+          // location?.pathname ? history.push(`${location.pathname}`) : history.push(`${routePrefix}/newBoard`);
         },
         onCancel: () => Modal.destroyAll(),
       });
     } else {
-      location?.pathname ? history.push(`${location.pathname}`) : history.push(`${routePrefix}/newBoard`);
+      window.location.href = window.location.origin + `${pathname}`;
     }
   };
 
