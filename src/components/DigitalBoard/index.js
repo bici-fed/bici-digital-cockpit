@@ -133,10 +133,9 @@ const DigitalBoard = (props) => {
       });
       return;
     }
-    // props.history.push({
-    //   pathname: `${routePrefix}/newBoard/${item.id}`,
-    // });
-    window.location.href = window.location.origin + `${routePrefix}/newBoard/${item.id}`;
+    props.history.push({
+      pathname: `${routePrefix}/newBoard/${item.id}`,
+    });
   };
 
   // 模态框取消

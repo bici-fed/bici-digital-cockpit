@@ -234,19 +234,18 @@ const DigitalCockpit = React.forwardRef((props, ref) => {
         onOk: () => {
           isSave = true;
           Modal.destroyAll();
-          window.location.href = window.location.origin + `${pathname}`;
-          // location?.pathname ? history.push(`${location.pathname}`) : history.push(`${routePrefix}/newBoard`);
+          history.push(pathname);
         },
         onCancel: () => Modal.destroyAll(),
       });
     } else {
-      window.location.href = window.location.origin + `${pathname}`;
+      history.push(pathname);
     }
   };
 
   const handlePreview = () => {
     window.open(
-      `${routePrefix}/newCockpit/${getEncryption(
+      `/newCockpit/${getEncryption(
         JSON.stringify({
           isShare: false,
           id: boardId,

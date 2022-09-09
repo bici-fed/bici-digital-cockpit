@@ -246,7 +246,7 @@ const BoardCreate = (props) => {
         name,
         remark,
         updateAuth,
-        links: `${window.location.origin}${routePrefix}/newCockpit`,
+        links: `${window.location.origin}/newCockpit`,
         newCockpitVisibleConfigList,
         tagIdList: selectedTypes.map((item) => item.id),
       };
@@ -299,8 +299,7 @@ const BoardCreate = (props) => {
             // 关闭模态框
             props.onClose();
             // 跳转到配置页面
-            window.location.href = window.location.origin + `${routePrefix}/newBoard/${res}`;
-            // history.push({ pathname: `${routePrefix}/newBoard/${res}` });
+            history.push({ pathname: `${routePrefix}/newBoard/${res}` });
           })
           .catch((err) => {
             biciNotification.error({ message: '创建失败!' });

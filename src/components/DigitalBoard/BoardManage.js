@@ -314,11 +314,11 @@ const BoardManage = (props) => {
       render: (text, record) => (
         <Tooltip
           placement="topLeft"
-          title={`${window.location.origin}${routePrefix}/newCockpit/${getEncryption(
+          title={`${window.location.origin}/newCockpit/${getEncryption(
             JSON.stringify({ id: record.id, isShare: false }),
           )}`}
         >
-          <a className="cursorDefault">{`${window.location.origin}${routePrefix}/newCockpit/${getEncryption(
+          <a className="cursorDefault">{`${window.location.origin}/newCockpit/${getEncryption(
             JSON.stringify({ id: record.id, isShare: false }),
           )}`}</a>
         </Tooltip>
