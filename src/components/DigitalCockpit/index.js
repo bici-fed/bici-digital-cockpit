@@ -8,6 +8,7 @@ import { industry_List } from '@/constant';
 import preBgImg1 from '@/assets/img/pre_bgimg_1.jpg';
 import preBgImg2 from '@/assets/img/pre_bgimg_2.jpg';
 import preBgImg3 from '@/assets/img/pre_bgimg_3.jpg';
+import { RouteTabtabParamsState } from '../../constant/index';
 
 let isSave = false;
 
@@ -223,8 +224,14 @@ const DigitalCockpit = React.forwardRef((props, ref) => {
   };
 
   const confirmAgainModal = (location) => {
-    const pathname = location?.pathname ?? `${routePrefix}/newBoard`;
-
+    const pathname = {
+      pathname: location?.pathname ?? `${routePrefix}/newBoard`,
+      state: {
+        tabParams: {
+          ...RouteTabtabParamsState,
+        },
+      },
+    };
     if (!editorRef.current?.getIsSave()) {
       Modal.confirm({
         title: '当前界面有未保存的内容，是否确认退出？',
