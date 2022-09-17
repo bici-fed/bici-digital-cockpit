@@ -14,6 +14,7 @@ import board1 from '@/assets/img/board-1.jpg';
 import board2 from '@/assets/img/board-2.jpg';
 import board3 from '@/assets/img/board-3.jpg';
 import board4 from '@/assets/img/board-4.jpg';
+import { RouteTabtabParamsState } from '../../constant/index';
 
 const { Option } = Select;
 
@@ -299,7 +300,9 @@ const BoardCreate = (props) => {
             // 关闭模态框
             props.onClose();
             // 跳转到配置页面
-            history.push({ pathname: `${routePrefix}/newBoard/${res}` });
+            history.push({
+              pathname: `${routePrefix}/newBoard/${res}`,
+            });
           })
           .catch((err) => {
             biciNotification.error({ message: '创建失败!' });

@@ -1,3 +1,11 @@
+/*
+ * @Descripttion:
+ * @version:
+ * @Author: bicitech-fed
+ * @Date: 2022-08-31 16:37:13
+ * @LastEditors: bicitech-fed
+ * @LastEditTime: 2022-09-17 15:23:19
+ */
 export const BOARD_SHARE_INFO = 'BOARD_SHARE_PWD';
 
 export const NEW_BOARD_INDUSTRY_CONVEYOR = [121, '传送带'];
@@ -16,6 +24,10 @@ export const NEW_BOARD_INDUSTRY_MINE = [133, '采矿'];
 export const NEW_BOARD_INDUSTRY_STEEL_INDUSTRY = [134, '钢铁行业'];
 export const NEW_BOARD_INDUSTRY_BOILER = [135, '锅炉'];
 export const NEW_BOARD_INDUSTRY_KLEP = [136, '阀门'];
+// 公共路由跳转 tabParams 参数
+export const RouteTabtabParamsState = {
+  isClose: true,
+};
 
 export const industry_List = [
   NEW_BOARD_INDUSTRY_CONVEYOR,
