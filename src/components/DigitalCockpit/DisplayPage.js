@@ -11,7 +11,6 @@ import {
   addFullScreenChanegListener,
   getFullScreenState,
 } from '@/utils/index';
-import { IconFont } from '@/utils/iconConfig';
 import { createShareLink, hasSharePwd, checkSharePwdAndGetData, fetchBoardDetail } from '@/apis/board';
 import { BOARD_SHARE_INFO } from '@/constant';
 
@@ -562,7 +561,7 @@ const DisplayPage = (props) => {
                     </span>
                   )}
                   <span style={{ cursor: 'pointer' }} onClick={handleShowFullScreen}>
-                    <IconFont type={isFullScreen ? 'shouqi1' : 'quanping'} />
+                    {isFullScreen ? <FullscreenExitOutlined /> : <FullscreenOutlined />}
                     <span style={{ marginLeft: 6 }}>{isFullScreen ? '退出全屏' : '展示全屏'}</span>
                   </span>
                 </Col>
