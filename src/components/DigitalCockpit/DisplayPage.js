@@ -133,7 +133,7 @@ const DisplayPage = (props) => {
     } else {
       let data = undefined;
       if (!res) {
-        // 分享的不需要密码
+        // 分享的不需要 密码
         // 获取看板详情
         data = await checkSharePwdAndGetData(requestClient, tokenTmp);
       } else {
