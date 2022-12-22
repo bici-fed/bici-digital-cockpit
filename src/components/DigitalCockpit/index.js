@@ -131,11 +131,11 @@ const DigitalCockpit = React.forwardRef((props, ref) => {
     self: {
       baseURL: baseUrl,
       token: token,
-      url: '/file/service/file/uploadReturnPath',
+      url: '/file/file/uploadReturnAllPath',
       apiUrl: {
-        list: '/file/service/file/getMappingFile',
-        delete: '/file/service/file/delete',
-        update: '/file/service/file/updateFile',
+        list: '/file/file/getMappingFile',
+        delete: '/file/file/delete',
+        update: '/file/file/updateFile',
       },
       data: {
         mappingId: boardData.companyId,
@@ -146,7 +146,7 @@ const DigitalCockpit = React.forwardRef((props, ref) => {
     preInstall: {
       baseURL: baseUrl,
       token: token,
-      url: 'file/service/file/uploadReturnPath',
+      url: 'file/file/uploadReturnAllPath',
       data: {
         mappingId: boardData.companyId,
         mappingType: '107',
@@ -158,9 +158,9 @@ const DigitalCockpit = React.forwardRef((props, ref) => {
       list: {
         url: '/applications/service/remote/customComponent/list',
         params: {
-          "mappingType":'101',
+          "mappingType": '101',
           mappingId: boardData.companyId,
-         },
+        },
       },
       add: {
         url: '/applications/service/remote/customComponent/save',
@@ -180,7 +180,7 @@ const DigitalCockpit = React.forwardRef((props, ref) => {
       mappingId: boardData.companyId,
       token: token,
       list: {
-        url: '/file/service/file/getMappingFile',
+        url: '/file/file/getMappingFile',
       },
       projectIndustryCats: industry_List,
     },
@@ -191,6 +191,7 @@ const DigitalCockpit = React.forwardRef((props, ref) => {
     if (data) {
       setBoardData(data);
     }
+    console.log(data, data.property, "JSON.parse(data.property)");
     if (isUpdateEdit && data.property) {
       const getEditorData = JSON.parse(data.property);
       setEditorData(getEditorData);
@@ -199,7 +200,6 @@ const DigitalCockpit = React.forwardRef((props, ref) => {
 
   useEffect(() => {
     // 获取面板数据
-    console.log(baseUrl,111)
     getBoardDetail(true);
   }, []);
 
@@ -258,7 +258,7 @@ const DigitalCockpit = React.forwardRef((props, ref) => {
 
   const handlePreview = () => {
     const url = window.location.href;
-    if(url && url.indexOf('/dp/base') !== -1){
+    if (url && url.indexOf('/dp/base') !== -1) {
       window.open(
         `/dp/base/SJYY/newCockpit/${getEncryption(
           JSON.stringify({
@@ -268,7 +268,7 @@ const DigitalCockpit = React.forwardRef((props, ref) => {
         )}`,
         '_blank',
       );
-    }else{
+    } else {
       window.open(
         `/SJYY/newCockpit/${getEncryption(
           JSON.stringify({
@@ -294,7 +294,7 @@ const DigitalCockpit = React.forwardRef((props, ref) => {
   const handleDataPointBind = (selectedselectedRowKeys, selectedselectedRows) => {
     editorRef?.current.handleDataPointBind(selectedselectedRowKeys, selectedselectedRows);
   };
-  const handleVedioBind=(selectedRowKeys, selectedRows)=>{
+  const handleVedioBind = (selectedRowKeys, selectedRows) => {
     editorRef?.current.handleVedioBind(selectedRowKeys, selectedRows);
   }
 
