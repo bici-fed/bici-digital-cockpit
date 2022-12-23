@@ -55,7 +55,7 @@ const DisplayPage = (props) => {
   });
 
   const websocketConf = {
-    url: `${wsUrl}/${socketToken}`,
+    url: `${wsUrl}`,
   };
 
   // 日期处理
@@ -480,7 +480,7 @@ const DisplayPage = (props) => {
         id={NEW_FULL_SCREEN_ID}
       >
         {
-          isApp?'':(<div
+          isApp ? '' : (<div
             style={{
               height: 48,
               position: 'absolute',
