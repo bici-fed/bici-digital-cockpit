@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Tooltip } from 'antd';
 import { LinkOutlined } from '@ant-design/icons';
-import { biciNotification } from 'bici-transformers';
+import { biciNotification } from 'bici-transformer';
 import { getEncryption } from '@/utils/index';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { DragSource, DropTarget } from 'react-dnd';

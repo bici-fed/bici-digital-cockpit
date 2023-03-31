@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import { DragDropContext } from 'react-dnd';
 import { Row, Col, Button, Empty, Input, Radio, Menu, Dropdown, Checkbox, Space, ConfigProvider } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
-import { biciNotification } from 'bici-transformers';
+import { biciNotification } from 'bici-transformer';
 import HTML5Backend from 'react-dnd-html5-backend';
 import _ from 'lodash';
 import { fetchBoardList, fetchTypeList, orderBoard } from '@/apis/board';

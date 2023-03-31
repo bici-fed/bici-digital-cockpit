@@ -87,5 +87,5 @@ module.exports = ['source-map'].map((devtool) => ({
       }
     }
   },
-  externals: ['react', 'react-dom', 'bici-transformers', '@ant-design/icons','lodash','moment'],
+  externals: ['react', 'react-dom', 'bici-transformer', '@ant-design/icons','lodash','moment'],
 }));

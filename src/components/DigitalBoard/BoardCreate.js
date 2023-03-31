@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { CheckCircleFilled, PlusOutlined } from '@ant-design/icons';
 import { Form, Modal, Button, Radio, Input, Upload, Select, TreeSelect } from 'antd';
-import { BiciTagsManager, biciNotification } from 'bici-transformers';
+import { BiciTagsManager, biciNotification } from 'bici-transformer';
 import _ from 'lodash';
 import { createBoard, modifyBoard } from '@/apis/board';
 import { deleteTags, getTagsList, saveTags, updateTags } from '@/apis/tag';
