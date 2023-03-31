@@ -9,6 +9,7 @@ import preBgImg1 from '@/assets/img/pre_bgimg_1.jpg';
 import preBgImg2 from '@/assets/img/pre_bgimg_2.jpg';
 import preBgImg3 from '@/assets/img/pre_bgimg_3.jpg';
 import preBgImg4 from '@/assets/img/pre_bgimg_4.png';
+import preBgImg5 from '@/assets/img/pre_bgimg_5.png';
 
 let isSave = false;
 
@@ -37,6 +38,7 @@ const DigitalCockpit = React.forwardRef((props, ref) => {
     { key: 2, img: preBgImg2 },
     { key: 3, img: preBgImg3 },
     { key: 4, img: preBgImg4 },
+    { key: 5, img: preBgImg5 },
   ];
 
   const industrialLibrary = [
