@@ -11,7 +11,6 @@ import {
   addFullScreenChanegListener,
   getFullScreenState,
 } from '@/utils/index';
-import { IconFont } from '@/utils/iconConfig';
 import { createShareLink, hasSharePwd, checkSharePwdAndGetData, fetchBoardDetail } from '@/apis/board';
 import { BOARD_SHARE_INFO } from '@/constant';
 
@@ -104,8 +103,6 @@ const DisplayPage = (props) => {
   useEffect(() => {
     handleValidDay();
   }, [handleValidDay]);
-
-
 
   // 分享获取详情
   const getSharedData = async (id, tokenTmp) => {
@@ -479,8 +476,10 @@ const DisplayPage = (props) => {
         }}
         id={NEW_FULL_SCREEN_ID}
       >
-        {
-          isApp?'':(<div
+        {isApp ? (
+          ''
+        ) : (
+          <div
             style={{
               height: 48,
               position: 'absolute',
@@ -555,16 +554,18 @@ const DisplayPage = (props) => {
                     </span>
                   )}
                   <span style={{ cursor: 'pointer' }} onClick={handleShowFullScreen}>
-                    <IconFont type={isFullScreen ? 'shouqi1' : 'quanping'} />
+                    {isFullScreen ? <FullscreenExitOutlined /> : <FullscreenOutlined />}
                     <span style={{ marginLeft: 6 }}>{isFullScreen ? '退出全屏' : '展示全屏'}</span>
                   </span>
                 </Col>
               </Row>
             </div>
-          </div>)
-        }
+          </div>
+        )}
         <div style={style} id="cockpitContent">
-          {Preview && editorData && socketToken && <Preview data={editorData} isApp={isApp} websocketConf={websocketConf} />}
+          {Preview && editorData && socketToken && (
+            <Preview data={editorData} isApp={isApp} websocketConf={websocketConf} />
+          )}
         </div>
         {renderShareModal}
         {renderSeePwdModal}
